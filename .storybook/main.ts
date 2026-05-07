@@ -3,12 +3,9 @@ import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 
 const config: StorybookConfig = {
   stories: [
-    '../src/**/*.mdx',
-    '../src/**/*.stories.@(ts|tsx)',
+    '../src/design-system/apps/storybook/**/*.stories.@(ts|tsx)',
   ],
-  addons: [
-    '@storybook/addon-a11y',
-  ],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
   framework: '@storybook/react-vite',
   async viteFinal(config) {
     config.plugins = [...(config.plugins ?? []), vanillaExtractPlugin()];
