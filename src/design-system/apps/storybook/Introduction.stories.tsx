@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import '../../package/tokens/color/color.tokens.css.ts';
+import { colorVars } from '../../package/tokens/color/index.ts';
 
 const meta = {
   title: 'Introduction',
@@ -15,7 +17,7 @@ const Badge = ({ children }: { children: string }) => (
 );
 
 const Card = ({ title, desc, badge }: { title: string; desc: string; badge: string }) => (
-  <div style={{ padding: '20px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}>
+  <div style={{ padding: '20px', background: colorVars.surfaceBase, border: '1px solid #1e293b', borderRadius: '8px' }}>
     <div style={{ marginBottom: '8px' }}>
       <Badge>{badge}</Badge>
     </div>
@@ -27,7 +29,7 @@ const Card = ({ title, desc, badge }: { title: string; desc: string; badge: stri
 export const Welcome: Story = {
   name: 'Welcome',
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: '720px' }}>
+    <div style={{ fontFamily: 'sans-serif', maxWidth: '720px', background: colorVars.surfaceBase, padding: '32px', borderRadius: '8px' }}>
       <div style={{ marginBottom: '40px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#e2e8f0', margin: '0 0 12px' }}>
           Loom Design System

@@ -142,7 +142,7 @@ const SubTitle = ({ children }: { children: string }) => (
 
 export const Palette: Story = {
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '8px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
       <SectionTitle>Palette</SectionTitle>
       <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '24px' }}>
         Colores primitivos del sistema. No usar directamente en componentes — usar los tokens semánticos.
@@ -177,7 +177,7 @@ export const Palette: Story = {
 export const Semantic: Story = {
   name: 'Semantic Colors',
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '8px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
       <SectionTitle>Semantic Colors</SectionTitle>
       <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '24px' }}>
         Tokens semánticos: referencian colores de la paleta y tienen un significado de uso.

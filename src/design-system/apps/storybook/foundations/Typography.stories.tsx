@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import '../../../package/tokens/color/color.tokens.css.ts';
 import { fontFamilyVars } from '../../../package/tokens/fontFamily/index.ts';
+import { colorVars } from '../../../package/tokens/color/index.ts';
 import { fontSizeVars } from '../../../package/tokens/fontSize/index.ts';
 import { fontWeightVars } from '../../../package/tokens/fontWeight/index.ts';
 import { lineHeightVars } from '../../../package/tokens/lineHeight/index.ts';
@@ -28,10 +30,12 @@ const Row = ({ label, sub, children }: { label: string; sub: string; children: R
   </div>
 );
 
+const wrap = { padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' } as const;
+
 export const FontFamily: Story = {
   name: 'Font Family',
   render: () => (
-    <div>
+    <div style={wrap}>
       <SubTitle>Font Family</SubTitle>
       <Row label="sans" sub="fontFamilyVars.sans">
         <span style={{ fontFamily: fontFamilyVars.sans, fontSize: '18px', color: '#e2e8f0' }}>
@@ -50,7 +54,7 @@ export const FontFamily: Story = {
 export const FontSize: Story = {
   name: 'Font Size',
   render: () => (
-    <div>
+    <div style={wrap}>
       <SubTitle>Font Size</SubTitle>
       {(
         [
@@ -82,19 +86,19 @@ export const FontSize: Story = {
 export const FontWeight: Story = {
   name: 'Font Weight',
   render: () => (
-    <div>
+    <div style={wrap}>
       <SubTitle>Font Weight</SubTitle>
       {(
         [
-          { key: 'thin' as const,      value: '100' },
+          { key: 'thin' as const,       value: '100' },
           { key: 'extralight' as const, value: '200' },
-          { key: 'light' as const,     value: '300' },
-          { key: 'normal' as const,    value: '400' },
-          { key: 'medium' as const,    value: '500' },
-          { key: 'semibold' as const,  value: '600' },
-          { key: 'bold' as const,      value: '700' },
-          { key: 'extrabold' as const, value: '800' },
-          { key: 'black' as const,     value: '900' },
+          { key: 'light' as const,      value: '300' },
+          { key: 'normal' as const,     value: '400' },
+          { key: 'medium' as const,     value: '500' },
+          { key: 'semibold' as const,   value: '600' },
+          { key: 'bold' as const,       value: '700' },
+          { key: 'extrabold' as const,  value: '800' },
+          { key: 'black' as const,      value: '900' },
         ] as const
       ).map(({ key, value }) => (
         <Row key={key} label={key} sub={value}>
@@ -110,7 +114,7 @@ export const FontWeight: Story = {
 export const LineHeight: Story = {
   name: 'Line Height',
   render: () => (
-    <div>
+    <div style={wrap}>
       <SubTitle>Line Height</SubTitle>
       {(
         [
