@@ -7,7 +7,6 @@ const SPACING_OPTIONS = ['none', 'px', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xl2
 const meta = {
   title: 'Primitives/Inline',
   component: Inline,
-  parameters: { layout: 'padded' },
   argTypes: {
     gap: {
       control: 'select',

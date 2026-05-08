@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import '../../../package/tokens/color/color.tokens.css.ts';
 import { fontFamilyVars } from '../../../package/tokens/fontFamily/index.ts';
-import { colorVars } from '../../../package/tokens/color/index.ts';
 import { fontSizeVars } from '../../../package/tokens/fontSize/index.ts';
 import { fontWeightVars } from '../../../package/tokens/fontWeight/index.ts';
 import { lineHeightVars } from '../../../package/tokens/lineHeight/index.ts';
@@ -10,7 +8,6 @@ import { Text } from '../../../package/ui/primitives/Text/index.ts';
 
 const meta = {
   title: 'Foundations/Typography',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
@@ -32,7 +29,7 @@ const Row = ({ label, sub, children }: { label: string; sub: string; children: R
   </div>
 );
 
-const wrap = { padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' } as const;
+const wrap = { padding: '24px' } as const;
 
 export const FontFamily: Story = {
   name: 'Font Family',

@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import '../../../package/tokens/color/color.tokens.css.ts';
 import { spacingVars } from '../../../package/tokens/spacing/index.ts';
-import { colorVars } from '../../../package/tokens/color/index.ts';
 
 const meta = {
   title: 'Foundations/Spacing',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
@@ -31,7 +28,7 @@ const SCALE: Array<{ key: keyof typeof spacingVars; value: string }> = [
 
 export const Scale: Story = {
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
       <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: '#e2e8f0' }}>Spacing Scale</h2>
       <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '32px' }}>
         Escala de espaciado basada en tokens. Usar <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px' }}>SpacingTokenKey</code> para tipar cualquier prop de spacing.

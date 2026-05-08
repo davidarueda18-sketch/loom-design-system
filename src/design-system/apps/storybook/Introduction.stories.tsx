@@ -4,7 +4,6 @@ import { colorVars } from '../../package/tokens/color/index.ts';
 
 const meta = {
   title: 'Introduction',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
@@ -29,7 +28,7 @@ const Card = ({ title, desc, badge }: { title: string; desc: string; badge: stri
 export const Welcome: Story = {
   name: 'Welcome',
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: '720px', background: colorVars.surfaceBase, padding: '32px', borderRadius: '8px' }}>
+    <div style={{ fontFamily: 'sans-serif', maxWidth: '720px', padding: '32px' }}>
       <div style={{ marginBottom: '40px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#e2e8f0', margin: '0 0 12px' }}>
           Loom Design System

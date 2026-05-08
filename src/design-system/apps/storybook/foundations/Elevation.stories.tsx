@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import '../../../package/tokens/color/color.tokens.css.ts';
 import { shadowVars } from '../../../package/tokens/shadow/index.ts';
 import { radiusVars } from '../../../package/tokens/radius/index.ts';
-import { colorVars } from '../../../package/tokens/color/index.ts';
 
 const meta = {
   title: 'Foundations/Elevation',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
@@ -20,7 +17,7 @@ const SubTitle = ({ children }: { children: string }) => (
 
 export const Shadows: Story = {
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
       <SubTitle>Shadow</SubTitle>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', padding: '32px 16px' }}>
         {(
@@ -56,7 +53,7 @@ export const Shadows: Story = {
 export const BorderRadius: Story = {
   name: 'Border Radius',
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
       <SubTitle>Border Radius</SubTitle>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', padding: '16px' }}>
         {(
@@ -91,7 +88,7 @@ export const BorderRadius: Story = {
 export const ZIndex: Story = {
   name: 'Z-Index',
   render: () => (
-    <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
+    <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
       <SubTitle>Z-Index Layers</SubTitle>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '400px' }}>
         {(

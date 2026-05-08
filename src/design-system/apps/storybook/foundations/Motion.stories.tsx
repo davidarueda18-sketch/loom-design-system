@@ -5,13 +5,12 @@ import { motionVars } from '../../../package/tokens/motion/index.ts';
 
 const meta = {
   title: 'Foundations/Motion',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
 type Story = StoryObj;
 
-const wrap = { padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' } as const;
+const wrap = { padding: '24px' } as const;
 
 const SubTitle = ({ children }: { children: string }) => (
   <h3 style={{ fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 600, margin: '32px 0 16px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>

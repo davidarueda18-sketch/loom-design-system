@@ -14,7 +14,6 @@ const VARIANT_OPTIONS = [
 const meta = {
   title: 'Primitives/Text',
   component: Text,
-  parameters: { layout: 'padded' },
   argTypes: {
     variant: { control: 'select', options: VARIANT_OPTIONS },
     as: {

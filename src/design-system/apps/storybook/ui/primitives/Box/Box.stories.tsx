@@ -6,7 +6,6 @@ const SPACING_OPTIONS = ['none', 'px', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xl2
 const meta = {
   title: 'Primitives/Box',
   component: Box,
-  parameters: { layout: 'padded' },
   argTypes: {
     padding:  { control: 'select', options: SPACING_OPTIONS },
     paddingX: { control: 'select', options: SPACING_OPTIONS },

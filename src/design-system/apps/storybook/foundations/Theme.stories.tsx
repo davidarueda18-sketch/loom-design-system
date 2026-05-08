@@ -6,7 +6,6 @@ import { applyTheme } from '../../../package/theme/index.ts';
 
 const meta = {
   title: 'Foundations/Theme',
-  parameters: { layout: 'padded' },
 } satisfies Meta;
 
 export default meta;
@@ -100,7 +99,6 @@ const ThemePanel = ({ theme, label }: { theme: 'dark' | 'light'; label: string }
 
 export const Comparison: Story = {
   name: 'Dark vs Light',
-  parameters: { layout: 'padded' },
   render: () => (
     <div style={{ fontFamily: 'sans-serif' }}>
       <h2 style={{ fontSize: '20px', fontWeight: 700, color: colorVars.textPrimary, margin: '0 0 6px' }}>
@@ -128,7 +126,7 @@ export const Usage: Story = {
     };
 
     return (
-      <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '8px' }}>
+      <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
         <h2 style={{ fontSize: '20px', fontWeight: 700, color: colorVars.textPrimary, margin: '0 0 6px' }}>
           Uso del sistema de temas
         </h2>

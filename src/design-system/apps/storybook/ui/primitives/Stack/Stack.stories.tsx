@@ -6,7 +6,6 @@ const SPACING_OPTIONS = ['none', 'px', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xl2
 const meta = {
   title: 'Primitives/Stack',
   component: Stack,
-  parameters: { layout: 'padded' },
   argTypes: {
     gap: {
       control: 'select',

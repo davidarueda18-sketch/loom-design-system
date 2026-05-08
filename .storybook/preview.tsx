@@ -1,12 +1,27 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
-import React from 'react';
+import { useEffect } from 'react';
 
 const withTheme: Decorator = (Story, context) => {
   const theme = (context.globals['theme'] as string) ?? 'dark';
+  const isLight = theme === 'light';
+  const isCanvas = context.viewMode === 'story';
+  const bg = isLight ? '' : '#181818';
+
+  // In canvas mode, extend the background beyond the story wrapper to cover
+  // the full iframe (areas outside the component when layout is 'centered').
+  useEffect(() => {
+    if (!isCanvas) return;
+    document.body.style.background = bg;
+    return () => { document.body.style.background = ''; };
+  }, [bg, isCanvas]);
+
   return (
     <div
-      data-theme={theme === 'light' ? 'light' : undefined}
-      style={{ minHeight: '100vh', background: theme === 'light' ? '#F6F6F6' : '#181818' }}
+      data-theme={isLight ? 'light' : undefined}
+      style={{
+        background: bg,
+        minHeight: isCanvas ? '100vh' : undefined,
+      }}
     >
       <Story />
     </div>
@@ -31,6 +46,7 @@ const preview: Preview = {
   },
   decorators: [withTheme],
   parameters: {
+    layout: 'padded',
     controls: {
       matchers: {
         color: /(background|color)$/i,
