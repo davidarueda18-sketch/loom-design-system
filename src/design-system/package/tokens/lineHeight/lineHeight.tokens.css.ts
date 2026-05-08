@@ -6,6 +6,8 @@ export const lineHeightVars = createThemeContract({
   snug: null,
   normal: null,
   relaxed: null,
+  condensed: null,
+  compact: null,
   loose: null,
 });
 
@@ -14,6 +16,8 @@ createGlobalTheme(':root', lineHeightVars, {
   tight: '1.25',
   snug: '1.375',
   normal: '1.5',
-  relaxed: '1.625',
+  relaxed: '1.6',
+  condensed: '1.2',
+  compact: '1.1',
   loose: '2',
 });

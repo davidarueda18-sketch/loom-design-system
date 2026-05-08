@@ -33,3 +33,9 @@ export type { ShadowTokenKey } from './shadow/index.ts';
 
 export { zIndexVars } from './zIndex/index.ts';
 export type { ZIndexTokenKey } from './zIndex/index.ts';
+
+export { letterSpacingVars } from './letterSpacing/index.ts';
+export type { LetterSpacingTokenKey } from './letterSpacing/index.ts';
+
+export { typographyVars } from './typography/index.ts';
+export type { TypographyTokenKey } from './typography/index.ts';

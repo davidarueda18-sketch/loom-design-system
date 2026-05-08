@@ -28,7 +28,7 @@
     "release": "npm run build:lib && npm publish --access public",
     "lint": "eslint .",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@figma/code-connect": "^1.4.4",
     "@microsoft/api-extractor": "^7.58.7",
     "@storybook/addon-docs": "^10.3.6",
     "@storybook/addon-vitest": "^10.3.6",
