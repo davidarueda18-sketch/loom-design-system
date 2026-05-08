@@ -1,12 +1,30 @@
 {
-  "extends": "./tsconfig.app.json",
   "compilerOptions": {
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+
+    /* Declaration emit — JS is handled by Vite */
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
     "declarationMap": true,
     "rootDir": "src/design-system/package",
-    "outDir": "./dist"
+    "outDir": "./dist",
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src/design-system/package"]
 }
