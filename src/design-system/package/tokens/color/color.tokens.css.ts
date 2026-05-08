@@ -13,6 +13,7 @@ export const colorVars = createThemeContract({
   brandPrimarySubtle: null,
   brandAccent: null,
   brandAccentSubtle: null,
+  brandAccentHover: null,
 
   // Border
   borderDefault: null,
@@ -34,9 +35,49 @@ export const colorVars = createThemeContract({
   feedbackWarningSubtle: null,
   feedbackDanger: null,
   feedbackDangerSubtle: null,
+  feedbackInfo: null,
+  feedbackInfoSubtle: null,
 });
 
-createGlobalTheme(':root', colorVars, {
+createGlobalTheme('[data-theme="light"]', colorVars, {
+  // Surface
+  surfaceRaised:  '#FFFFFF',
+  surfaceBase:    '#F6F6F6',
+  surfaceSubtle:  '#EEEEEE',
+  surfaceNeutral: paletteVars.neutral100,
+
+  // Brand
+  brandPrimary:       paletteVars.red600,
+  brandPrimarySubtle: paletteVars.red100,
+  brandAccent:        paletteVars.cyan700,
+  brandAccentSubtle:  paletteVars.cyan100,
+  brandAccentHover:   paletteVars.cyan800,
+
+  // Border
+  borderDefault: paletteVars.neutral200,
+  borderStrong:  paletteVars.neutral400,
+  borderSubtle:  paletteVars.neutral100,
+
+  // Text
+  textPrimary:   '#1A1A1A',
+  textSecondary: paletteVars.neutral500,
+  textDisabled:  paletteVars.neutral300,
+  textInverse:   '#FFFFFF',
+  textOnBrand:   '#FFFFFF',
+
+  // Feedback
+  feedbackSuccess:       paletteVars.green600,
+  feedbackSuccessSubtle: paletteVars.green100,
+  feedbackWarning:       paletteVars.amber600,
+  feedbackWarningStrong: paletteVars.red600,
+  feedbackWarningSubtle: paletteVars.amber100,
+  feedbackDanger:        paletteVars.red600,
+  feedbackDangerSubtle:  paletteVars.red100,
+  feedbackInfo:          paletteVars.blue600,
+  feedbackInfoSubtle:    paletteVars.blue100,
+});
+
+const darkTheme = {
   // Surface
   surfaceRaised: '#2B2D2E',
   surfaceBase: '#181818',
@@ -48,6 +89,7 @@ createGlobalTheme(':root', colorVars, {
   brandPrimarySubtle: paletteVars.red900,
   brandAccent: paletteVars.cyan400,
   brandAccentSubtle: paletteVars.cyan900,
+  brandAccentHover: '#3A5053',
 
   // Border
   borderDefault: '#343434',
@@ -69,4 +111,9 @@ createGlobalTheme(':root', colorVars, {
   feedbackWarningSubtle: paletteVars.amber900,
   feedbackDanger: paletteVars.red500,
   feedbackDangerSubtle: paletteVars.red900,
-});
+  feedbackInfo: paletteVars.blue500,
+  feedbackInfoSubtle: paletteVars.blue900,
+} satisfies Record<keyof typeof colorVars, string>;
+
+createGlobalTheme(':root', colorVars, darkTheme);
+createGlobalTheme('[data-theme="dark"]', colorVars, darkTheme);

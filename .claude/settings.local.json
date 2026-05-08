@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "mcp__figma__figma_get_variables"
+      "mcp__figma__figma_get_variables",
+      "mcp__figma__figma_batch_create_variables",
+      "Bash(npx tsc *)",
+      "mcp__figma__figma_get_status",
+      "mcp__figma__figma_create_variable_collection",
+      "Bash(ls -la .storybook/)",
+      "Bash(ls -la src/design-system/apps/storybook/)",
+      "mcp__figma__figma_rename_mode",
+      "mcp__figma__figma_add_mode",
+      "mcp__figma__figma_batch_update_variables",
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\App.tsx\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\App.css\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\main.tsx\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\index.css\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\index.html\" -Force)"
     ]
   }
 }

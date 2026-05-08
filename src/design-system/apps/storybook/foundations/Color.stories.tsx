@@ -70,6 +70,17 @@ const PALETTE: Record<string, Array<{ key: string; value: string; cssVar: string
     { key: 'amber800', value: '#663D00', cssVar: paletteVars.amber800 },
     { key: 'amber900', value: '#332000', cssVar: paletteVars.amber900 },
   ],
+  Blue: [
+    { key: 'blue100', value: '#DDEEFF', cssVar: paletteVars.blue100 },
+    { key: 'blue200', value: '#BAD8FE', cssVar: paletteVars.blue200 },
+    { key: 'blue300', value: '#87B9FC', cssVar: paletteVars.blue300 },
+    { key: 'blue400', value: '#5A9AF7', cssVar: paletteVars.blue400 },
+    { key: 'blue500', value: '#3B82F6', cssVar: paletteVars.blue500 },
+    { key: 'blue600', value: '#2563EB', cssVar: paletteVars.blue600 },
+    { key: 'blue700', value: '#1A46C4', cssVar: paletteVars.blue700 },
+    { key: 'blue800', value: '#112F8A', cssVar: paletteVars.blue800 },
+    { key: 'blue900', value: '#071650', cssVar: paletteVars.blue900 },
+  ],
 };
 
 // ─── Semantic color data ──────────────────────────────────────────────────────
@@ -91,6 +102,7 @@ const SEMANTIC: Array<{ group: string; tokens: Array<{ key: keyof typeof colorVa
       { key: 'brandPrimarySubtle', label: 'Primary Subtle' },
       { key: 'brandAccent', label: 'Accent' },
       { key: 'brandAccentSubtle', label: 'Accent Subtle' },
+      { key: 'brandAccentHover', label: 'Accent Hover' },
     ],
   },
   {
@@ -117,9 +129,12 @@ const SEMANTIC: Array<{ group: string; tokens: Array<{ key: keyof typeof colorVa
       { key: 'feedbackSuccess', label: 'Success' },
       { key: 'feedbackSuccessSubtle', label: 'Success Subtle' },
       { key: 'feedbackWarning', label: 'Warning' },
+      { key: 'feedbackWarningStrong', label: 'Warning Strong' },
       { key: 'feedbackWarningSubtle', label: 'Warning Subtle' },
       { key: 'feedbackDanger', label: 'Danger' },
       { key: 'feedbackDangerSubtle', label: 'Danger Subtle' },
+      { key: 'feedbackInfo', label: 'Info' },
+      { key: 'feedbackInfoSubtle', label: 'Info Subtle' },
     ],
   },
 ];
@@ -127,13 +142,13 @@ const SEMANTIC: Array<{ group: string; tokens: Array<{ key: keyof typeof colorVa
 // ─── Shared components ────────────────────────────────────────────────────────
 
 const SectionTitle = ({ children }: { children: string }) => (
-  <h2 style={{ fontFamily: 'sans-serif', fontSize: '20px', fontWeight: 700, margin: '32px 0 16px', color: '#e2e8f0' }}>
+  <h2 style={{ fontFamily: 'sans-serif', fontSize: '20px', fontWeight: 700, margin: '32px 0 16px', color: colorVars.textPrimary }}>
     {children}
   </h2>
 );
 
 const SubTitle = ({ children }: { children: string }) => (
-  <h3 style={{ fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 600, margin: '24px 0 12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+  <h3 style={{ fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 600, margin: '24px 0 12px', color: colorVars.textSecondary, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
     {children}
   </h3>
 );
@@ -144,7 +159,7 @@ export const Palette: Story = {
   render: () => (
     <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
       <SectionTitle>Palette</SectionTitle>
-      <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '24px' }}>
+      <p style={{ fontSize: '14px', color: colorVars.textSecondary, marginBottom: '24px' }}>
         Colores primitivos del sistema. No usar directamente en componentes — usar los tokens semánticos.
       </p>
       {Object.entries(PALETTE).map(([scale, swatches]) => (
@@ -159,12 +174,12 @@ export const Palette: Story = {
                     height: '64px',
                     background: value,
                     borderRadius: '6px',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    border: `1px solid ${colorVars.borderSubtle}`,
                     marginBottom: '6px',
                   }}
                 />
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#e2e8f0' }}>{key}</div>
-                <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{value}</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: colorVars.textPrimary }}>{key}</div>
+                <div style={{ fontSize: '11px', color: colorVars.textSecondary, marginTop: '2px' }}>{value}</div>
               </div>
             ))}
           </div>
@@ -179,7 +194,7 @@ export const Semantic: Story = {
   render: () => (
     <div style={{ fontFamily: 'sans-serif', padding: '24px', background: colorVars.surfaceBase, borderRadius: '4px' }}>
       <SectionTitle>Semantic Colors</SectionTitle>
-      <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '24px' }}>
+      <p style={{ fontSize: '14px', color: colorVars.textSecondary, marginBottom: '24px' }}>
         Tokens semánticos: referencian colores de la paleta y tienen un significado de uso.
       </p>
       {SEMANTIC.map(({ group, tokens }) => (
@@ -194,13 +209,13 @@ export const Semantic: Story = {
                     height: '48px',
                     background: colorVars[key],
                     borderRadius: '6px',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    border: `1px solid ${colorVars.borderSubtle}`,
                     flexShrink: 0,
                   }}
                 />
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#e2e8f0' }}>{key}</div>
-                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{label}</div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: colorVars.textPrimary }}>{key}</div>
+                  <div style={{ fontSize: '12px', color: colorVars.textSecondary, marginTop: '2px' }}>{label}</div>
                 </div>
               </div>
             ))}

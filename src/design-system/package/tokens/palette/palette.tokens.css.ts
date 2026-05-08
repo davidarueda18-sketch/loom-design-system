@@ -55,6 +55,17 @@ export const paletteVars = createThemeContract({
   amber700: null,
   amber800: null,
   amber900: null,
+
+  // Blue scale
+  blue100: null,
+  blue200: null,
+  blue300: null,
+  blue400: null,
+  blue500: null,
+  blue600: null,
+  blue700: null,
+  blue800: null,
+  blue900: null,
 });
 
 createGlobalTheme(':root', paletteVars, {
@@ -112,4 +123,15 @@ createGlobalTheme(':root', paletteVars, {
   amber700: '#995B00',
   amber800: '#663D00',
   amber900: '#332000',
+
+  // Blue
+  blue100: '#DDEEFF',
+  blue200: '#BAD8FE',
+  blue300: '#87B9FC',
+  blue400: '#5A9AF7',
+  blue500: '#3B82F6',
+  blue600: '#2563EB',
+  blue700: '#1A46C4',
+  blue800: '#112F8A',
+  blue900: '#071650',
 });

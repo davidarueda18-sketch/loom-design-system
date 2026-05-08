@@ -39,3 +39,6 @@ export type { LetterSpacingTokenKey } from './letterSpacing/index.ts';
 
 export { typographyVars } from './typography/index.ts';
 export type { TypographyTokenKey } from './typography/index.ts';
+
+export { motionVars } from './motion/index.ts';
+export type { MotionTokenKey } from './motion/index.ts';
