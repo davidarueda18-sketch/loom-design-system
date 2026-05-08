@@ -1,0 +1,140 @@
+/* Hairline → 100 | Thin → 200 | Ultralight → 300 | Light → 350
+   Regular → 400  | Medium → 500 | Bold → 700 | Extrabold → 800
+   Black → 900    | Super → 950
+   CSS Fonts Level 4 allows any integer 1–1000, so 350 and 950 are valid. */
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Hairline-web.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-HairlineItalic-web.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Thin-web.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-ThinItalic-web.woff2') format('woff2');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Ultralight-web.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Light-web.woff2') format('woff2');
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-LightItalic-web.woff2') format('woff2');
+  font-weight: 350;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Regular-web.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-RegularItalic-web.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Medium-web.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-MediumItalic-web.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Bold-web.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-BoldItalic-web.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Extrabold-web.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Black-web.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-Super-web.woff2') format('woff2');
+  font-weight: 950;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TWK Everett';
+  src: url('./fonts/TWKEverett-SuperItalic-web.woff2') format('woff2');
+  font-weight: 950;
+  font-style: italic;
+  font-display: swap;
+}
