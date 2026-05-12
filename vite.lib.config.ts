@@ -34,18 +34,24 @@ export default defineConfig({
     vanillaExtractPlugin(),
     dts({
       tsconfigPath: './tsconfig.lib.json',
+      entryRoot: 'src/design-system/package',
     }),
     copyFontAssets,
   ],
   publicDir: false,
   build: {
     lib: {
-      entry: path.resolve(dirname, 'src/design-system/package/index.ts'),
+      entry: {
+        index:    path.resolve(dirname, 'src/design-system/package/index.ts'),
+        core:     path.resolve(dirname, 'src/design-system/package/index.core.ts'),
+        elements: path.resolve(dirname, 'src/design-system/package/index.elements.ts'),
+      },
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+      fileName: (format, entryName) =>
+        `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime', 'react-dom', '@vanilla-extract/css'],
+      external: ['react', 'react/jsx-runtime', 'react-dom', '@vanilla-extract/css', '@angular/core'],
       output: {
         globals: {
           react: 'React',

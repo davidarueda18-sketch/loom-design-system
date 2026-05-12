@@ -11,6 +11,16 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./core": {
+      "types": "./dist/index.core.d.ts",
+      "import": "./dist/core.mjs",
+      "require": "./dist/core.cjs"
+    },
+    "./elements": {
+      "types":   "./dist/index.elements.d.ts",
+      "import":  "./dist/elements.mjs",
+      "require": "./dist/elements.cjs"
+    },
     "./style.css": "./dist/style.css",
     "./fonts.css": "./dist/fonts.css"
   },
@@ -19,7 +29,9 @@
   ],
   "sideEffects": [
     "dist/style.css",
-    "dist/fonts.css"
+    "dist/fonts.css",
+    "dist/elements.mjs",
+    "dist/elements.cjs"
   ],
   "scripts": {
     "build:lib": "vite build --config vite.lib.config.ts",
@@ -31,6 +43,10 @@
   "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.20.1"

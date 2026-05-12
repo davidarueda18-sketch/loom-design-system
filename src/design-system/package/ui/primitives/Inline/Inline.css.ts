@@ -11,23 +11,7 @@ export const wrap = style({
   flexWrap: 'wrap',
 });
 
-export const gap = styleVariants({
-  none: { gap: spacingVars.none },
-  px:   { gap: spacingVars.px },
-  xxs:  { gap: spacingVars.xxs },
-  xs:   { gap: spacingVars.xs },
-  sm:   { gap: spacingVars.sm },
-  md:   { gap: spacingVars.md },
-  lg:   { gap: spacingVars.lg },
-  xl:   { gap: spacingVars.xl },
-  xl2:  { gap: spacingVars.xl2 },
-  xl3:  { gap: spacingVars.xl3 },
-  xl4:  { gap: spacingVars.xl4 },
-  xl5:  { gap: spacingVars.xl5 },
-  xl6:  { gap: spacingVars.xl6 },
-  xl7:  { gap: spacingVars.xl7 },
-  xl8:  { gap: spacingVars.xl8 },
-});
+export const gap = styleVariants(spacingVars, (val) => ({ gap: val }));
 
 export const align = styleVariants({
   start:    { alignItems: 'flex-start' },
