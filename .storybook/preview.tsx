@@ -1,26 +1,40 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
+import { darkDocsTheme, lightDocsTheme } from './docs-theme';
+
+// Shared object — mutated by the decorator to switch theme without re-creating the ref.
+const docsParams = { theme: darkDocsTheme, story: { inline: true } };
 
 const withTheme: Decorator = (Story, context) => {
   const theme = (context.globals['theme'] as string) ?? 'dark';
   const isLight = theme === 'light';
-  const isCanvas = context.viewMode === 'story';
-  const bg = isLight ? '' : '#181818';
 
-  // In canvas mode, extend the background beyond the story wrapper to cover
-  // the full iframe (areas outside the component when layout is 'centered').
+  // Sync Storybook's docs theme with the toolbar selection.
+  // Mutating the shared docsParams object updates all story instances consistently.
+  docsParams.theme = isLight ? lightDocsTheme : darkDocsTheme;
+  context.parameters['docs'] = docsParams;
+
   useEffect(() => {
-    if (!isCanvas) return;
-    document.body.style.background = bg;
-    return () => { document.body.style.background = ''; };
-  }, [bg, isCanvas]);
+    if (isLight) {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.body.setAttribute('data-theme', 'light');
+      document.body.style.backgroundColor = '#F6F6F6';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      document.body.removeAttribute('data-theme');
+      document.body.style.backgroundColor = '#181818';
+    }
+    // No cleanup: in docs mode multiple decorator instances share the same body.
+    // Removing data-theme on unmount would break sibling stories still in the DOM.
+  }, [isLight]);
 
   return (
     <div
       data-theme={isLight ? 'light' : undefined}
       style={{
-        background: bg,
-        minHeight: isCanvas ? '100vh' : undefined,
+        minHeight: context.viewMode === 'story' ? '100vh' : undefined,
+        backgroundColor: isLight ? '#F6F6F6' : '#181818',
+        color: isLight ? '#1A1A1A' : '#FFFFFF',
       }}
     >
       <Story />
@@ -47,6 +61,7 @@ const preview: Preview = {
   decorators: [withTheme],
   parameters: {
     layout: 'padded',
+    docs: docsParams,
     controls: {
       matchers: {
         color: /(background|color)$/i,

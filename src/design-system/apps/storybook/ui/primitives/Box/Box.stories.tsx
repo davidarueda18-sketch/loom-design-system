@@ -1,15 +1,18 @@
+import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Box } from '../../../../../package/ui/primitives/Box/index.ts';
-
-const SPACING_OPTIONS = ['none', 'px', 'xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xl2', 'xl3'] as const;
+import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
+import { colorVars } from '../../../../../package/tokens/color/index.ts';
+import '../../../../../package/tokens/color/color.tokens.css.ts';
 
 const meta = {
   title: 'Primitives/Box',
   component: Box,
+  tags: ['autodocs'],
   argTypes: {
-    padding:  { control: 'select', options: SPACING_OPTIONS },
-    paddingX: { control: 'select', options: SPACING_OPTIONS },
-    paddingY: { control: 'select', options: SPACING_OPTIONS },
+    padding:  { control: 'select', options: Object.keys(spacingVars) },
+    paddingX: { control: 'select', options: Object.keys(spacingVars) },
+    paddingY: { control: 'select', options: Object.keys(spacingVars) },
     as: {
       control: 'select',
       options: ['div', 'section', 'article', 'main', 'aside', 'header', 'footer'],
@@ -20,20 +23,42 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const DemoBlock = ({ label }: { label: string }) => (
-  <div style={{ background: '#e0e7ff', padding: '12px', borderRadius: '4px', fontSize: '14px' }}>
-    {label}
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const DemoBlock = ({ children }: { children?: ReactNode }) => (
+  <div style={{
+    background: colorVars.surfaceRaised,
+    border: `1px solid ${colorVars.borderSubtle}`,
+    borderRadius: '4px',
+    padding: '12px',
+    fontFamily: 'sans-serif',
+    fontSize: '13px',
+    color: colorVars.textPrimary,
+  }}>
+    {children ?? 'Contenido'}
   </div>
 );
 
+const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
+  <div style={{ marginBottom: '32px' }}>
+    <h3 style={{
+      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
+      textTransform: 'uppercase', letterSpacing: '0.08em',
+      color: colorVars.textSecondary, margin: '0 0 12px',
+    }}>
+      {title}
+    </h3>
+    {children}
+  </div>
+);
+
+// ─── Stories ─────────────────────────────────────────────────────────────────
+
 export const Default: Story = {
-  args: {
-    padding: 'md',
-    as: "header"
-  },
+  args: { padding: 'md', as: 'header' },
   render: (args) => (
-    <Box {...args}>
-      <DemoBlock label="Contenido con padding" />
+    <Box {...args} style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
+      <DemoBlock>Contenido con padding</DemoBlock>
     </Box>
   ),
 };
@@ -42,18 +67,18 @@ export const PaddingAxes: Story = {
   name: 'Padding por eje',
   args: { paddingX: 'xl', paddingY: 'sm' },
   render: (args) => (
-    <Box {...args} style={{ border: '1px dashed #94a3b8' }}>
-      <DemoBlock label="paddingX grande, paddingY pequeño" />
+    <Box {...args} style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
+      <DemoBlock>paddingX grande, paddingY pequeño</DemoBlock>
     </Box>
   ),
 };
 
 export const AsSection: Story = {
-  name: 'Como <section>',
+  name: 'Como &lt;section&gt;',
   args: { as: 'section', padding: 'lg' },
   render: (args) => (
-    <Box {...args} style={{ border: '1px solid #94a3b8', borderRadius: '8px' }}>
-      <DemoBlock label="Renderizado como <section>" />
+    <Box {...args} style={{ border: `1px solid ${colorVars.borderDefault}`, borderRadius: '8px' }}>
+      <DemoBlock>Renderizado como &lt;section&gt;</DemoBlock>
     </Box>
   ),
 };
@@ -61,10 +86,14 @@ export const AsSection: Story = {
 export const Nested: Story = {
   name: 'Anidado',
   render: () => (
-    <Box padding="xl" style={{ border: '1px dashed #94a3b8' }}>
-      <Box padding="md" style={{ border: '1px dashed #6366f1' }}>
-        <DemoBlock label="Box dentro de Box" />
-      </Box>
-    </Box>
+    <div style={{ padding: '24px' }}>
+      <StorySection title="Composición anidada">
+        <Box padding="xl" style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
+          <Box padding="md" style={{ border: `1px dashed ${colorVars.brandAccent}` }}>
+            <DemoBlock>Box dentro de Box</DemoBlock>
+          </Box>
+        </Box>
+      </StorySection>
+    </div>
   ),
 };

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import '../../../package/tokens/color/color.tokens.css.ts';
 import { colorVars } from '../../../package/tokens/color/index.ts';
 import { applyTheme } from '../../../package/theme/index.ts';
@@ -11,37 +11,16 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Token comparison data ────────────────────────────────────────────────────
+// ─── Grouping metadata (display order — not mirror values) ────────────────────
 
-const GROUPS: Array<{ label: string; tokens: Array<keyof typeof colorVars> }> = [
-  {
-    label: 'Surface',
-    tokens: ['surfaceBase', 'surfaceRaised', 'surfaceSubtle', 'surfaceNeutral'],
-  },
-  {
-    label: 'Brand',
-    tokens: ['brandPrimary', 'brandPrimarySubtle', 'brandAccent', 'brandAccentSubtle', 'brandAccentHover'],
-  },
-  {
-    label: 'Text',
-    tokens: ['textPrimary', 'textSecondary', 'textDisabled', 'textInverse', 'textOnBrand'],
-  },
-  {
-    label: 'Border',
-    tokens: ['borderDefault', 'borderStrong', 'borderSubtle'],
-  },
-  {
-    label: 'Feedback',
-    tokens: [
-      'feedbackSuccess', 'feedbackSuccessSubtle',
-      'feedbackWarning', 'feedbackWarningStrong', 'feedbackWarningSubtle',
-      'feedbackDanger', 'feedbackDangerSubtle',
-      'feedbackInfo', 'feedbackInfoSubtle',
-    ],
-  },
-];
+const COLOR_GROUPS = ['surface', 'brand', 'text', 'border', 'feedback'] as const;
 
-// ─── Shared sub-components ────────────────────────────────────────────────────
+const GROUPS = COLOR_GROUPS.map((prefix) => ({
+  label: prefix.charAt(0).toUpperCase() + prefix.slice(1),
+  tokens: (Object.keys(colorVars) as Array<keyof typeof colorVars>).filter((k) => k.startsWith(prefix)),
+}));
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const GroupLabel = ({ children }: { children: string }) => (
   <div style={{
@@ -65,22 +44,21 @@ const TokenRow = ({ tokenKey }: { tokenKey: keyof typeof colorVars }) => (
   </div>
 );
 
-// ─── ThemePanel renders inside a forced data-theme context ────────────────────
-
+// colorVars inside ThemePanel resolve correctly because the panel has data-theme on itself
 const ThemePanel = ({ theme, label }: { theme: 'dark' | 'light'; label: string }) => (
   <div
     data-theme={theme}
     style={{
       flex: 1, borderRadius: '10px', overflow: 'hidden',
-      border: `1px solid ${theme === 'dark' ? '#2A2A2A' : '#DDDDDD'}`,
+      border: `1px solid ${colorVars.borderDefault}`,
     }}
   >
     <div style={{
       padding: '10px 16px',
-      background: theme === 'dark' ? '#0F1113' : '#E2E8F0',
+      background: colorVars.surfaceNeutral,
       fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
       letterSpacing: '0.08em', textTransform: 'uppercase',
-      color: theme === 'dark' ? '#64748B' : '#475569',
+      color: colorVars.textSecondary,
     }}>
       {label}
     </div>
@@ -88,14 +66,14 @@ const ThemePanel = ({ theme, label }: { theme: 'dark' | 'light'; label: string }
       {GROUPS.map(({ label: groupLabel, tokens }) => (
         <div key={groupLabel}>
           <GroupLabel>{groupLabel}</GroupLabel>
-          {tokens.map(key => <TokenRow key={key} tokenKey={key} />)}
+          {tokens.map((key) => <TokenRow key={key} tokenKey={key} />)}
         </div>
       ))}
     </div>
   </div>
 );
 
-// ─── Stories ──────────────────────────────────────────────────────────────────
+// ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Comparison: Story = {
   name: 'Dark vs Light',
@@ -144,7 +122,7 @@ export const Usage: Story = {
             Demo interactivo
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            {(['dark', 'light'] as const).map(t => (
+            {(['dark', 'light'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => toggle(t)}

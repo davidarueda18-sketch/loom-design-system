@@ -1,0 +1,241 @@
+<script>
+/* Sync data-theme from Storybook globals before React mounts — prevents flash of wrong theme */
+(function () {
+  try {
+    var globals = new URLSearchParams(location.search).get('globals') || '';
+    var theme = '';
+    globals.split(';').forEach(function (pair) {
+      var kv = pair.split(':');
+      if (kv[0] === 'theme') theme = decodeURIComponent(kv[1] || '');
+    });
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.body.setAttribute('data-theme', 'light');
+    }
+  } catch (_) {}
+})();
+</script>
+
+<style>
+  /* ── Dark mode ────────────────────────────────────────────────────────────── */
+  body:not([data-theme="light"]) {
+    background: #181818;
+    color: #e2e8f0;
+    color-scheme: dark;
+  }
+
+  body:not([data-theme="light"]) #storybook-docs,
+  body:not([data-theme="light"]) .sbdocs-wrapper,
+  body:not([data-theme="light"]) .sbdocs-content {
+    background: #181818;
+    color: #e2e8f0;
+  }
+
+  body:not([data-theme="light"]) .sbdocs-title,
+  body:not([data-theme="light"]) .sbdocs-subtitle {
+    color: #FFFFFF;
+  }
+
+  /* Story preview containers — !important needed to beat emotion's ThemeProvider styles */
+  body:not([data-theme="light"]) .sbdocs-preview,
+  body:not([data-theme="light"]) .sbdocs-preview > *,
+  body:not([data-theme="light"]) .docs-story {
+    background: #181818 !important;
+    border-color: #2A2A2A !important;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable,
+  body:not([data-theme="light"]) .docblock-argstable table {
+    background: #252525;
+    color: #e2e8f0;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-head th,
+  body:not([data-theme="light"]) .docblock-argstable-head th span {
+    background: #1e1e1e;
+    color: #94a3b8;
+    border-bottom: 1px solid #343434;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body tr {
+    border-bottom: 1px solid #343434;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td {
+    background: #252525;
+    color: #e2e8f0;
+    border-color: #343434;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body tr:nth-child(even) td {
+    background: #1e1e1e;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td span,
+  body:not([data-theme="light"]) .docblock-argstable-body td p,
+  body:not([data-theme="light"]) .docblock-argstable-body td a,
+  body:not([data-theme="light"]) .docblock-argstable-body td button {
+    color: #e2e8f0;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td:first-child span {
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td abbr {
+    color: #FF462D;
+    text-decoration: none;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td code {
+    background: #2A2A2A;
+    color: #42D8EC;
+    border: 1px solid #343434;
+    border-radius: 3px;
+    padding: 1px 4px;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body td:nth-child(3) span {
+    color: #94a3b8;
+  }
+
+  body:not([data-theme="light"]) .docblock-argstable-body input,
+  body:not([data-theme="light"]) .docblock-argstable-body select,
+  body:not([data-theme="light"]) .docblock-argstable-body textarea {
+    background: #181818;
+    color: #e2e8f0;
+    border-color: #343434;
+  }
+
+  body:not([data-theme="light"]) .docblock-source {
+    background: #252525;
+    border-color: #343434;
+    color: #e2e8f0;
+  }
+
+  body:not([data-theme="light"]) .docblock-source pre,
+  body:not([data-theme="light"]) .docblock-source code,
+  body:not([data-theme="light"]) .docblock-source [class*="prism-"],
+  body:not([data-theme="light"]) .docblock-source [class*="language-"] {
+    background: #252525 !important;
+    color: #e2e8f0 !important;
+  }
+
+  body:not([data-theme="light"]) .docblock-code-toggle {
+    background: #252525;
+    color: #e2e8f0;
+    border-color: #343434;
+  }
+
+  /* ── Light mode ───────────────────────────────────────────────────────────── */
+  body[data-theme="light"] {
+    background: #F6F6F6;
+    color: #1A1A1A;
+    color-scheme: light;
+  }
+
+  body[data-theme="light"] #storybook-docs,
+  body[data-theme="light"] .sbdocs-wrapper,
+  body[data-theme="light"] .sbdocs-content {
+    background: #F6F6F6;
+    color: #1A1A1A;
+  }
+
+  body[data-theme="light"] .sbdocs-title,
+  body[data-theme="light"] .sbdocs-subtitle {
+    color: #1A1A1A;
+  }
+
+  /* Story preview containers — !important needed to beat emotion's ThemeProvider styles */
+  body[data-theme="light"] .sbdocs-preview,
+  body[data-theme="light"] .sbdocs-preview > *,
+  body[data-theme="light"] .docs-story {
+    background: #FFFFFF !important;
+    border-color: #C8C8C8 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable,
+  body[data-theme="light"] .docblock-argstable table {
+    background: #FFFFFF !important;
+    color: #1A1A1A !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-head th,
+  body[data-theme="light"] .docblock-argstable-head th span {
+    background: #F6F6F6 !important;
+    color: #666666 !important;
+    border-bottom: 1px solid #C8C8C8 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body tr {
+    border-bottom: 1px solid #E8E8E8 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td {
+    background: #FFFFFF !important;
+    color: #1A1A1A !important;
+    border-color: #E8E8E8 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body tr:nth-child(even) td {
+    background: #F6F6F6 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td span,
+  body[data-theme="light"] .docblock-argstable-body td p,
+  body[data-theme="light"] .docblock-argstable-body td a,
+  body[data-theme="light"] .docblock-argstable-body td button {
+    color: #1A1A1A !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td:first-child span {
+    color: #1A1A1A !important;
+    font-weight: 600;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td abbr {
+    color: #E83015;
+    text-decoration: none;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td code {
+    background: #EEEEEE !important;
+    color: #117287 !important;
+    border: 1px solid #C8C8C8;
+    border-radius: 3px;
+    padding: 1px 4px;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body td:nth-child(3) span {
+    color: #666666 !important;
+  }
+
+  body[data-theme="light"] .docblock-argstable-body input,
+  body[data-theme="light"] .docblock-argstable-body select,
+  body[data-theme="light"] .docblock-argstable-body textarea {
+    background: #FFFFFF;
+    color: #1A1A1A;
+    border-color: #C8C8C8;
+  }
+
+  body[data-theme="light"] .docblock-source {
+    background: #EEEEEE;
+    border-color: #C8C8C8;
+    color: #1A1A1A;
+  }
+
+  body[data-theme="light"] .docblock-source pre,
+  body[data-theme="light"] .docblock-source code,
+  body[data-theme="light"] .docblock-source [class*="prism-"],
+  body[data-theme="light"] .docblock-source [class*="language-"] {
+    background: #EEEEEE !important;
+    color: #1A1A1A !important;
+  }
+
+  body[data-theme="light"] .docblock-code-toggle {
+    background: #EEEEEE;
+    color: #1A1A1A;
+    border-color: #C8C8C8;
+  }
+</style>

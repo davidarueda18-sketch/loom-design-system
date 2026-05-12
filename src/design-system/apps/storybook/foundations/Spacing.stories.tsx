@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import '../../../package/tokens/color/color.tokens.css.ts';
+import { colorVars } from '../../../package/tokens/color/index.ts';
 import { spacingVars } from '../../../package/tokens/spacing/index.ts';
 
 const meta = {
@@ -8,51 +11,71 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-const SCALE: Array<{ key: keyof typeof spacingVars; value: string }> = [
-  { key: 'none',  value: '0px' },
-  { key: 'px',    value: '1px' },
-  { key: 'xxs',   value: '2px' },
-  { key: 'xs',    value: '4px' },
-  { key: 'sm',    value: '8px' },
-  { key: 'md',    value: '16px' },
-  { key: 'lg',    value: '24px' },
-  { key: 'xl',    value: '32px' },
-  { key: 'xl2',   value: '48px' },
-  { key: 'xl3',   value: '64px' },
-  { key: 'xl4',   value: '96px' },
-  { key: 'xl5',   value: '128px' },
-  { key: 'xl6',   value: '192px' },
-  { key: 'xl7',   value: '256px' },
-  { key: 'xl8',   value: '384px' },
-];
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const resolveToken = (cssVar: string): string => {
+  if (typeof window === 'undefined') return '';
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(cssVar.replace(/^var\((.+)\)$/, '$1').trim())
+    .trim();
+  return value || '—';
+};
+
+const TokenValue = ({ cssVar }: { cssVar: string }) => {
+  const [value, setValue] = useState('');
+  useEffect(() => { setValue(resolveToken(cssVar)); }, [cssVar]);
+  return (
+    <span style={{ fontSize: '12px', color: colorVars.textSecondary, fontFamily: 'monospace' }}>
+      {value || '—'}
+    </span>
+  );
+};
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const SectionTitle = ({ children }: { children: string }) => (
+  <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: colorVars.textPrimary }}>
+    {children}
+  </h2>
+);
+
+const SpacingRow = ({ name, cssVar }: { name: string; cssVar: string }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+    <span style={{ width: '40px', fontSize: '13px', fontWeight: 600, color: colorVars.textPrimary, textAlign: 'right', flexShrink: 0, fontFamily: 'monospace' }}>
+      {name}
+    </span>
+    <span style={{ width: '52px', flexShrink: 0 }}>
+      <TokenValue cssVar={cssVar} />
+    </span>
+    <div
+      style={{
+        height: '20px',
+        width: cssVar,
+        minWidth: name === 'none' ? '2px' : undefined,
+        background: name === 'none' ? colorVars.borderStrong : colorVars.brandPrimary,
+        borderRadius: '3px',
+        flexShrink: 0,
+      }}
+    />
+  </div>
+);
+
+// ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Scale: Story = {
   render: () => (
     <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
-      <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: '#e2e8f0' }}>Spacing Scale</h2>
-      <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '32px' }}>
-        Escala de espaciado basada en tokens. Usar <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px' }}>SpacingTokenKey</code> para tipar cualquier prop de spacing.
+      <SectionTitle>Spacing Scale</SectionTitle>
+      <p style={{ fontSize: '14px', color: colorVars.textSecondary, marginBottom: '32px' }}>
+        Escala de espaciado basada en tokens. Usar{' '}
+        <code style={{ background: colorVars.surfaceNeutral, padding: '2px 6px', borderRadius: '4px', color: colorVars.textPrimary }}>
+          SpacingTokenKey
+        </code>{' '}
+        para tipar cualquier prop de spacing.
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {SCALE.map(({ key, value }) => (
-          <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ width: '40px', fontSize: '13px', fontWeight: 600, color: '#e2e8f0', textAlign: 'right', flexShrink: 0 }}>
-              {key}
-            </span>
-            <span style={{ width: '52px', fontSize: '12px', color: '#64748b', flexShrink: 0 }}>
-              {value}
-            </span>
-            <div
-              style={{
-                height: '20px',
-                width: spacingVars[key],
-                minWidth: key === 'none' ? '2px' : undefined,
-                background: key === 'none' ? '#334155' : '#6366f1',
-                borderRadius: '3px',
-                flexShrink: 0,
-              }}
-            />
-          </div>
+        {(Object.keys(spacingVars) as Array<keyof typeof spacingVars>).map((key) => (
+          <SpacingRow key={key} name={key} cssVar={spacingVars[key]} />
         ))}
       </div>
     </div>

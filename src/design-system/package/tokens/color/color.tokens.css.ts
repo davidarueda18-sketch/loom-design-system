@@ -10,15 +10,19 @@ export const colorVars = createThemeContract({
 
   // Brand — describes intent, not color name
   brandPrimary: null,
+  brandPrimaryHover: null,
+  brandPrimaryPressed: null,
   brandPrimarySubtle: null,
   brandAccent: null,
   brandAccentSubtle: null,
   brandAccentHover: null,
+  brandAccentPressed: null,
 
   // Border
   borderDefault: null,
   borderStrong: null,
   borderSubtle: null,
+  borderInteractive: null,
 
   // Text
   textPrimary: null,
@@ -47,16 +51,20 @@ createGlobalTheme('[data-theme="light"]', colorVars, {
   surfaceNeutral: paletteVars.neutral100,
 
   // Brand
-  brandPrimary:       paletteVars.red600,
-  brandPrimarySubtle: paletteVars.red100,
-  brandAccent:        paletteVars.cyan700,
-  brandAccentSubtle:  paletteVars.cyan100,
-  brandAccentHover:   paletteVars.cyan800,
+  brandPrimary:        paletteVars.red600,
+  brandPrimaryHover:   paletteVars.red700,
+  brandPrimaryPressed: paletteVars.red800,
+  brandPrimarySubtle:  paletteVars.red100,
+  brandAccent:         paletteVars.cyan700,
+  brandAccentSubtle:   paletteVars.cyan100,
+  brandAccentHover:    paletteVars.cyan200,
+  brandAccentPressed:  paletteVars.cyan900,
 
   // Border
-  borderDefault: paletteVars.neutral200,
-  borderStrong:  paletteVars.neutral400,
-  borderSubtle:  paletteVars.neutral100,
+  borderDefault:      paletteVars.neutral200,
+  borderStrong:       paletteVars.neutral400,
+  borderSubtle:       paletteVars.neutral100,
+  borderInteractive:  paletteVars.neutral400,
 
   // Text
   textPrimary:   '#1A1A1A',
@@ -85,23 +93,27 @@ const darkTheme = {
   surfaceNeutral: '#2F3031',
 
   // Brand
-  brandPrimary: paletteVars.red500,
-  brandPrimarySubtle: paletteVars.red900,
-  brandAccent: paletteVars.cyan400,
-  brandAccentSubtle: paletteVars.cyan900,
-  brandAccentHover: '#3A5053',
+  brandPrimary:        paletteVars.red500,
+  brandPrimaryHover:   paletteVars.red700,
+  brandPrimaryPressed: paletteVars.red800,
+  brandPrimarySubtle:  paletteVars.red900,
+  brandAccent:         paletteVars.cyan400,
+  brandAccentSubtle:   paletteVars.cyan900,
+  brandAccentHover:    '#3A5053',
+  brandAccentPressed:  '#283739',
 
   // Border
-  borderDefault: '#343434',
-  borderStrong: paletteVars.neutral600,
-  borderSubtle: '#2A2A2A',
+  borderDefault:      '#343434',
+  borderStrong:       paletteVars.neutral600,
+  borderSubtle:       '#2A2A2A',
+  borderInteractive:  paletteVars.neutral400,
 
   // Text
   textPrimary: '#FFFFFF',
   textSecondary: paletteVars.neutral400,
   textDisabled: paletteVars.neutral200,
   textInverse: '#181818',
-  textOnBrand: '#0A1F22',
+  textOnBrand: '#FFFFFF',
 
   // Feedback — all reference palette, single source of truth
   feedbackSuccess: paletteVars.green500,

@@ -7,9 +7,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./style.css": "./dist/style.css",
     "./fonts.css": "./dist/fonts.css"
@@ -39,6 +39,7 @@
     "@eslint/js": "^10.0.1",
     "@figma/code-connect": "^1.4.4",
     "@microsoft/api-extractor": "^7.58.7",
+    "@storybook/addon-a11y": "^10.3.6",
     "@storybook/addon-docs": "^10.3.6",
     "@storybook/addon-vitest": "^10.3.6",
     "@storybook/react-vite": "^10.3.6",

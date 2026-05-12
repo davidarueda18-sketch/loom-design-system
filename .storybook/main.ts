@@ -9,6 +9,13 @@ const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   async viteFinal(config) {
     config.plugins = [...(config.plugins ?? []), vanillaExtractPlugin()];
+    config.server = {
+      ...config.server,
+      hmr: {
+        ...(typeof config.server?.hmr === 'object' ? config.server.hmr : {}),
+        port: 24679,
+      },
+    };
     return config;
   },
 };
