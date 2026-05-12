@@ -1,7 +1,10 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 import { colorVars } from '../../../tokens/index.ts';
 
-export const host = style({ display: 'contents' });
+export const host = style({
+  display: 'inline-flex',
+  boxSizing: 'border-box',
+});
 
 export const root = style({
   display: 'inline-flex',

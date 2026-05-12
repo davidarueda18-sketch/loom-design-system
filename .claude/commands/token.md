@@ -5,6 +5,12 @@ description: Create a new Vanilla Extract design token group for the Loom Design
 
 # Loom Design System — Token Creator
 
+## Canonical Contract
+
+- Source of truth: `ai/contracts/token.contract.md`
+- Wrapper role: this file orchestrates user interaction and project-specific defaults.
+- Change policy: update the contract first, then reflect wrapper-specific prompts only when needed.
+
 You are creating a new design token group for the Loom Design System using `@vanilla-extract/css`. Follow every step in order. Ask before writing any files if information is missing.
 
 ---

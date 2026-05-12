@@ -1,5 +1,7 @@
-import { styleVariants } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
 import { typographyVars } from '../../../tokens/index.ts';
+
+export const root = style({});
 
 export const variants = styleVariants(typographyVars, (variant) => ({
   fontSize: variant.fontSize,

@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite';
+import type { Plugin } from 'vite';
+import type { PluginContext } from 'rollup';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import dts from 'vite-plugin-dts';
 import path from 'node:path';
@@ -8,19 +10,19 @@ import { fileURLToPath } from 'node:url';
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-const copyFontAssets = {
+const copyFontAssets: Plugin = {
   name: 'copy-font-assets',
-  generateBundle() {
+  generateBundle(this: PluginContext) {
     const fontsCSS = fs.readFileSync(
       path.resolve(dirname, 'src/design-system/package/fonts/fonts.css'),
       'utf-8',
     );
-    (this as any).emitFile({ type: 'asset', fileName: 'fonts.css', source: fontsCSS });
+    this.emitFile({ type: 'asset', fileName: 'fonts.css', source: fontsCSS });
 
     const fontDir = path.resolve(dirname, 'src/assets/fonts');
     for (const file of fs.readdirSync(fontDir)) {
       if (!file.endsWith('.woff2')) continue;
-      (this as any).emitFile({
+      this.emitFile({
         type: 'asset',
         fileName: `fonts/${file}`,
         source: fs.readFileSync(path.join(fontDir, file)),

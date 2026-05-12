@@ -1,3 +1,4 @@
+/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Text } from '../../../../../package/ui/primitives/Text/index.ts';
@@ -5,6 +6,8 @@ import { typographyVars } from '../../../../../package/tokens/typography/index.t
 import { fontFamilyVars } from '../../../../../package/tokens/fontFamily/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Text/adapters/Text.element.ts';
+import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Text',
@@ -71,7 +74,6 @@ export const Default: Story = {
 };
 
 export const TypeScale: Story = {
-  name: 'Type Scale',
   render: () => (
     <div style={{ padding: '24px' }}>
       <StorySection title="Todas las variantes">
@@ -109,6 +111,27 @@ export const Polymorphic: Story = {
           </Text>
         </PolyRow>
       </StorySection>
+    </div>
+  ),
+};
+
+export const WebComponent: Story = {
+  args: {
+    variant: 'bodyBase',
+    children: 'Loom Design System',
+  },
+  argTypes: {
+    variant: { control: 'select', options: Object.keys(typographyVars) },
+    children: { control: 'text' },
+  },
+  render: ({ variant, children }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-text
+        variant={variant as string}
+        style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}
+      >
+        {children as ReactNode}
+      </loom-text>
     </div>
   ),
 };

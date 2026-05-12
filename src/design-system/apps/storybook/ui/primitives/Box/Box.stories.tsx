@@ -1,9 +1,12 @@
+/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Box } from '../../../../../package/ui/primitives/Box/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Box',
@@ -94,6 +97,31 @@ export const Nested: Story = {
           </Box>
         </Box>
       </StorySection>
+    </div>
+  ),
+};
+
+export const WebComponent: Story = {
+  args: {
+    padding: 'md',
+    paddingX: 'xl',
+    paddingY: 'sm',
+  },
+  argTypes: {
+    padding: { control: 'select', options: Object.keys(spacingVars) },
+    paddingX: { control: 'select', options: Object.keys(spacingVars) },
+    paddingY: { control: 'select', options: Object.keys(spacingVars) },
+  },
+  render: ({ padding, paddingX, paddingY }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-box
+        padding={padding as string}
+        padding-x={paddingX as string}
+        padding-y={paddingY as string}
+        style={{ border: `1px dashed ${colorVars.borderDefault}` }}
+      >
+        <DemoBlock>loom-box con atributos reactivos</DemoBlock>
+      </loom-box>
     </div>
   ),
 };

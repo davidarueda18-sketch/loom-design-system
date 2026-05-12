@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../../package/tokens/color/color.tokens.css.ts';
 import { colorVars } from '../../../package/tokens/color/index.ts';
 import { fontFamilyVars } from '../../../package/tokens/fontFamily/index.ts';
@@ -28,8 +27,7 @@ const resolveToken = (cssVar: string): string => {
 };
 
 const TokenValue = ({ cssVar }: { cssVar: string }) => {
-  const [value, setValue] = useState('');
-  useEffect(() => { setValue(resolveToken(cssVar)); }, [cssVar]);
+  const value = resolveToken(cssVar);
   return (
     <span style={{ fontSize: '11px', color: colorVars.textSecondary, fontFamily: 'sans-serif', marginTop: '2px' }}>
       {value || '—'}
@@ -105,7 +103,6 @@ const wrap = { padding: '24px' } as const;
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const FontFamily: Story = {
-  name: 'Font Family',
   render: () => (
     <div style={wrap}>
       <SubTitle>Font Family</SubTitle>
@@ -121,7 +118,6 @@ export const FontFamily: Story = {
 };
 
 export const FontSize: Story = {
-  name: 'Font Size',
   render: () => (
     <div style={wrap}>
       <SubTitle>Font Size</SubTitle>
@@ -137,7 +133,6 @@ export const FontSize: Story = {
 };
 
 export const FontWeight: Story = {
-  name: 'Font Weight',
   render: () => (
     <div style={wrap}>
       <SubTitle>Font Weight</SubTitle>
@@ -153,7 +148,6 @@ export const FontWeight: Story = {
 };
 
 export const LineHeight: Story = {
-  name: 'Line Height',
   render: () => (
     <div style={wrap}>
       <SubTitle>Line Height</SubTitle>
@@ -169,7 +163,6 @@ export const LineHeight: Story = {
 };
 
 export const LetterSpacing: Story = {
-  name: 'Letter Spacing',
   render: () => (
     <div style={wrap}>
       <SubTitle>Letter Spacing</SubTitle>
@@ -185,7 +178,6 @@ export const LetterSpacing: Story = {
 };
 
 export const TypeScale: Story = {
-  name: 'Type Scale',
   render: () => (
     <div style={wrap}>
       {scaleSections.map(({ label, keys }) => (

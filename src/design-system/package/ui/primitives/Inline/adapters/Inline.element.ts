@@ -35,8 +35,7 @@ class LoomInline extends HTMLElement {
     return this.hasAttribute('wrap');
   }
   set wrap(val: boolean) {
-    if (val) this.setAttribute('wrap', '');
-    else this.removeAttribute('wrap');
+    this.toggleAttribute('wrap', val);
   }
 
   // ─── Lifecycle ────────────────────────────────────────────────────────────
@@ -46,7 +45,18 @@ class LoomInline extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    this._sync();
+    this._scheduleSync();
+  }
+
+  private _syncScheduled = false;
+
+  private _scheduleSync(): void {
+    if (this._syncScheduled) return;
+    this._syncScheduled = true;
+    requestAnimationFrame(() => {
+      this._syncScheduled = false;
+      this._sync();
+    });
   }
 
   // ─── State tracking (idempotent _sync) ───────────────────────────────────

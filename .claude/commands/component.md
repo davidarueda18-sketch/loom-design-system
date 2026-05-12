@@ -5,6 +5,12 @@ description: Create a new Loom Design System component with proper structure, ty
 
 # Loom Design System — Component Creator
 
+## Canonical Contract
+
+- Source of truth: `ai/contracts/component.contract.md`
+- Wrapper role: this file orchestrates requirement gathering and repo-specific file placement.
+- Change policy: update the contract first, then refine wrapper flow if required.
+
 You are creating a new component for the Loom Design System. Follow every step in order without skipping. When information is missing, ask before writing any files.
 
 ---

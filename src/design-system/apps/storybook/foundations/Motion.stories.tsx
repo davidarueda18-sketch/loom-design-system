@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../../package/tokens/color/color.tokens.css.ts';
 import { colorVars } from '../../../package/tokens/color/index.ts';
 import { motionVars } from '../../../package/tokens/motion/index.ts';
@@ -22,8 +21,7 @@ const resolveToken = (cssVar: string): string => {
 };
 
 const TokenValue = ({ cssVar }: { cssVar: string }) => {
-  const [value, setValue] = useState('');
-  useEffect(() => { setValue(resolveToken(cssVar)); }, [cssVar]);
+  const value = resolveToken(cssVar);
   return (
     <span style={{ fontSize: '13px', fontWeight: 600, color: colorVars.textSecondary, fontFamily: 'monospace' }}>
       {value || '—'}
@@ -124,7 +122,6 @@ const EasingRow = ({ tokenKey }: { tokenKey: keyof typeof motionVars }) => (
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Duration: Story = {
-  name: 'Duration',
   render: () => (
     <div style={{ padding: '24px' }}>
       <style>{`
@@ -148,7 +145,6 @@ export const Duration: Story = {
 };
 
 export const Easing: Story = {
-  name: 'Easing',
   render: () => (
     <div style={{ padding: '24px' }}>
       <style>{`

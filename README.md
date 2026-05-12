@@ -336,3 +336,30 @@ npm run release
 ```
 
 This runs `build:lib` followed by `npm publish --access public`.
+
+---
+
+## AI Workflow (Claude + Copilot)
+
+This repository uses a shared-contract model so Claude and Copilot behave consistently.
+
+### Canonical Contracts
+
+All generation laws live in `ai/contracts/`:
+
+- `ai/contracts/token.contract.md`
+- `ai/contracts/component.contract.md`
+- `ai/contracts/adapter-web-component.contract.md`
+- `ai/contracts/story.contract.md`
+
+### Wrappers
+
+- Claude wrappers live under `.claude/commands/` and `.claude/skills/`
+- Copilot wrappers live under `.github/prompts/`
+- Repo-level Copilot defaults are in `.github/copilot-instructions.md`
+
+Wrappers should orchestrate flow only. Mandatory behavior changes must be done in contracts first.
+
+### Execution Brief
+
+Use `ai/templates/execution-brief.md` as the standard handoff format from planning to implementation. This reduces repeated context and keeps output stable across tools.

@@ -16,11 +16,23 @@ class LoomText extends HTMLElement {
 
   // ─── Lifecycle ────────────────────────────────────────────────────────────
   connectedCallback() {
+    this.classList.add(styles.root);
     this._sync();
   }
 
   attributeChangedCallback() {
-    this._sync();
+    this._scheduleSync();
+  }
+
+  private _syncScheduled = false;
+
+  private _scheduleSync(): void {
+    if (this._syncScheduled) return;
+    this._syncScheduled = true;
+    requestAnimationFrame(() => {
+      this._syncScheduled = false;
+      this._sync();
+    });
   }
 
   // ─── State tracking (idempotent _sync) ───────────────────────────────────

@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../../package/tokens/color/color.tokens.css.ts';
 import '../../../package/tokens/palette/palette.tokens.css.ts';
 import { colorVars } from '../../../package/tokens/color/index.ts';
@@ -23,8 +22,7 @@ const resolveToken = (cssVar: string): string => {
 };
 
 const TokenValue = ({ cssVar }: { cssVar: string }) => {
-  const [value, setValue] = useState('');
-  useEffect(() => { setValue(resolveToken(cssVar)); }, [cssVar]);
+  const value = resolveToken(cssVar);
   return (
     <span style={{ fontSize: '10px', color: colorVars.textSecondary, fontFamily: 'monospace', marginTop: '2px', display: 'block' }}>
       {value || '—'}

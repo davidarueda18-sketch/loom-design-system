@@ -1,9 +1,12 @@
+/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Stack, STACK_ALIGNS, STACK_JUSTIFIES } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
+import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Stack',
@@ -76,7 +79,6 @@ export const Default: Story = {
 };
 
 export const Align: Story = {
-  name: 'Align',
   render: () => (
     <div style={{ padding: '24px' }}>
       <Stack gap="xl">
@@ -126,6 +128,33 @@ export const GapComparison: Story = {
           ))}
         </Stack>
       </StorySection>
+    </div>
+  ),
+};
+
+export const WebComponent: Story = {
+  args: {
+    gap: 'md',
+    align: 'stretch',
+    justify: 'start',
+  },
+  argTypes: {
+    gap: { control: 'select', options: Object.keys(spacingVars) },
+    align: { control: 'select', options: STACK_ALIGNS },
+    justify: { control: 'select', options: STACK_JUSTIFIES },
+  },
+  render: ({ gap, align, justify }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-stack
+        gap={gap as string}
+        align={align as string}
+        justify={justify as string}
+        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}
+      >
+        <Item wide>Elemento 1</Item>
+        <Item>Elemento 2</Item>
+        <Item wide>Elemento 3</Item>
+      </loom-stack>
     </div>
   ),
 };

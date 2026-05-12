@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../../package/tokens/color/color.tokens.css.ts';
 import { colorVars } from '../../../package/tokens/color/index.ts';
 import { applyTheme } from '../../../package/theme/index.ts';

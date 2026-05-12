@@ -1,3 +1,4 @@
+/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Inline, INLINE_ALIGNS, INLINE_JUSTIFIES } from '../../../../../package/ui/primitives/Inline/index.ts';
@@ -5,6 +6,8 @@ import { Stack } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Inline',
@@ -78,7 +81,6 @@ export const Default: Story = {
 };
 
 export const Align: Story = {
-  name: 'Align',
   render: () => (
     <div style={{ padding: '24px' }}>
       <Stack gap="md">
@@ -98,7 +100,6 @@ export const Align: Story = {
 };
 
 export const Justify: Story = {
-  name: 'Justify',
   render: () => (
     <div style={{ padding: '24px' }}>
       <Stack gap="md">
@@ -145,6 +146,37 @@ export const GapComparison: Story = {
           ))}
         </Stack>
       </StorySection>
+    </div>
+  ),
+};
+
+export const WebComponent: Story = {
+  args: {
+    gap: 'sm',
+    align: 'center',
+    justify: 'start',
+    wrap: false,
+  },
+  argTypes: {
+    gap: { control: 'select', options: Object.keys(spacingVars) },
+    align: { control: 'select', options: INLINE_ALIGNS },
+    justify: { control: 'select', options: INLINE_JUSTIFIES },
+    wrap: { control: 'boolean' },
+  },
+  render: ({ gap, align, justify, wrap }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-inline
+        gap={gap as string}
+        align={align as string}
+        justify={justify as string}
+        wrap={(wrap as boolean) || undefined}
+        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', maxWidth: '320px' }}
+      >
+        <Chip>React</Chip>
+        <Chip>TypeScript</Chip>
+        <Chip>Vite</Chip>
+        <Chip>Storybook</Chip>
+      </loom-inline>
     </div>
   ),
 };

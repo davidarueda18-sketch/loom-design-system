@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
 import { darkDocsTheme, lightDocsTheme } from './docs-theme';
@@ -5,15 +6,13 @@ import { darkDocsTheme, lightDocsTheme } from './docs-theme';
 // Shared object — mutated by the decorator to switch theme without re-creating the ref.
 const docsParams = { theme: darkDocsTheme, story: { inline: true } };
 
-const withTheme: Decorator = (Story, context) => {
-  const theme = (context.globals['theme'] as string) ?? 'dark';
-  const isLight = theme === 'light';
+type ThemeFrameProps = {
+  isLight: boolean;
+  viewMode: string;
+  children: React.ReactNode;
+};
 
-  // Sync Storybook's docs theme with the toolbar selection.
-  // Mutating the shared docsParams object updates all story instances consistently.
-  docsParams.theme = isLight ? lightDocsTheme : darkDocsTheme;
-  context.parameters['docs'] = docsParams;
-
+function ThemeFrame({ isLight, viewMode, children }: ThemeFrameProps) {
   useEffect(() => {
     if (isLight) {
       document.documentElement.setAttribute('data-theme', 'light');
@@ -32,13 +31,29 @@ const withTheme: Decorator = (Story, context) => {
     <div
       data-theme={isLight ? 'light' : undefined}
       style={{
-        minHeight: context.viewMode === 'story' ? '100vh' : undefined,
+        minHeight: viewMode === 'story' ? '100vh' : undefined,
         backgroundColor: isLight ? '#F6F6F6' : '#181818',
         color: isLight ? '#1A1A1A' : '#FFFFFF',
       }}
     >
-      <Story />
+      {children}
     </div>
+  );
+}
+
+const withTheme: Decorator = (Story, context) => {
+  const theme = (context.globals['theme'] as string) ?? 'dark';
+  const isLight = theme === 'light';
+
+  // Sync Storybook's docs theme with the toolbar selection.
+  // Mutating the shared docsParams object updates all story instances consistently.
+  docsParams.theme = isLight ? lightDocsTheme : darkDocsTheme;
+  context.parameters['docs'] = docsParams;
+
+  return (
+    <ThemeFrame isLight={isLight} viewMode={context.viewMode}>
+      <Story />
+    </ThemeFrame>
   );
 };
 

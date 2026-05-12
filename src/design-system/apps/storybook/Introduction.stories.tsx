@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import '../../package/tokens/color/color.tokens.css.ts';
 import { colorVars } from '../../package/tokens/color/index.ts';
 
@@ -26,7 +26,6 @@ const Card = ({ title, desc, badge }: { title: string; desc: string; badge: stri
 );
 
 export const Welcome: Story = {
-  name: 'Welcome',
   render: () => (
     <div style={{ fontFamily: 'sans-serif', maxWidth: '720px', padding: '32px' }}>
       <div style={{ marginBottom: '40px' }}>
