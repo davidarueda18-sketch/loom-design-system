@@ -5,6 +5,7 @@ import type { TextProps } from '../Text.types.ts';
 export function Text<T extends ElementType = 'p'>({
   as,
   variant,
+  align,
   children,
   className,
   ...props
@@ -13,7 +14,13 @@ export function Text<T extends ElementType = 'p'>({
 
   return (
     <Tag
-      className={[styles.variants[variant], className].filter(Boolean).join(' ')}
+      className={[
+        styles.variants[variant],
+        align != null ? styles.aligns[align] : undefined,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...(props as object)}
     >
       {children}

@@ -10,3 +10,10 @@ export const variants = styleVariants(typographyVars, (variant) => ({
   letterSpacing: variant.letterSpacing,
   margin: 0,
 }));
+
+export const aligns = styleVariants({
+  start:   { textAlign: 'start' },
+  center:  { textAlign: 'center' },
+  end:     { textAlign: 'end' },
+  justify: { textAlign: 'justify' },
+});

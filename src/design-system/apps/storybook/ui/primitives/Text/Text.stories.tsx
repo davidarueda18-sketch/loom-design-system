@@ -15,6 +15,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     variant: { control: 'select', options: Object.keys(typographyVars) },
+    align: { control: 'select', options: ['start', 'center', 'end', 'justify'] },
     as: {
       control: 'select',
       options: ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'figcaption'],
@@ -122,12 +123,14 @@ export const WebComponent: Story = {
   },
   argTypes: {
     variant: { control: 'select', options: Object.keys(typographyVars) },
+    align:   { control: 'select', options: ['start', 'center', 'end', 'justify'] },
     children: { control: 'text' },
   },
-  render: ({ variant, children }) => (
+  render: ({ variant, align, children }) => (
     <div style={{ padding: '24px' }}>
       <loom-text
         variant={variant as string}
+        align={align as string | undefined}
         style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}
       >
         {children as ReactNode}

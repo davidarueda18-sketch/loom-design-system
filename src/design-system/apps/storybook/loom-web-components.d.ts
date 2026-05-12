@@ -21,6 +21,7 @@ declare module 'react' {
       }, HTMLElement>;
       'loom-text': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
         variant?: string;
+        align?: string;
       }, HTMLElement>;
       'loom-button': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
         variant?: string;

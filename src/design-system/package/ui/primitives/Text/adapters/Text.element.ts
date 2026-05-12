@@ -3,7 +3,7 @@ import type { TypographyTokenKey } from '../../../../tokens/index.ts';
 
 class LoomText extends HTMLElement {
   // ─── Observed attributes (drives HTML / Vue reactivity) ──────────────────
-  static observedAttributes = ['variant'] as const;
+  static observedAttributes = ['variant', 'align'] as const;
 
   // ─── Getters / Setters (drives Angular / JS property reactivity) ─────────
   get variant(): TypographyTokenKey | null {
@@ -12,6 +12,14 @@ class LoomText extends HTMLElement {
   set variant(val: TypographyTokenKey | null) {
     if (val == null) this.removeAttribute('variant');
     else this.setAttribute('variant', val);
+  }
+
+  get align(): string | null {
+    return this.getAttribute('align');
+  }
+  set align(val: string | null) {
+    if (val == null) this.removeAttribute('align');
+    else this.setAttribute('align', val);
   }
 
   // ─── Lifecycle ────────────────────────────────────────────────────────────
@@ -38,11 +46,13 @@ class LoomText extends HTMLElement {
   // ─── State tracking (idempotent _sync) ───────────────────────────────────
   private _prev: Record<string, string | null> = {
     variant: null,
+    align: null,
   };
 
   // ─── Sync logic ───────────────────────────────────────────────────────────
   private _sync(): void {
     this._apply('variant', this.getAttribute('variant'), styles.variants as Record<string, string>);
+    this._apply('align', this.getAttribute('align'), styles.aligns as Record<string, string>);
   }
 
   private _apply(
