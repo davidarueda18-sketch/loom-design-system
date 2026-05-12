@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
-import type { Plugin } from 'vite';
-import type { PluginContext } from 'rollup';
+import type { Plugin, Rollup } from 'vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import dts from 'vite-plugin-dts';
 import path from 'node:path';
@@ -12,7 +11,7 @@ const dirname =
 
 const copyFontAssets: Plugin = {
   name: 'copy-font-assets',
-  generateBundle(this: PluginContext) {
+  generateBundle(this: Rollup.PluginContext) {
     const fontsCSS = fs.readFileSync(
       path.resolve(dirname, 'src/design-system/package/fonts/fonts.css'),
       'utf-8',
