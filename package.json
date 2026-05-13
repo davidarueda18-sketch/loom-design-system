@@ -21,6 +21,16 @@
       "import": "./dist/elements.mjs",
       "require": "./dist/elements.cjs"
     },
+    "./custom-elements": {
+      "types": "./dist/index.custom-elements.d.ts",
+      "import": "./dist/custom-elements.mjs",
+      "require": "./dist/custom-elements.cjs"
+    },
+    "./elements/*": {
+      "types": "./dist/elements/*.d.ts",
+      "import": "./dist/elements/*.mjs",
+      "require": "./dist/elements/*.cjs"
+    },
     "./style.css": "./dist/style.css",
     "./fonts.css": "./dist/fonts.css"
   },
@@ -31,7 +41,9 @@
     "dist/style.css",
     "dist/fonts.css",
     "dist/elements.mjs",
-    "dist/elements.cjs"
+    "dist/elements.cjs",
+    "dist/elements/*.mjs",
+    "dist/elements/*.cjs"
   ],
   "scripts": {
     "build:lib": "vite build --config vite.lib.config.ts",

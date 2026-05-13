@@ -9,6 +9,15 @@ import { fileURLToPath } from 'node:url';
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
+const elementEntries = Object.fromEntries(
+  fs.readdirSync(path.resolve(dirname, 'src/design-system/package/elements'))
+    .filter(f => f.endsWith('.ts'))
+    .map(f => [
+      `elements/${path.basename(f, '.ts')}`,
+      path.resolve(dirname, `src/design-system/package/elements/${f}`),
+    ])
+);
+
 const copyFontAssets: Plugin = {
   name: 'copy-font-assets',
   generateBundle(this: Rollup.PluginContext) {
@@ -43,9 +52,11 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index:    path.resolve(dirname, 'src/design-system/package/index.ts'),
-        core:     path.resolve(dirname, 'src/design-system/package/index.core.ts'),
-        elements: path.resolve(dirname, 'src/design-system/package/index.elements.ts'),
+        index:             path.resolve(dirname, 'src/design-system/package/index.ts'),
+        core:              path.resolve(dirname, 'src/design-system/package/index.core.ts'),
+        elements:          path.resolve(dirname, 'src/design-system/package/index.elements.ts'),
+        'custom-elements': path.resolve(dirname, 'src/design-system/package/index.custom-elements.ts'),
+        ...elementEntries,
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) =>
