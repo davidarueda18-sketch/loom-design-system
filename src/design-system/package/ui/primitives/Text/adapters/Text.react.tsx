@@ -1,6 +1,7 @@
 import type { ElementType } from 'react';
 import * as styles from '../Text.css.ts';
 import type { TextProps } from '../Text.types.ts';
+import { variantTokenMap } from '../Text.types.ts';
 
 export function Text<T extends ElementType = 'p'>({
   as,
@@ -15,7 +16,7 @@ export function Text<T extends ElementType = 'p'>({
   return (
     <Tag
       className={[
-        styles.variants[variant],
+        styles.variants[variantTokenMap[variant]],
         align != null ? styles.aligns[align] : undefined,
         className,
       ]

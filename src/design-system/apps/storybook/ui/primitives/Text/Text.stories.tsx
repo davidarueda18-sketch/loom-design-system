@@ -1,24 +1,26 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Text } from '../../../../../package/ui/primitives/Text/index.ts';
-import { typographyVars } from '../../../../../package/tokens/typography/index.ts';
+import { Text, variantTokenMap } from '../../../../../package/ui/primitives/Text/index.ts';
+import type { TextVariant } from '../../../../../package/ui/primitives/Text/index.ts';
 import { fontFamilyVars } from '../../../../../package/tokens/fontFamily/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Text/adapters/Text.element.ts';
 import '../../../loom-web-components.d.ts';
 
+const allVariants = Object.keys(variantTokenMap) as TextVariant[];
+
 const meta = {
   title: 'Primitives/Text',
   component: Text,
   tags: ['autodocs'],
   args: {
-    variant:  'bodyBase',
+    variant:  'body-md',
     children: 'Loom Design System',
   },
   argTypes: {
-    variant: { control: 'select', options: Object.keys(typographyVars) },
+    variant: { control: 'select', options: allVariants },
     align: { control: 'select', options: ['start', 'center', 'end', 'justify'] },
     as: {
       control: 'select',
@@ -45,7 +47,7 @@ const StorySection = ({ title, children }: { title: string; children: ReactNode 
   </div>
 );
 
-const TypeScaleRow = ({ variant }: { variant: keyof typeof typographyVars }) => (
+const TypeScaleRow = ({ variant }: { variant: TextVariant }) => (
   <div style={{
     display: 'flex', alignItems: 'baseline', gap: '24px',
     padding: '10px 0', borderBottom: `1px solid ${colorVars.borderSubtle}`,
@@ -80,7 +82,7 @@ export const TypeScale: Story = {
   render: () => (
     <div style={{ padding: '24px' }}>
       <StorySection title="Todas las variantes">
-        {(Object.keys(typographyVars) as Array<keyof typeof typographyVars>).map((variant) => (
+        {allVariants.map((variant) => (
           <TypeScaleRow key={variant} variant={variant} />
         ))}
       </StorySection>
@@ -94,7 +96,7 @@ export const Polymorphic: Story = {
     <div style={{ padding: '24px' }}>
       <StorySection title="as — elemento HTML semántico">
         <PolyRow>
-          <Text as="label" variant="labelBase" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textSecondary }}>
+          <Text as="label" variant="label-md" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textSecondary }}>
             as="label" — etiqueta de campo
           </Text>
         </PolyRow>
@@ -104,12 +106,12 @@ export const Polymorphic: Story = {
           </Text>
         </PolyRow>
         <PolyRow>
-          <Text as="span" variant="bodySm" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
+          <Text as="span" variant="body-sm" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
             as="span" — inline text
           </Text>
         </PolyRow>
         <PolyRow>
-          <Text as="h1" variant="headingH1" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
+          <Text as="h1" variant="heading-1" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
             as="h1" — encabezado semántico
           </Text>
         </PolyRow>
@@ -120,12 +122,12 @@ export const Polymorphic: Story = {
 
 export const WebComponent: Story = {
   args: {
-    variant: 'bodyBase',
+    variant: 'body-md',
     children: 'Loom Design System',
   },
   argTypes: {
-    variant: { control: 'select', options: Object.keys(typographyVars) },
-    align:   { control: 'select', options: ['start', 'center', 'end', 'justify'] },
+    variant:  { control: 'select', options: allVariants },
+    align:    { control: 'select', options: ['start', 'center', 'end', 'justify'] },
     children: { control: 'text' },
   },
   render: ({ variant, align, children }) => (

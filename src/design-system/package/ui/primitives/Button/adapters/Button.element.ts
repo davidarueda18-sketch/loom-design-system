@@ -1,12 +1,13 @@
 import * as styles from '../Button.css.ts';
 import * as textStyles from '../../Text/Text.css.ts';
 import type { ButtonVariant, ButtonSize } from '../Button.types.ts';
-import type { TypographyTokenKey } from '../../../../tokens/index.ts';
+import type { TextVariant } from '../../Text/Text.types.ts';
+import { variantTokenMap } from '../../Text/Text.types.ts';
 
-const labelVariant: Record<ButtonSize, TypographyTokenKey> = {
-  sm: 'labelSm',
-  md: 'labelBase',
-  lg: 'labelLg',
+const labelVariant: Record<ButtonSize, TextVariant> = {
+  sm: 'label-sm',
+  md: 'label-md',
+  lg: 'label-lg',
 };
 
 const _sheetCache: Record<string, CSSStyleSheet | null> = {};
@@ -43,7 +44,7 @@ function getVESheet(anchorClass: string): CSSStyleSheet | null {
 function getVEAdoptedStyleSheets(): CSSStyleSheet[] {
   const sheets = [
     getVESheet(styles.root),
-    getVESheet(textStyles.variants[labelVariant.md]),
+    getVESheet(textStyles.variants[variantTokenMap[labelVariant.md]]),
   ].filter((sheet): sheet is CSSStyleSheet => sheet != null);
   return Array.from(new Set(sheets));
 }
@@ -181,10 +182,11 @@ class LoomButton extends HTMLElement {
     this._apply(this._inner, 'size', sizeKey, styles.size as Record<string, string>);
     this._inner.disabled = this.hasAttribute('disabled');
 
-    const typographyKey: TypographyTokenKey = sizeKey in labelVariant
+    const textVariant = sizeKey in labelVariant
       ? labelVariant[sizeKey as ButtonSize]
       : labelVariant.md;
-    this._apply(this._label, 'typographyKey', typographyKey, textStyles.variants as Record<string, string>);
+    const tokenKey = variantTokenMap[textVariant];
+    this._apply(this._label, 'typographyKey', tokenKey, textStyles.variants as Record<string, string>);
 
     this._syncA11y();
   }

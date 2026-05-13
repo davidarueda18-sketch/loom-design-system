@@ -7,7 +7,8 @@ import { fontWeightVars } from '../../../package/tokens/fontWeight/index.ts';
 import { lineHeightVars } from '../../../package/tokens/lineHeight/index.ts';
 import { letterSpacingVars } from '../../../package/tokens/letterSpacing/index.ts';
 import { typographyVars } from '../../../package/tokens/typography/index.ts';
-import { Text } from '../../../package/ui/primitives/Text/index.ts';
+import { Text, variantTokenMap } from '../../../package/ui/primitives/Text/index.ts';
+import type { TextVariant } from '../../../package/ui/primitives/Text/index.ts';
 
 const meta = {
   title: 'Foundations/Typography',
@@ -53,7 +54,7 @@ const LETTER_SPACING_FIGMA: Partial<Record<keyof typeof letterSpacingVars, strin
 
 // TypeScale grouping — prefix-based, not a list of token keys
 const SCALE_PREFIXES = ['display', 'heading', 'body', 'label'] as const;
-const allScaleKeys = Object.keys(typographyVars) as Array<keyof typeof typographyVars>;
+const allScaleKeys = Object.keys(variantTokenMap) as TextVariant[];
 const scaleSections = SCALE_PREFIXES.map((prefix) => ({
   label: prefix.charAt(0).toUpperCase() + prefix.slice(1),
   keys: allScaleKeys.filter((k) => k.startsWith(prefix)),
@@ -87,7 +88,7 @@ const TokenRowWithValue = ({ label, valueVar, children }: { label: string; value
   </div>
 );
 
-const TypeScaleRow = ({ variant }: { variant: keyof typeof typographyVars }) => (
+const TypeScaleRow = ({ variant }: { variant: TextVariant }) => (
   <div style={{ padding: '12px 0', borderBottom: `1px solid ${colorVars.borderSubtle}` }}>
     <div style={{ fontSize: '11px', color: colorVars.textSecondary, fontFamily: 'monospace', marginBottom: '4px' }}>
       {variant}

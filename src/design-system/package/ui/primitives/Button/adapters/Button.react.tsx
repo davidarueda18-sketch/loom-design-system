@@ -2,12 +2,12 @@ import type { ElementType } from 'react';
 import * as styles from '../Button.css.ts';
 import type { ButtonProps, ButtonSize } from '../Button.types.ts';
 import { Text } from '../../Text/index.ts';
-import type { TypographyTokenKey } from '../../../../tokens/index.ts';
+import type { TextVariant } from '../../Text/index.ts';
 
-const labelVariant: Record<ButtonSize, TypographyTokenKey> = {
-  sm: 'labelSm',
-  md: 'labelBase',
-  lg: 'labelLg',
+const labelVariant: Record<ButtonSize, TextVariant> = {
+  sm: 'label-sm',
+  md: 'label-md',
+  lg: 'label-lg',
 };
 
 export function Button<T extends ElementType = 'button'>({

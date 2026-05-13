@@ -1,15 +1,24 @@
 import * as styles from '../Text.css.ts';
+import type { TextVariant } from '../Text.types.ts';
+import { variantTokenMap } from '../Text.types.ts';
 import type { TypographyTokenKey } from '../../../../tokens/index.ts';
+
+// Pre-compute TextVariant → CSS class map so _apply can do a direct key lookup
+const variantClassMap: Record<string, string> = Object.fromEntries(
+  (Object.entries(variantTokenMap) as [TextVariant, TypographyTokenKey][]).map(
+    ([v, k]) => [v, styles.variants[k]],
+  ),
+);
 
 class LoomText extends HTMLElement {
   // ─── Observed attributes (drives HTML / Vue reactivity) ──────────────────
   static observedAttributes = ['variant', 'align'] as const;
 
   // ─── Getters / Setters (drives Angular / JS property reactivity) ─────────
-  get variant(): TypographyTokenKey | null {
-    return this.getAttribute('variant') as TypographyTokenKey | null;
+  get variant(): TextVariant | null {
+    return this.getAttribute('variant') as TextVariant | null;
   }
-  set variant(val: TypographyTokenKey | null) {
+  set variant(val: TextVariant | null) {
     if (val == null) this.removeAttribute('variant');
     else this.setAttribute('variant', val);
   }
@@ -51,7 +60,7 @@ class LoomText extends HTMLElement {
 
   // ─── Sync logic ───────────────────────────────────────────────────────────
   private _sync(): void {
-    this._apply('variant', this.getAttribute('variant'), styles.variants as Record<string, string>);
+    this._apply('variant', this.getAttribute('variant'), variantClassMap);
     this._apply('align', this.getAttribute('align'), styles.aligns as Record<string, string>);
   }
 
