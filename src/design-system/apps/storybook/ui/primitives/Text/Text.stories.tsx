@@ -13,6 +13,10 @@ const meta = {
   title: 'Primitives/Text',
   component: Text,
   tags: ['autodocs'],
+  args: {
+    variant:  'bodyBase',
+    children: 'Loom Design System',
+  },
   argTypes: {
     variant: { control: 'select', options: Object.keys(typographyVars) },
     align: { control: 'select', options: ['start', 'center', 'end', 'justify'] },
@@ -68,9 +72,7 @@ const PolyRow = ({ children }: { children: ReactNode }) => (
 
 export const Default: Story = {
   args: {
-    variant:  'bodyBase',
-    children: 'Loom Design System',
-    style:    { fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary },
+    style: { fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary },
   },
 };
 
