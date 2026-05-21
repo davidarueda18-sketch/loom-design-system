@@ -12,3 +12,6 @@ export type { TextProps } from './Text/index.ts';
 
 export { Button } from './Button/index.ts';
 export type { ButtonProps, ButtonVariant, ButtonSize } from './Button/index.ts';
+
+export { Link } from './Link/index.ts';
+export type { LinkProps, LinkColor, LinkUnderline } from './Link/index.ts';

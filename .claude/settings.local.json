@@ -15,7 +15,17 @@
       "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\App.css\" -Force)",
       "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\main.tsx\" -Force)",
       "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\src\\\\index.css\" -Force)",
-      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\index.html\" -Force)"
+      "Bash(Remove-Item \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\SDC\\\\loom-design-system\\\\index.html\" -Force)",
+      "mcp__claude_ai_Figma__whoami",
+      "mcp__claude_ai_Figma__get_metadata",
+      "mcp__figma__figma_execute",
+      "Skill(component)",
+      "Skill(component:*)",
+      "mcp__claude_ai_Figma__get_code_connect_suggestions",
+      "mcp__claude_ai_Figma__send_code_connect_mappings",
+      "Skill(story)",
+      "Skill(story:*)",
+      "mcp__figma__figma_reconnect"
     ]
   }
 }
