@@ -18,3 +18,6 @@ export type { LinkProps, LinkColor, LinkUnderline } from './Link/index.ts';
 
 export { Icon, ICON_SIZES } from './Icon/index.ts';
 export type { IconProps, IconSize, IconColor } from './Icon/index.ts';
+
+export { Divider, DIVIDER_ORIENTATIONS, DIVIDER_LABEL_POSITIONS, DIVIDER_COLORS, DIVIDER_THICKNESSES, DIVIDER_LINE_STYLES } from './Divider/index.ts';
+export type { DividerProps, DividerOrientation, DividerLabelPosition, DividerColor, DividerThickness, DividerLineStyle } from './Divider/index.ts';

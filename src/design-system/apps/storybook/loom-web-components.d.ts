@@ -33,6 +33,14 @@ declare module 'react' {
         color?: string;
         label?: string;
       }, HTMLElement>;
+      'loom-divider': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        orientation?:      string;
+        label?:            string;
+        'label-position'?: string;
+        color?:            string;
+        thickness?:        string;
+        'line-style'?:     string;
+      }, HTMLElement>;
     }
   }
 }

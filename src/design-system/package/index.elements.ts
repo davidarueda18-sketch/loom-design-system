@@ -13,4 +13,5 @@ export { LoomStack } from './ui/primitives/Stack/adapters/Stack.element.ts';
 export { LoomInline } from './ui/primitives/Inline/adapters/Inline.element.ts';
 export { LoomText } from './ui/primitives/Text/adapters/Text.element.ts';
 export { LoomButton } from './ui/primitives/Button/adapters/Button.element.ts';
-export { LoomIcon } from './ui/primitives/Icon/adapters/Icon.element.ts';
+export { LoomIcon }    from './ui/primitives/Icon/adapters/Icon.element.ts';
+export { LoomDivider } from './ui/primitives/Divider/adapters/Divider.element.ts';
