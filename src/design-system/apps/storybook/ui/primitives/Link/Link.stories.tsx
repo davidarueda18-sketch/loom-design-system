@@ -1,7 +1,8 @@
 import type { ReactNode, CSSProperties } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 import { Link, LINK_COLORS, LINK_UNDERLINES } from '../../../../../package/ui/primitives/Link/index.ts';
-import type { LinkColor, LinkUnderline } from '../../../../../package/ui/primitives/Link/index.ts';
+import type { LinkUnderline } from '../../../../../package/ui/primitives/Link/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 
@@ -87,6 +88,17 @@ export const Default: Story = {
     underline: 'always',
     href:      '#',
     children:  'Ir a la documentación',
+  },
+  play: async ({ canvasElement }) => {
+    const link = canvasElement.querySelector('a');
+    if (!(link instanceof HTMLAnchorElement)) {
+      throw new Error('Expected the default Link story to render an anchor element.');
+    }
+
+    await expect(link).toBeInTheDocument();
+    await expect(link.textContent).toContain('Ir a la documentación');
+    await expect(link.getAttribute('href')).toBe('#');
+    await expect(link.className.length).toBeGreaterThan(0);
   },
 };
 

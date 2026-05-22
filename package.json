@@ -50,7 +50,8 @@
     "release": "npm run build:lib && npm publish --access public",
     "lint": "eslint .",
     "storybook": "storybook dev -p 6007",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "vitest run --project storybook"
   },
   "peerDependencies": {
     "react": ">=19",

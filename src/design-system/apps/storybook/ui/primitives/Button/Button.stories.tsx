@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type * as React from 'react';
 import type { ReactNode, CSSProperties } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Button, BUTTON_VARIANTS, BUTTON_SIZES } from '../../../../../package/ui/primitives/Button/index.ts';
 import type { ButtonVariant } from '../../../../../package/ui/primitives/Button/index.ts';

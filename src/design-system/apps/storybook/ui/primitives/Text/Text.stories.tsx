@@ -1,6 +1,6 @@
-/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import { Text, variantTokenMap } from '../../../../../package/ui/primitives/Text/index.ts';
 import type { TextVariant } from '../../../../../package/ui/primitives/Text/index.ts';
 import { fontFamilyVars } from '../../../../../package/tokens/fontFamily/index.ts';
@@ -141,4 +141,18 @@ export const WebComponent: Story = {
       </loom-text>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const host = canvasElement.querySelector('loom-text');
+    if (!(host instanceof HTMLElement)) {
+      throw new Error('Expected a loom-text host in the story canvas.');
+    }
+
+    await expect(host).toBeInTheDocument();
+    await expect(host.getAttribute('variant')).toBe('body-md');
+    await expect(host.textContent).toContain('Loom Design System');
+
+    await waitFor(async () => {
+      await expect(host.classList.length).toBeGreaterThan(1);
+    });
+  },
 };

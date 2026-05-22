@@ -6,7 +6,6 @@ import { fontSizeVars } from '../../../package/tokens/fontSize/index.ts';
 import { fontWeightVars } from '../../../package/tokens/fontWeight/index.ts';
 import { lineHeightVars } from '../../../package/tokens/lineHeight/index.ts';
 import { letterSpacingVars } from '../../../package/tokens/letterSpacing/index.ts';
-import { typographyVars } from '../../../package/tokens/typography/index.ts';
 import { Text, variantTokenMap } from '../../../package/ui/primitives/Text/index.ts';
 import type { TextVariant } from '../../../package/ui/primitives/Text/index.ts';
 

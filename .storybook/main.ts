@@ -5,7 +5,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/design-system/apps/storybook/**/*.stories.@(ts|tsx)',
   ],
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: '@storybook/react-vite',
   async viteFinal(config) {
     config.plugins = [...(config.plugins ?? []), vanillaExtractPlugin()];

@@ -1,6 +1,6 @@
-/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import { Stack, STACK_ALIGNS, STACK_JUSTIFIES } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
@@ -157,4 +157,20 @@ export const WebComponent: Story = {
       </loom-stack>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const host = canvasElement.querySelector('loom-stack');
+    if (!(host instanceof HTMLElement)) {
+      throw new Error('Expected a loom-stack host in the story canvas.');
+    }
+
+    await expect(host).toBeInTheDocument();
+    await expect(host.getAttribute('gap')).toBe('md');
+    await expect(host.getAttribute('align')).toBe('stretch');
+    await expect(host.getAttribute('justify')).toBe('start');
+    await expect(host.textContent ?? '').toContain('Elemento 3');
+
+    await waitFor(async () => {
+      await expect(host.classList.length).toBeGreaterThan(1);
+    });
+  },
 };

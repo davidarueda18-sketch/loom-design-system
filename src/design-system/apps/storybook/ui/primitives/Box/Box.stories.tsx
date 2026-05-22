@@ -1,6 +1,6 @@
-/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import { Box } from '../../../../../package/ui/primitives/Box/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
@@ -124,4 +124,20 @@ export const WebComponent: Story = {
       </loom-box>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const host = canvasElement.querySelector('loom-box');
+    if (!(host instanceof HTMLElement)) {
+      throw new Error('Expected a loom-box host in the story canvas.');
+    }
+
+    await expect(host).toBeInTheDocument();
+    await expect(host.getAttribute('padding')).toBe('md');
+    await expect(host.getAttribute('padding-x')).toBe('xl');
+    await expect(host.getAttribute('padding-y')).toBe('sm');
+    await expect(host.textContent ?? '').toContain('loom-box con atributos reactivos');
+
+    await waitFor(async () => {
+      await expect(host.classList.length).toBeGreaterThan(1);
+    });
+  },
 };

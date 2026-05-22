@@ -1,6 +1,6 @@
-/* eslint-disable storybook/no-renderer-packages */
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import { Inline, INLINE_ALIGNS, INLINE_JUSTIFIES } from '../../../../../package/ui/primitives/Inline/index.ts';
 import { Stack } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
@@ -179,4 +179,21 @@ export const WebComponent: Story = {
       </loom-inline>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const host = canvasElement.querySelector('loom-inline');
+    if (!(host instanceof HTMLElement)) {
+      throw new Error('Expected a loom-inline host in the story canvas.');
+    }
+
+    await expect(host).toBeInTheDocument();
+    await expect(host.getAttribute('gap')).toBe('sm');
+    await expect(host.getAttribute('align')).toBe('center');
+    await expect(host.getAttribute('justify')).toBe('start');
+    await expect(host.hasAttribute('wrap')).toBe(false);
+    await expect(host.textContent ?? '').toContain('Storybook');
+
+    await waitFor(async () => {
+      await expect(host.classList.length).toBeGreaterThan(1);
+    });
+  },
 };
