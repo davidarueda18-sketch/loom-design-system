@@ -42,3 +42,6 @@ export type { TypographyTokenKey } from './typography/index.ts';
 
 export { motionVars } from './motion/index.ts';
 export type { MotionTokenKey } from './motion/index.ts';
+
+export { progressVars } from './progress/index.ts';
+export type { ProgressTokenKey } from './progress/index.ts';

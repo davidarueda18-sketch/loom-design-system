@@ -21,3 +21,6 @@ export type { IconProps, IconSize, IconColor } from './Icon/index.ts';
 
 export { Divider, DIVIDER_ORIENTATIONS, DIVIDER_LABEL_POSITIONS, DIVIDER_COLORS, DIVIDER_THICKNESSES, DIVIDER_LINE_STYLES } from './Divider/index.ts';
 export type { DividerProps, DividerOrientation, DividerLabelPosition, DividerColor, DividerThickness, DividerLineStyle } from './Divider/index.ts';
+
+export { ProgressLinear, ProgressCircular, PROGRESS_THICKNESSES, PROGRESS_SHAPES, PROGRESS_CIRCULAR_SIZES, PROGRESS_COLORS } from './Progress/index.ts';
+export type { ProgressLinearProps, ProgressCircularProps, ProgressThickness, ProgressShape, ProgressCircularSize, ProgressColor } from './Progress/index.ts';

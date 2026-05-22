@@ -41,6 +41,26 @@ declare module 'react' {
         thickness?:        string;
         'line-style'?:     string;
       }, HTMLElement>;
+      'loom-progress-linear': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        value?:         number | string;
+        max?:           number | string;
+        indeterminate?: boolean;
+        thickness?:     string;
+        color?:         string;
+        shape?:         string;
+        label?:         string;
+        'show-value'?:  boolean;
+      }, HTMLElement>;
+      'loom-progress-circular': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        value?:         number | string;
+        max?:           number | string;
+        indeterminate?: boolean;
+        thickness?:     string;
+        size?:          string;
+        color?:         string;
+        label?:         string;
+        'show-value'?:  boolean;
+      }, HTMLElement>;
     }
   }
 }
