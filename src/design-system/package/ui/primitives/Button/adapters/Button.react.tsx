@@ -1,14 +1,6 @@
 import type { ElementType } from 'react';
 import * as styles from '../Button.css.ts';
-import type { ButtonProps, ButtonSize } from '../Button.types.ts';
-import { Text } from '../../Text/index.ts';
-import type { TextVariant } from '../../Text/index.ts';
-
-const labelVariant: Record<ButtonSize, TextVariant> = {
-  sm: 'label-sm',
-  md: 'label-md',
-  lg: 'label-lg',
-};
+import type { ButtonProps } from '../Button.types.ts';
 
 export function Button<T extends ElementType = 'button'>({
   as,
@@ -26,9 +18,7 @@ export function Button<T extends ElementType = 'button'>({
         .join(' ')}
       {...(props as object)}
     >
-      <Text as="span" variant={labelVariant[size]}>
-        {children}
-      </Text>
+      {children}
     </Tag>
   );
 }

@@ -15,3 +15,6 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from './Button/index.ts';
 
 export { Link } from './Link/index.ts';
 export type { LinkProps, LinkColor, LinkUnderline } from './Link/index.ts';
+
+export { Icon, ICON_SIZES } from './Icon/index.ts';
+export type { IconProps, IconSize, IconColor } from './Icon/index.ts';

@@ -28,6 +28,11 @@ declare module 'react' {
         size?: string;
         disabled?: boolean;
       }, HTMLElement>;
+      'loom-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        size?: string;
+        color?: string;
+        label?: string;
+      }, HTMLElement>;
     }
   }
 }

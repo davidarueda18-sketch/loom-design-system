@@ -1,5 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css';
-import { colorVars } from '../../../tokens/index.ts';
+import { colorVars, typographyVars } from '../../../tokens/index.ts';
 
 export const host = style({
   display: 'inline-flex',
@@ -83,7 +83,25 @@ export const variant = styleVariants({
 });
 
 export const size = styleVariants({
-  sm: { height: '28px', padding: '6px 16px', borderRadius: '6px' },
-  md: { height: '36px', padding: '8px 16px', borderRadius: '8px' },
-  lg: { height: '44px', padding: '12px 24px', borderRadius: '8px' },
+  sm: {
+    height: '28px', padding: '6px 16px', borderRadius: '6px',
+    fontSize: typographyVars.labelSm.fontSize,
+    fontWeight: typographyVars.labelSm.fontWeight,
+    lineHeight: typographyVars.labelSm.lineHeight,
+    letterSpacing: typographyVars.labelSm.letterSpacing,
+  },
+  md: {
+    height: '36px', padding: '8px 16px', borderRadius: '8px',
+    fontSize: typographyVars.labelBase.fontSize,
+    fontWeight: typographyVars.labelBase.fontWeight,
+    lineHeight: typographyVars.labelBase.lineHeight,
+    letterSpacing: typographyVars.labelBase.letterSpacing,
+  },
+  lg: {
+    height: '44px', padding: '12px 24px', borderRadius: '8px',
+    fontSize: typographyVars.labelLg.fontSize,
+    fontWeight: typographyVars.labelLg.fontWeight,
+    lineHeight: typographyVars.labelLg.lineHeight,
+    letterSpacing: typographyVars.labelLg.letterSpacing,
+  },
 });

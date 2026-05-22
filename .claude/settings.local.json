@@ -25,7 +25,12 @@
       "mcp__claude_ai_Figma__send_code_connect_mappings",
       "Skill(story)",
       "Skill(story:*)",
-      "mcp__figma__figma_reconnect"
+      "mcp__figma__figma_reconnect",
+      "mcp__figma__figma_list_open_files",
+      "mcp__figma__figma_get_selection",
+      "mcp__figma__figma_get_design_system_summary",
+      "mcp__figma__figma_get_component",
+      "Bash(npm run *)"
     ]
   }
 }
