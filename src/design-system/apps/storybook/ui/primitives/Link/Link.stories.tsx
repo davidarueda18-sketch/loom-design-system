@@ -1,13 +1,21 @@
 import { useCallback, useState } from 'react';
-import type * as React from 'react';
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Link, LINK_COLORS, LINK_UNDERLINES } from '../../../../../package/ui/primitives/Link/index.ts';
+import type { LinkColor, LinkUnderline } from '../../../../../package/ui/primitives/Link/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Link/adapters/Link.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface LinkStoryArgs {
+  color: LinkColor;
+  underline: LinkUnderline;
+  href: string;
+  label: string;
+  disabled?: boolean;
+}
 
 const meta = {
   title: 'Primitives/Link',
@@ -47,10 +55,10 @@ React también puede usar \`<loom-link>\` directamente o el wrapper opcional \`<
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<LinkStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<LinkStoryArgs>;
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
   <div style={{ marginBottom: '40px' }}>
@@ -195,7 +203,7 @@ export const CustomEvents: Story = {
   render: () => {
     const [log, setLog] = useState<string[]>([]);
 
-    const handleRef = useCallback((el: HTMLElement | null) => {
+    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-link'] | null) => {
       if (!el) return;
 
       const handleClick = (event: Event) => {
@@ -216,7 +224,7 @@ export const CustomEvents: Story = {
 
     return (
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <loom-link href="#" color="default" underline="always" ref={handleRef as React.Ref<HTMLElement>}>
+        <loom-link href="#" color="default" underline="always" ref={handleRef}>
           Trigger events
         </loom-link>
         <div style={{
