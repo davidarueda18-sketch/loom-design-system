@@ -10,10 +10,14 @@ import '../../../../../package/ui/primitives/Text/adapters/Text.element.ts';
 import '../../../loom-web-components.d.ts';
 
 const allVariants = Object.keys(variantTokenMap) as TextVariant[];
+const textImplementationCode = `import '@loom-sdc/design-system/elements';
+
+<loom-text variant="body-md" align="start">
+  Loom Design System
+</loom-text>`;
 
 const meta = {
   title: 'Primitives/Text',
-  component: Text,
   tags: ['autodocs'],
   args: {
     variant:  'body-md',
@@ -22,17 +26,38 @@ const meta = {
   argTypes: {
     variant: { control: 'select', options: allVariants },
     align: { control: 'select', options: ['start', 'center', 'end', 'justify'] },
-    as: {
-      control: 'select',
-      options: ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'figcaption'],
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Text** es el primitive canónico para aplicar variantes tipográficas tokenizadas.
+
+\`\`\`html
+<script type="module" src="@loom-sdc/design-system/elements"></script>
+
+<loom-text variant="body-md" align="start">
+  Loom Design System
+</loom-text>
+\`\`\`
+
+El wrapper React \`<Text />\` renderiza internamente \`<loom-text>\`.
+        `.trim(),
+      },
     },
   },
-} satisfies Meta<typeof Text>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+const Canvas = ({ children, maxWidth = 680 }: { children: ReactNode; maxWidth?: number }) => (
+  <div style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
+    {children}
+  </div>
+);
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
   <div style={{ marginBottom: '32px' }}>
@@ -64,18 +89,28 @@ const TypeScaleRow = ({ variant }: { variant: TextVariant }) => (
   </div>
 );
 
-const PolyRow = ({ children }: { children: ReactNode }) => (
-  <div style={{ padding: '6px 0', borderBottom: `1px solid ${colorVars.borderSubtle}` }}>
-    {children}
-  </div>
-);
-
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
   args: {
     style: { fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary },
   },
+  parameters: {
+    docs: {
+      source: { code: '<loom-text variant="body-md" align="start">Loom Design System</loom-text>' },
+    },
+  },
+  render: ({ variant, align, children }) => (
+    <Canvas>
+      <loom-text
+        variant={variant as string}
+        align={align as string | undefined}
+        style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary, overflowWrap: 'anywhere' }}
+      >
+        {children as ReactNode}
+      </loom-text>
+    </Canvas>
+  ),
 };
 
 export const TypeScale: Story = {
@@ -90,33 +125,41 @@ export const TypeScale: Story = {
   ),
 };
 
-export const Polymorphic: Story = {
-  name: 'Polimórfico (as)',
+export const ReactWrapper: Story = {
+  name: 'Wrapper React',
+  parameters: {
+    docs: {
+      description: {
+        story: 'El wrapper React mantiene ergonomía JSX, pero renderiza el mismo custom element `loom-text` que la API canónica.',
+      },
+      source: { code: '<Text variant="body-md">Loom Design System</Text>' },
+    },
+  },
   render: () => (
-    <div style={{ padding: '24px' }}>
-      <StorySection title="as — elemento HTML semántico">
-        <PolyRow>
-          <Text as="label" variant="label-md" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textSecondary }}>
-            as="label" — etiqueta de campo
-          </Text>
-        </PolyRow>
-        <PolyRow>
-          <Text as="figcaption" variant="caption" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textSecondary }}>
-            as="figcaption" — pie de imagen
-          </Text>
-        </PolyRow>
-        <PolyRow>
-          <Text as="span" variant="body-sm" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
-            as="span" — inline text
-          </Text>
-        </PolyRow>
-        <PolyRow>
-          <Text as="h1" variant="heading-1" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
-            as="h1" — encabezado semántico
-          </Text>
-        </PolyRow>
-      </StorySection>
-    </div>
+    <Canvas>
+      <Text variant="body-md" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
+        Loom Design System desde React
+      </Text>
+    </Canvas>
+  ),
+};
+
+export const Implementation: Story = {
+  name: 'Implementación',
+  parameters: {
+    docs: {
+      description: {
+        story: '`variant` selecciona una entrada de la escala tipográfica y `align` aplica alineación de texto sin duplicar valores CSS.',
+      },
+      source: { code: textImplementationCode },
+    },
+  },
+  render: () => (
+    <Canvas>
+      <loom-text variant="body-md" align="start" style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
+        Loom Design System
+      </loom-text>
+    </Canvas>
   ),
 };
 
@@ -131,15 +174,15 @@ export const WebComponent: Story = {
     children: { control: 'text' },
   },
   render: ({ variant, align, children }) => (
-    <div style={{ padding: '24px' }}>
+    <Canvas>
       <loom-text
         variant={variant as string}
         align={align as string | undefined}
-        style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}
+        style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary, overflowWrap: 'anywhere' }}
       >
         {children as ReactNode}
       </loom-text>
-    </div>
+    </Canvas>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-text');

@@ -26,7 +26,6 @@ const COLOR_OPTIONS = [
 
 const meta = {
   title: 'Primitives/Icon',
-  component: Icon,
   tags: ['autodocs'],
   args: {
     size: 'md',
@@ -41,14 +40,18 @@ const meta = {
     docs: {
       description: {
         component: `
-Wrapper agnóstico de íconos. Controla tamaño y color; el SVG se inyecta como \`children\` (React) o \`<slot>\` (Web Component).
+Wrapper agnóstico de íconos canónico como Web Component. Controla tamaño y color; el SVG se inyecta en el slot.
 
 **Sin dependencias de librería de íconos en el bundle** — el DS no importa Heroicons ni ningún otro set. El consumidor pasa el SVG directamente y obtiene tree-shaking nativo.
 
-\`\`\`tsx
+\`\`\`html
 import { BellIcon } from '@heroicons/react/24/outline';
-<Icon size="md"><BellIcon /></Icon>
+<loom-icon size="md">
+  <BellIcon />
+</loom-icon>
 \`\`\`
+
+El wrapper React \`<Icon />\` renderiza internamente \`<loom-icon>\`.
 
 El color se controla con la prop \`color\` (token semántico) o se hereda del padre vía \`currentColor\`.
 Para íconos informativos, pasa \`label\` para activar \`role="img"\`; omítelo en íconos decorativos (\`aria-hidden\`).
@@ -56,7 +59,7 @@ Para íconos informativos, pasa \`label\` para activar \`role="img"\`; omítelo 
       },
     },
   },
-} satisfies Meta<typeof Icon>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -97,6 +100,21 @@ export const Default: Story = {
   args: {
     size: 'md',
     children: <BellIcon />,
+  },
+  render: (args) => {
+    const { size, color, label, children } = args as {
+      size?: string;
+      color?: string;
+      label?: string;
+      children?: ReactNode;
+    };
+    return (
+      <div style={{ padding: '24px' }}>
+        <loom-icon size={size} color={color} label={label}>
+          {children}
+        </loom-icon>
+      </div>
+    );
   },
 };
 

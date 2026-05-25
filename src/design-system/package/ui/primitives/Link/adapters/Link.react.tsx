@@ -1,5 +1,5 @@
+import './Link.element.ts';
 import type { ElementType } from 'react';
-import * as styles from '../Link.css.ts';
 import type { LinkProps } from '../Link.types.ts';
 
 export function Link<T extends ElementType = 'a'>({
@@ -10,12 +10,12 @@ export function Link<T extends ElementType = 'a'>({
   className,
   ...props
 }: LinkProps<T>) {
-  const Tag = (as ?? 'a') as ElementType;
+  const Tag = (as ?? 'loom-link') as ElementType;
   return (
     <Tag
-      className={[styles.root, styles.color[color], styles.underline[underline], className]
-        .filter(Boolean)
-        .join(' ')}
+      color={color}
+      underline={underline}
+      className={className}
       {...(props as object)}
     >
       {children}

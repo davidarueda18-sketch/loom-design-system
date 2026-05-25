@@ -1,9 +1,9 @@
+import './Fab.element.ts';
 import type { ElementType } from 'react';
-import * as styles from '../Fab.css.ts';
 import type { FabProps } from '../Fab.types.ts';
 
 export function Fab<T extends ElementType = 'button'>({
-  as,
+  as: _as,
   size = 'md',
   content = 'icon',
   label,
@@ -12,21 +12,18 @@ export function Fab<T extends ElementType = 'button'>({
   className,
   ...props
 }: FabProps<T>) {
-  const Tag = (as ?? 'button') as ElementType;
+  void _as;
+  const Tag = 'loom-fab' as ElementType;
   return (
     <Tag
-      aria-label={content === 'icon' ? label : undefined}
+      size={size}
+      content={content}
+      label={label}
       disabled={disabled}
-      className={[styles.root, styles.size[size], className]
-        .filter(Boolean)
-        .join(' ')}
+      className={className}
       {...(props as object)}
     >
-      {content === 'icon' ? (
-        <span aria-hidden="true">{icon}</span>
-      ) : (
-        <span className={styles.textLabel[size]}>{label}</span>
-      )}
+      {content === 'icon' ? icon : null}
     </Tag>
   );
 }

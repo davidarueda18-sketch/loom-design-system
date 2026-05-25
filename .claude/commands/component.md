@@ -11,7 +11,7 @@ description: Create a new Loom Design System component with proper structure, ty
 - Wrapper role: this file orchestrates requirement gathering and repo-specific file placement.
 - Change policy: update the contract first, then refine wrapper flow if required.
 
-You are creating a new component for the Loom Design System. Follow every step in order without skipping. When information is missing, ask before writing any files.
+You are creating a new component for the Loom Design System. Follow every step in order without skipping. When information is missing, ask before writing any files. `loom-*` Web Components are the canonical cross-framework runtime; React adapters are thin wrappers over those custom elements.
 
 ---
 
@@ -98,7 +98,7 @@ Use these canonical subpart lists:
 
 ### 5A — Simple component (primitive or pattern, or non-compound component)
 
-Create these 4 files + 1 adapter:
+Create these files and adapters. The Web Component adapter is the runtime source of truth; the React adapter is a wrapper over the `loom-*` element.
 
 #### `[COMPONENT_DIR]/[ComponentName].types.ts`
 
@@ -175,11 +175,60 @@ export const size = styleVariants({
 
 Adapt: omit `variant` and/or `size` styleVariants if the types file does not define them.
 
+#### `[COMPONENT_DIR]/adapters/[ComponentName].element.ts`
+
+Create a custom element named `loom-[kebab-component-name]`. It must own the runtime behavior, accessibility, Shadow DOM/slots when needed, custom events, and `::part()` exposure. Follow `ai/contracts/adapter-web-component.contract.md`.
+
+Minimum shape for a simple shadow/action component:
+
+```typescript
+import * as styles from '../[ComponentName].css.ts';
+import type { [ComponentName]Size, [ComponentName]Variant } from '../[ComponentName].types.ts';
+
+class Loom[ComponentName] extends HTMLElement {
+  static observedAttributes = ['variant', 'size', 'disabled'] as const;
+
+  private _inner: HTMLElement | null = null;
+
+  connectedCallback() {
+    if (!this.shadowRoot) {
+      const shadow = this.attachShadow({ mode: 'open' });
+      this._inner = document.createElement('[default_tag]');
+      this._inner.setAttribute('part', '[default_tag]');
+      this._inner.appendChild(document.createElement('slot'));
+      shadow.appendChild(this._inner);
+    }
+    this._sync();
+  }
+
+  attributeChangedCallback() {
+    this._sync();
+  }
+
+  private _sync(): void {
+    if (!this._inner) return;
+    // Apply validated style variant classes and native state forwarding here.
+  }
+}
+
+customElements.define('loom-[kebab-component-name]', Loom[ComponentName]);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'loom-[kebab-component-name]': Loom[ComponentName];
+  }
+}
+
+export { Loom[ComponentName] };
+```
+
+Adapt this skeleton to the component classification. Use light DOM only for layout primitives where the existing adapter pattern does so. Use Shadow DOM when wrapping native controls or exposing styleable internals.
+
 #### `[COMPONENT_DIR]/adapters/[ComponentName].react.tsx`
 
 ```typescript
+import './[ComponentName].element.ts';
 import type { ElementType } from 'react';
-import * as styles from '../[ComponentName].css.ts';
 import type { [ComponentName]Props } from '../[ComponentName].types.ts';
 
 export function [ComponentName]<T extends ElementType = '[default_tag]'>({
@@ -190,17 +239,12 @@ export function [ComponentName]<T extends ElementType = '[default_tag]'>({
   className,
   ...props
 }: [ComponentName]Props<T>) {
-  const Tag = (as ?? '[default_tag]') as ElementType;
+  const Tag = (as ?? 'loom-[kebab-component-name]') as ElementType;
   return (
     <Tag
-      className={[
-        styles.root,
-        styles.variant[variant],
-        styles.size[size],
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      variant={variant}
+      size={size}
+      className={className}
       {...props}
     >
       {children}
@@ -211,21 +255,21 @@ export function [ComponentName]<T extends ElementType = '[default_tag]'>({
 
 For `pattern`, replace the generic function with a concrete element (no `as` prop):
 ```typescript
-import * as styles from '../[ComponentName].css.ts';
+import './[ComponentName].element.ts';
 import type { [ComponentName]Props } from '../[ComponentName].types.ts';
 
 export function [ComponentName]({ children, className, ...props }: [ComponentName]Props) {
   return (
-    <div className={[styles.root, className].filter(Boolean).join(' ')} {...props}>
+    <loom-[kebab-component-name] className={className} {...props}>
       {children}
-    </div>
+    </loom-[kebab-component-name]>
   );
 }
 ```
 
 #### `[COMPONENT_DIR]/adapters/.gitkeep`
 
-Empty file. Signals the `adapters/` directory is intentional and reserved for Angular/Vue adapters.
+Do not create this file when `.element.ts` and `.react.tsx` are present. Use `.gitkeep` only if an adapter directory would otherwise be empty.
 
 #### `[COMPONENT_DIR]/index.ts`
 
@@ -241,6 +285,8 @@ Remove `[ComponentName]Variant` and `[ComponentName]Size` from the export if the
 ### 5B — Compound component
 
 Create these files (example: `Tabs` with subparts `Root`, `List`, `Trigger`, `Content`):
+
+Compound components follow the same canonical rule as simple components: generate the `loom-*` Web Component runtime first, then expose React subparts as wrappers over the custom-element contract. Do not scaffold compound React subparts that implement final visual behavior directly with Vanilla Extract classes unless there is not yet a Web Component contract for the compound primitive; in that case, mark the component as transitional and create the Web Component adapter before publishing it.
 
 #### `[COMPONENT_DIR]/[ComponentName].context.ts`
 
@@ -391,7 +437,7 @@ Add one file per additional subpart following the same pattern.
 
 #### `[COMPONENT_DIR]/adapters/.gitkeep`
 
-Empty file. Reserved for Angular/Vue adapters.
+Do not create this file when adapter files are present. Use `.gitkeep` only if an adapter directory would otherwise be empty.
 
 #### `[COMPONENT_DIR]/index.ts` (compound)
 
@@ -482,11 +528,12 @@ Files created:
   ├── [ComponentName].css.ts
   ├── [ComponentName].context.ts    (compound only)
   ├── adapters/
-  │   ├── [ComponentName].react.tsx     (simple)
+  │   ├── [ComponentName].element.ts    (canonical runtime)
+  │   ├── [ComponentName].react.tsx     (React wrapper, simple)
   │   ├── [ComponentName]Root.react.tsx  (compound)
   │   ├── [ComponentName]Trigger.react.tsx
   │   ├── [ComponentName]Content.react.tsx
-  │   └── .gitkeep
+  │   └── .gitkeep                      (only if needed)
   └── index.ts
 
 Parent index updated:
@@ -550,7 +597,8 @@ Use this pattern for all `primitive` types. Do NOT use it for `component` or `pa
 | Types file | `[PascalCase].types.ts` | `Button.types.ts` |
 | Styles file | `[PascalCase].css.ts` | `Button.css.ts` |
 | Context file | `[PascalCase].context.ts` | `Tabs.context.ts` |
-| React adapter (simple) | `adapters/[PascalCase].react.tsx` | `adapters/Button.react.tsx` |
+| Web Component adapter | `adapters/[PascalCase].element.ts` | `adapters/Button.element.ts` |
+| React wrapper (simple) | `adapters/[PascalCase].react.tsx` | `adapters/Button.react.tsx` |
 | React adapter (subpart) | `adapters/[PascalCase][Subpart].react.tsx` | `adapters/TabsRoot.react.tsx` |
 | Index | `index.ts` | always lowercase |
 | Exported function | Named, PascalCase | `export function Button` |

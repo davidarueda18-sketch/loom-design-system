@@ -73,7 +73,6 @@ const SizeLabel = ({ children }: { children: string }) => (
 
 const meta = {
   title: 'Primitives/Fab',
-  component: Fab,
   tags: ['autodocs'],
   args: {
     size: 'md',
@@ -99,18 +98,18 @@ Soporta dos modos de contenido:
 
 El FAB es cuadrado con border-radius proporcional al tamaño. El posicionamiento flotante (fixed/absolute) lo decide el consumidor; el componente solo aporta el z-index \`raised\`.
 
-\`\`\`tsx
-import { Fab } from '@loom-sdc/design-system';
-import { Icon } from '@loom-sdc/design-system';
-import { PlusIcon } from '@heroicons/react/24/outline';
-
-<Fab label="Agregar" icon={<Icon size="md"><PlusIcon /></Icon>} />
+\`\`\`html
+<loom-fab label="Agregar" content="icon" size="md">
+  <svg aria-hidden="true"><!-- icon --></svg>
+</loom-fab>
 \`\`\`
+
+El wrapper React \`<Fab />\` renderiza internamente \`<loom-fab>\`.
         `.trim(),
       },
     },
   },
-} satisfies Meta<typeof Fab>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -124,6 +123,18 @@ export const Default: Story = {
     label: 'Agregar',
     icon: <Icon size="md"><PlusIcon /></Icon>,
   },
+  render: ({ size, content, label, disabled }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-fab
+        size={size as string}
+        content={content as string}
+        label={label as string}
+        disabled={(disabled as boolean) || undefined}
+      >
+        {content !== 'text' && <PlusIcon style={{ width: '24px', height: '24px' }} />}
+      </loom-fab>
+    </div>
+  ),
 };
 
 export const Sizes: Story = {
@@ -412,7 +423,6 @@ export const CustomEvents: Story = {
 };
 
 export const CSSParts: Story = {
-  name: 'CSS Parts',
   decorators: [
     (Story) => (
       <>

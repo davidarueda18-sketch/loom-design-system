@@ -9,26 +9,54 @@ import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../loom-web-components.d.ts';
 
+const inlineImplementationCode = `import '@loom-sdc/design-system/elements';
+
+<loom-inline gap="sm" align="center" justify="start" wrap>
+  <button>Cancelar</button>
+  <button>Guardar</button>
+</loom-inline>`;
+
 const meta = {
   title: 'Primitives/Inline',
-  component: Inline,
   tags: ['autodocs'],
   argTypes: {
     gap:     { control: 'select', options: Object.keys(spacingVars) },
     align:   { control: 'select', options: INLINE_ALIGNS },
     justify: { control: 'select', options: INLINE_JUSTIFIES },
     wrap:    { control: 'boolean' },
-    as: {
-      control: 'select',
-      options: ['div', 'nav', 'ul', 'ol', 'header'],
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Inline** es el primitive canónico para layout horizontal con gap tokenizado, alineación y wrapping opcional.
+
+\`\`\`html
+<script type="module" src="@loom-sdc/design-system/elements"></script>
+
+<loom-inline gap="sm" align="center" justify="start" wrap>
+  <button>Cancelar</button>
+  <button>Guardar</button>
+</loom-inline>
+\`\`\`
+
+El wrapper React \`<Inline />\` renderiza internamente \`<loom-inline>\`.
+        `.trim(),
+      },
     },
   },
-} satisfies Meta<typeof Inline>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+const Canvas = ({ children, maxWidth = 560 }: { children: ReactNode; maxWidth?: number }) => (
+  <div style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
+    {children}
+  </div>
+);
 
 const Chip = ({ children }: { children: ReactNode }) => (
   <div style={{
@@ -71,12 +99,19 @@ const PropLabel = ({ children }: { children: string }) => (
 
 export const Default: Story = {
   args: { gap: 'sm', align: 'center' },
+  parameters: {
+    docs: {
+      source: { code: '<loom-inline gap="sm" align="center"><span>Elemento 1</span><span>Elemento 2</span></loom-inline>' },
+    },
+  },
   render: (args) => (
-    <Inline {...args}>
-      <Chip>Elemento 1</Chip>
-      <Chip>Elemento 2</Chip>
-      <Chip>Elemento 3</Chip>
-    </Inline>
+    <Canvas>
+      <loom-inline gap={args.gap as string} align={args.align as string} style={{ width: '100%' }}>
+        <Chip>Elemento 1</Chip>
+        <Chip>Elemento 2</Chip>
+        <Chip>Elemento 3</Chip>
+      </loom-inline>
+    </Canvas>
   ),
 };
 
@@ -122,11 +157,37 @@ export const WithWrap: Story = {
   name: 'Con wrap',
   args: { gap: 'sm', wrap: true },
   render: (args) => (
-    <Inline {...args} style={{ maxWidth: '300px', border: `1px dashed ${colorVars.borderDefault}`, padding: '8px', borderRadius: '4px' }}>
-      {['React', 'TypeScript', 'Vite', 'Vanilla Extract', 'Storybook', 'A11y'].map((tag) => (
-        <Chip key={tag}>{tag}</Chip>
-      ))}
-    </Inline>
+    <Canvas maxWidth={320}>
+      <loom-inline
+        gap={args.gap as string}
+        wrap={(args.wrap as boolean) || undefined}
+        style={{ width: '100%', border: `1px dashed ${colorVars.borderDefault}`, padding: '8px', borderRadius: '4px', boxSizing: 'border-box' }}
+      >
+        {['React', 'TypeScript', 'Vite', 'Vanilla Extract', 'Storybook', 'A11y'].map((tag) => (
+          <Chip key={tag}>{tag}</Chip>
+        ))}
+      </loom-inline>
+    </Canvas>
+  ),
+};
+
+export const Implementation: Story = {
+  name: 'Implementación',
+  parameters: {
+    docs: {
+      description: {
+        story: '`wrap` es booleano por presencia. `gap`, `align` y `justify` se actualizan como atributos reactivos del custom element.',
+      },
+      source: { code: inlineImplementationCode },
+    },
+  },
+  render: () => (
+    <Canvas>
+      <loom-inline gap="sm" align="center" justify="start" wrap style={{ width: '100%' }}>
+        <Chip>Cancelar</Chip>
+        <Chip>Guardar</Chip>
+      </loom-inline>
+    </Canvas>
   ),
 };
 
@@ -164,20 +225,20 @@ export const WebComponent: Story = {
     wrap: { control: 'boolean' },
   },
   render: ({ gap, align, justify, wrap }) => (
-    <div style={{ padding: '24px' }}>
+    <Canvas maxWidth={360}>
       <loom-inline
         gap={gap as string}
         align={align as string}
         justify={justify as string}
         wrap={(wrap as boolean) || undefined}
-        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', maxWidth: '320px' }}
+        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', width: '100%', boxSizing: 'border-box' }}
       >
         <Chip>React</Chip>
         <Chip>TypeScript</Chip>
         <Chip>Vite</Chip>
         <Chip>Storybook</Chip>
       </loom-inline>
-    </div>
+    </Canvas>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-inline');

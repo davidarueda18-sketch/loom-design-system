@@ -2,6 +2,7 @@ import { style, styleVariants } from '@vanilla-extract/css';
 import { spacingVars } from '../../../tokens/spacing/spacing.tokens.css.ts';
 
 export const root = style({
+  display: 'block',
   boxSizing: 'border-box',
 });
 

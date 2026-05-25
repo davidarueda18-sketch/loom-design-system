@@ -1,9 +1,9 @@
+import './Stack.element.ts';
 import type { ElementType } from 'react';
-import * as styles from '../Stack.css.ts';
 import type { StackProps } from '../Stack.types.ts';
 
 export function Stack<T extends ElementType = 'div'>({
-  as,
+  as: _as,
   gap,
   align = 'stretch',
   justify = 'start',
@@ -11,16 +11,14 @@ export function Stack<T extends ElementType = 'div'>({
   className,
   ...props
 }: StackProps<T>) {
-  const Tag = (as ?? 'div') as ElementType;
+  void _as;
+  const Tag = 'loom-stack' as ElementType;
   return (
     <Tag
-      className={[
-        styles.root,
-        gap !== undefined ? styles.gap[gap] : undefined,
-        styles.align[align],
-        styles.justify[justify],
-        className,
-      ].filter(Boolean).join(' ')}
+      gap={gap}
+      align={align}
+      justify={justify}
+      className={className}
       {...(props as object)}
     >
       {children}

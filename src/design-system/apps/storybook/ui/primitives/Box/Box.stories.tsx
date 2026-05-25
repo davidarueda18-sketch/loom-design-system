@@ -1,32 +1,77 @@
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import { Box } from '../../../../../package/ui/primitives/Box/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../loom-web-components.d.ts';
 
+type BoxStoryArgs = {
+  padding?: string;
+  paddingX?: string;
+  paddingY?: string;
+};
+
+const boxImplementationCode = `import '@loom-sdc/design-system/elements';
+
+<loom-box padding="md">
+  Contenido con padding por token
+</loom-box>
+
+<loom-box padding-x="xl" padding-y="sm">
+  Padding horizontal y vertical independientes
+</loom-box>`;
+
 const meta = {
   title: 'Primitives/Box',
-  component: Box,
   tags: ['autodocs'],
   argTypes: {
     padding:  { control: 'select', options: Object.keys(spacingVars) },
     paddingX: { control: 'select', options: Object.keys(spacingVars) },
     paddingY: { control: 'select', options: Object.keys(spacingVars) },
-    as: {
-      control: 'select',
-      options: ['div', 'section', 'article', 'main', 'aside', 'header', 'footer'],
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Box** es el contenedor canónico para aplicar padding con tokens de spacing.
+
+\`\`\`html
+<script type="module" src="@loom-sdc/design-system/elements"></script>
+
+<loom-box padding="md">
+  Contenido con padding por token
+</loom-box>
+
+<loom-box padding-x="xl" padding-y="sm">
+  Padding horizontal y vertical independientes
+</loom-box>
+\`\`\`
+
+El wrapper React \`<Box />\` renderiza internamente \`<loom-box>\`.
+        `.trim(),
+      },
     },
   },
-} satisfies Meta<typeof Box>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+const Canvas = ({ children, maxWidth = 520 }: { children: ReactNode; maxWidth?: number }) => (
+  <div style={{
+    width: '100%',
+    maxWidth: `${maxWidth}px`,
+    minWidth: 0,
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+  }}>
+    {children}
+  </div>
+);
 
 const DemoBlock = ({ children }: { children?: ReactNode }) => (
   <div style={{
@@ -34,9 +79,12 @@ const DemoBlock = ({ children }: { children?: ReactNode }) => (
     border: `1px solid ${colorVars.borderSubtle}`,
     borderRadius: '4px',
     padding: '12px',
+    minWidth: 0,
+    boxSizing: 'border-box',
     fontFamily: 'sans-serif',
     fontSize: '13px',
     color: colorVars.textPrimary,
+    overflowWrap: 'anywhere',
   }}>
     {children ?? 'Contenido'}
   </div>
@@ -58,46 +106,77 @@ const StorySection = ({ title, children }: { title: string; children: ReactNode 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  args: { padding: 'md', as: 'header' },
+  args: {
+    padding: "lg",
+    paddingX: "xl3",
+    paddingY: "xl8"
+  },
+  parameters: {
+    docs: {
+      source: { code: '<loom-box padding="md">Contenido con padding</loom-box>' },
+    },
+  },
   render: (args) => (
-    <Box {...args} style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
-      <DemoBlock>Contenido con padding</DemoBlock>
-    </Box>
+    <Canvas>
+      <loom-box padding={args.padding as string} style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
+        <DemoBlock>Contenido con padding</DemoBlock>
+      </loom-box>
+    </Canvas>
   ),
 };
 
 export const PaddingAxes: Story = {
   name: 'Padding por eje',
   args: { paddingX: 'xl', paddingY: 'sm' },
-  render: (args) => (
-    <Box {...args} style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
-      <DemoBlock>paddingX grande, paddingY pequeño</DemoBlock>
-    </Box>
-  ),
-};
-
-export const AsSection: Story = {
-  name: 'Como &lt;section&gt;',
-  args: { as: 'section', padding: 'lg' },
-  render: (args) => (
-    <Box {...args} style={{ border: `1px solid ${colorVars.borderDefault}`, borderRadius: '8px' }}>
-      <DemoBlock>Renderizado como &lt;section&gt;</DemoBlock>
-    </Box>
+  parameters: {
+    docs: {
+      source: { code: '<loom-box padding-x="xl" padding-y="sm">Contenido</loom-box>' },
+    },
+  },
+  render: (args: BoxStoryArgs) => (
+    <Canvas>
+      <loom-box
+        padding-x={args.paddingX}
+        padding-y={args.paddingY}
+        style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}
+      >
+        <DemoBlock>paddingX grande, paddingY pequeño</DemoBlock>
+      </loom-box>
+    </Canvas>
   ),
 };
 
 export const Nested: Story = {
   name: 'Anidado',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <Canvas maxWidth={560}>
       <StorySection title="Composición anidada">
-        <Box padding="xl" style={{ border: `1px dashed ${colorVars.borderDefault}` }}>
-          <Box padding="md" style={{ border: `1px dashed ${colorVars.brandAccent}` }}>
+        <loom-box padding="xl" style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
+          <loom-box padding="md" style={{ border: `1px dashed ${colorVars.brandAccent}`, width: '100%' }}>
             <DemoBlock>Box dentro de Box</DemoBlock>
-          </Box>
-        </Box>
+          </loom-box>
+        </loom-box>
       </StorySection>
-    </div>
+    </Canvas>
+  ),
+};
+
+export const Implementation: Story = {
+  name: 'Implementación',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Registra los custom elements una vez desde `@loom-sdc/design-system/elements` y usa atributos kebab-case para consumir los tokens.',
+      },
+      source: { code: boxImplementationCode },
+    },
+  },
+  render: () => (
+    <Canvas>
+      <loom-box padding="md" style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
+        <DemoBlock>Implementación con loom-box</DemoBlock>
+      </loom-box>
+    </Canvas>
   ),
 };
 
@@ -113,16 +192,16 @@ export const WebComponent: Story = {
     paddingY: { control: 'select', options: Object.keys(spacingVars) },
   },
   render: ({ padding, paddingX, paddingY }) => (
-    <div style={{ padding: '24px' }}>
+    <Canvas>
       <loom-box
         padding={padding as string}
         padding-x={paddingX as string}
         padding-y={paddingY as string}
-        style={{ border: `1px dashed ${colorVars.borderDefault}` }}
+        style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}
       >
         <DemoBlock>loom-box con atributos reactivos</DemoBlock>
       </loom-box>
-    </div>
+    </Canvas>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-box');

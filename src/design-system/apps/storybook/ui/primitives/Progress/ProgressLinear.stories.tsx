@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
@@ -15,7 +16,6 @@ import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Progress/Linear',
-  component: ProgressLinear,
   tags: ['autodocs'],
   args: {
     value:         60,
@@ -43,14 +43,14 @@ const meta = {
 Indicador de progreso lineal basado en Material Design 3. Soporta modo \`determinate\`
 (barra que avanza según \`value/max\`) e \`indeterminate\` (animación continua).
 
-\`\`\`tsx
-<ProgressLinear value={42} max={100} />
-<ProgressLinear indeterminate />
-<ProgressLinear value={70} shape="wave" thickness="md" color="feedbackSuccess" />
-<ProgressLinear value={42} label="Subiendo archivo" showValue />
+\`\`\`html
+<loom-progress-linear value="42" max="100"></loom-progress-linear>
+<loom-progress-linear indeterminate></loom-progress-linear>
+<loom-progress-linear value="70" shape="wave" thickness="md" color="feedbackSuccess"></loom-progress-linear>
+<loom-progress-linear value="42" label="Subiendo archivo" show-value></loom-progress-linear>
 \`\`\`
 
-**Web Component:** \`<loom-progress-linear>\` expone las mismas props como atributos HTML
+El wrapper React \`<ProgressLinear />\` renderiza internamente \`<loom-progress-linear>\`.
 (\`value\`, \`max\`, \`indeterminate\`, \`thickness\`, \`color\`, \`shape\`, \`label\`, \`show-value\`).
 Hooks CSS: \`::part(track-host)\`, \`::part(track)\`, \`::part(active)\`, \`::part(stop)\`,
 \`::part(label-row)\`, \`::part(label)\`, \`::part(value)\`.
@@ -58,14 +58,25 @@ Hooks CSS: \`::part(track-host)\`, \`::part(track)\`, \`::part(active)\`, \`::pa
       },
     },
   },
-} satisfies Meta<typeof ProgressLinear>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+type ProgressLinearWebComponentArgs = {
+  value?: number;
+  max?: number;
+  indeterminate?: boolean;
+  thickness?: string;
+  color?: string;
+  shape?: string;
+  label?: string;
+  'show-value'?: boolean;
+};
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div style={{ marginBottom: '32px' }}>
       <h3 style={{
@@ -82,7 +93,22 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: ({ value, max, indeterminate, thickness, color, shape, label, showValue }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-progress-linear
+        value={value as number}
+        max={max as number}
+        indeterminate={(indeterminate as boolean) || undefined}
+        thickness={thickness as string}
+        color={color as string}
+        shape={shape as string}
+        label={label as string | undefined}
+        show-value={(showValue as boolean) || undefined}
+      />
+    </div>
+  ),
+};
 
 export const Determinate: Story = {
   name: 'Determinate — escala',
@@ -215,16 +241,7 @@ export const WithLabel: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  value?:         number;
-  max?:           number;
-  indeterminate?: boolean;
-  thickness?:     string;
-  color?:         string;
-  shape?:         string;
-  label?:         string;
-  'show-value'?:  boolean;
-}> = {
+export const WebComponent: StoryObj<ProgressLinearWebComponentArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-progress-linear)',
   parameters: {
@@ -276,8 +293,7 @@ La story incluye \`play\` tests automáticos: presencia de shadow DOM, \`role="p
     const host = canvasElement.querySelector('loom-progress-linear');
     if (!(host instanceof HTMLElement)) throw new Error('Expected loom-progress-linear in canvas.');
 
-    // requestAnimationFrame settle for _scheduleSync
-    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     await expect(host.shadowRoot).toBeTruthy();
     await expect(host.getAttribute('role')).toBe('progressbar');
@@ -286,7 +302,8 @@ La story incluye \`play\` tests automáticos: presencia de shadow DOM, \`role="p
     await expect(host.getAttribute('aria-valuenow')).toBe('42');
     await expect(host.hasAttribute('aria-busy')).toBe(false);
 
-    const shadow = host.shadowRoot!;
+    const shadow = host.shadowRoot;
+    if (!shadow) throw new Error('Expected loom-progress-linear to expose an open shadowRoot.');
     const track  = shadow.querySelector('[part~="track"]');
     const active = shadow.querySelector('[part~="active"]');
     if (!(track  instanceof HTMLElement)) throw new Error('Expected ::part(track).');

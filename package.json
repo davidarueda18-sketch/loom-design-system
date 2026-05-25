@@ -26,6 +26,11 @@
       "import": "./dist/custom-elements.mjs",
       "require": "./dist/custom-elements.cjs"
     },
+    "./react-jsx": {
+      "types": "./dist/react-jsx.d.ts",
+      "import": "./dist/react-jsx.mjs",
+      "require": "./dist/react-jsx.cjs"
+    },
     "./elements/*": {
       "types": "./dist/elements/*.d.ts",
       "import": "./dist/elements/*.mjs",

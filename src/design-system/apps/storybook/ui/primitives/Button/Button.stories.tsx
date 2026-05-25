@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import type * as React from 'react';
-import type { ReactNode, CSSProperties } from 'react';
+import type { ReactNode, CSSProperties, Ref } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Button, BUTTON_VARIANTS, BUTTON_SIZES } from '../../../../../package/ui/primitives/Button/index.ts';
@@ -12,7 +11,6 @@ import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Button',
-  component: Button,
   tags: ['autodocs'],
   args: { children: 'Button' },
   argTypes: {
@@ -21,7 +19,22 @@ const meta = {
     disabled: { control: 'boolean' },
     children: { control: 'text' },
   },
-} satisfies Meta<typeof Button>;
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Button** — acción canónica como Web Component.
+
+\`\`\`html
+<loom-button variant="primary" size="md">Guardar cambios</loom-button>
+\`\`\`
+
+El wrapper React \`<Button />\` renderiza internamente \`<loom-button>\`.
+        `.trim(),
+      },
+    },
+  },
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -31,6 +44,13 @@ type Story = StoryObj<typeof meta>;
 // with the design system without duplicating hex values.
 
 type StateDemo = { label: string; style?: CSSProperties; disabled?: boolean };
+
+type ButtonWebComponentArgs = {
+  variant?: string;
+  size?: string;
+  disabled?: boolean;
+  label?: string;
+};
 
 const VARIANT_STATES: Record<ButtonVariant, StateDemo[]> = {
   primary: [
@@ -103,6 +123,17 @@ export const Default: Story = {
     size:     'md',
     children: 'Guardar cambios',
   },
+  render: ({ variant, size, disabled, children }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-button
+        variant={variant as string}
+        size={size as string}
+        disabled={(disabled as boolean) || undefined}
+      >
+        {children as ReactNode}
+      </loom-button>
+    </div>
+  ),
 };
 
 export const Variants: Story = {
@@ -192,12 +223,7 @@ export const Polymorphic: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  variant?: string;
-  size?: string;
-  disabled?: boolean;
-  label?: string;
-}> = {
+export const WebComponent: StoryObj<ButtonWebComponentArgs> = {
   args: {
     variant: 'primary',
     size: 'md',
@@ -268,7 +294,7 @@ export const CustomEvents: Story = {
         <loom-button
           variant="primary"
           size="md"
-          ref={handleRef as React.Ref<HTMLElement>}
+          ref={handleRef as Ref<HTMLElement>}
         >
           Trigger events
         </loom-button>

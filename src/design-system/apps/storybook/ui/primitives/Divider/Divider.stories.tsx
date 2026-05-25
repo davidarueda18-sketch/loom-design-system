@@ -9,7 +9,6 @@ import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Divider',
-  component: Divider,
   tags: ['autodocs'],
   args: {
     orientation:   'horizontal',
@@ -32,28 +31,28 @@ const meta = {
 Separador visual que divide secciones de contenido. Soporta orientación horizontal/vertical,
 label opcional con posición configurable, tokens de color, grosor y estilo de línea.
 
-\`\`\`tsx
+\`\`\`html
 // Línea simple
-<Divider />
+<loom-divider></loom-divider>
 
 // Con label centrado
-<Divider label="or" />
+<loom-divider label="or"></loom-divider>
 
 // Vertical entre columnas
 <div style={{ display: 'flex', height: '80px', gap: '16px' }}>
   <span>A</span>
-  <Divider orientation="vertical" />
+  <loom-divider orientation="vertical"></loom-divider>
   <span>B</span>
 </div>
 \`\`\`
 
-**Web Component:** \`<loom-divider>\` expone las mismas props como atributos HTML.
+El wrapper React \`<Divider />\` renderiza internamente \`<loom-divider>\`.
 Usa \`::part(line)\`, \`::part(line-start)\`, \`::part(line-end)\` y \`::part(label)\` para override CSS externo.
         `.trim(),
       },
     },
   },
-} satisfies Meta<typeof Divider>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -77,7 +76,20 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: ({ orientation, label, labelPosition, color, thickness, lineStyle }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-divider
+        orientation={orientation as string}
+        label={label as string | undefined}
+        label-position={labelPosition as string | undefined}
+        color={color as string}
+        thickness={thickness as string}
+        line-style={lineStyle as string}
+      />
+    </div>
+  ),
+};
 
 export const LabelPositions: Story = {
   name: 'Label — posiciones',
@@ -107,7 +119,6 @@ export const LabelPositions: Story = {
 };
 
 export const Vertical: Story = {
-  name: 'Vertical',
   parameters: {
     docs: {
       description: {

@@ -1,10 +1,6 @@
-import * as styles from '../ProgressLinear.css.ts';
+import './ProgressLinear.element.ts';
+import type { ElementType } from 'react';
 import type { ProgressLinearProps } from '../Progress.types.ts';
-
-/** Clamps `n` into `[min, max]`. */
-function clamp(n: number, min: number, max: number): number {
-  return Math.min(Math.max(n, min), max);
-}
 
 export function ProgressLinear({
   value,
@@ -19,55 +15,21 @@ export function ProgressLinear({
   style,
   ...props
 }: ProgressLinearProps) {
-  const isIndeterminate = indeterminate === true || value === undefined;
-  const ratio   = isIndeterminate ? 0 : clamp(value! / max, 0, 1);
-  const percent = Math.round(ratio * 100);
-  const waveClass = shape === 'wave' ? styles.wave[thickness] : null;
-
-  const trackClass = [
-    styles.trackBg[thickness],
-    waveClass,
-  ].filter(Boolean).join(' ');
-
-  const activeClass = [
-    styles.active[thickness],
-    isIndeterminate ? styles.indeterminate[thickness] : null,
-    waveClass,
-  ].filter(Boolean).join(' ');
-
-  const activeStyle = isIndeterminate ? undefined : { width: `${ratio * 100}%` };
-
-  const showCaption = Boolean(label) || (showValue && !isIndeterminate);
+  const Tag = 'loom-progress-linear' as ElementType;
 
   return (
-    <div
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={max}
-      aria-valuenow={isIndeterminate ? undefined : Math.round(ratio * max)}
-      aria-busy={isIndeterminate || undefined}
-      aria-label={label || undefined}
-      className={[styles.root, styles.colors[color], className].filter(Boolean).join(' ')}
+    <Tag
+      value={value}
+      max={max}
+      indeterminate={indeterminate || undefined}
+      thickness={thickness}
+      color={color}
+      shape={shape}
+      label={label}
+      show-value={showValue || undefined}
+      className={className}
       style={style}
-      {...props}
-    >
-      <div className={styles.trackHost}>
-        <div className={trackClass} aria-hidden="true" />
-        <div
-          className={activeClass}
-          style={activeStyle}
-          aria-hidden="true"
-        />
-        <div className={styles.stop[thickness]} aria-hidden="true" />
-      </div>
-      {showCaption && (
-        <div className={styles.labelRow}>
-          {label && <span className={styles.labelText}>{label}</span>}
-          {showValue && !isIndeterminate && (
-            <span className={styles.labelValue}>{percent}%</span>
-          )}
-        </div>
-      )}
-    </div>
+      {...(props as object)}
+    />
   );
 }

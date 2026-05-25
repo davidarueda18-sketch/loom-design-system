@@ -36,7 +36,10 @@
       "Bash(Select-Object Name)",
       "mcp__figma__figma_add_component_property",
       "mcp__claude_ai_Figma__add_code_connect_map",
-      "Bash(npx figma *)"
+      "Bash(npx figma *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\Activos\\\\SDC\\\\loom-design-system\" -Name)",
+      "mcp__figma__figma_get_file_data",
+      "PowerShell(cd \"c:\\\\Users\\\\DavidAndrésRueda\\\\OneDrive - kyndryl\\\\code\\\\Loom\\\\Activos\\\\SDC\\\\loom-design-system\"; npx tsc -b --noEmit 2>&1; echo \"EXIT:$LASTEXITCODE\")"
     ]
   }
 }

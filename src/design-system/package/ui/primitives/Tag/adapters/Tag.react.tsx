@@ -1,26 +1,16 @@
-import { ArrowTrendingUpIcon, ArrowTrendingDownIcon, MinusIcon } from '@heroicons/react/16/solid';
-import * as styles from '../Tag.css.ts';
-import type { TagProps, TagValue } from '../Tag.types.ts';
-
-const ICON_MAP: Record<TagValue, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  positive: ArrowTrendingUpIcon,
-  negative: ArrowTrendingDownIcon,
-  neutral: MinusIcon,
-};
+import './Tag.element.ts';
+import type { ElementType } from 'react';
+import type { TagProps } from '../Tag.types.ts';
 
 export function Tag({ value = 'positive', label, showIcon = true, className, ...props }: TagProps) {
-  const IconComponent = ICON_MAP[value];
+  const TagElement = 'loom-tag' as ElementType;
   return (
-    <span
-      className={[styles.root, styles.value[value], className].filter(Boolean).join(' ')}
-      {...props}
-    >
-      {showIcon && (
-        <span className={styles.iconWrapper} aria-hidden="true">
-          <IconComponent width={16} height={16} />
-        </span>
-      )}
-      {label != null && <span>{label}</span>}
-    </span>
+    <TagElement
+      value={value}
+      label={label}
+      show-icon={String(showIcon)}
+      className={className}
+      {...(props as object)}
+    />
   );
 }

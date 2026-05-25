@@ -15,7 +15,6 @@ import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Progress/Circular',
-  component: ProgressCircular,
   tags: ['autodocs'],
   args: {
     value:         60,
@@ -44,20 +43,20 @@ Indicador de progreso circular basado en Material Design 3. Soporta modo \`deter
 (arco con \`stroke-dasharray\` derivado de \`value/max\`) e \`indeterminate\` (rotación
 combinada con animación de dash, patrón clásico Material).
 
-\`\`\`tsx
-<ProgressCircular value={42} max={100} />
-<ProgressCircular indeterminate />
-<ProgressCircular value={75} size="lg" thickness="md" showValue />
-<ProgressCircular indeterminate size="sm" color="feedbackSuccess" />
+\`\`\`html
+<loom-progress-circular value="42" max="100"></loom-progress-circular>
+<loom-progress-circular indeterminate></loom-progress-circular>
+<loom-progress-circular value="75" size="lg" thickness="md" show-value></loom-progress-circular>
+<loom-progress-circular indeterminate size="sm" color="feedbackSuccess"></loom-progress-circular>
 \`\`\`
 
-**Web Component:** \`<loom-progress-circular>\` expone las mismas props como atributos HTML.
+El wrapper React \`<ProgressCircular />\` renderiza internamente \`<loom-progress-circular>\`.
 Hooks CSS: \`::part(ring)\` (svg), \`::part(track)\`, \`::part(active)\`, \`::part(label)\`.
         `.trim(),
       },
     },
   },
-} satisfies Meta<typeof ProgressCircular>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -89,7 +88,22 @@ function Row({ children }: { children: React.ReactNode }) {
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: ({ value, max, indeterminate, thickness, size, color, label, showValue }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-progress-circular
+        value={value as number}
+        max={max as number}
+        indeterminate={(indeterminate as boolean) || undefined}
+        thickness={thickness as string}
+        size={size as string}
+        color={color as string}
+        label={label as string | undefined}
+        show-value={(showValue as boolean) || undefined}
+      />
+    </div>
+  ),
+};
 
 export const Determinate: Story = {
   name: 'Determinate — escala',
@@ -115,7 +129,6 @@ export const Determinate: Story = {
 };
 
 export const Indeterminate: Story = {
-  name: 'Indeterminate',
   parameters: {
     docs: {
       description: {

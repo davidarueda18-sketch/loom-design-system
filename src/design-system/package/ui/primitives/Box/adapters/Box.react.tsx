@@ -1,30 +1,25 @@
-import type { CSSProperties, ElementType } from 'react';
-import * as styles from '../Box.css.ts';
+import './Box.element.ts';
+import type { ElementType } from 'react';
 import type { BoxProps } from '../Box.types.ts';
-import { spacingVars } from '../../../../tokens/index.ts';
 
 export function Box<T extends ElementType = 'div'>({
-  as,
+  as: _as,
   padding,
   paddingX,
   paddingY,
   children,
   className,
-  style,
   ...props
 }: BoxProps<T>) {
-  const Tag = (as ?? 'div') as ElementType;
-
-  const paddingStyle: CSSProperties = {
-    ...(padding  && { padding:       spacingVars[padding] }),
-    ...(paddingX && { paddingInline: spacingVars[paddingX] }),
-    ...(paddingY && { paddingBlock:  spacingVars[paddingY] }),
-  };
+  void _as;
+  const Tag = 'loom-box' as ElementType;
 
   return (
     <Tag
-      className={[styles.root, className].filter(Boolean).join(' ')}
-      style={{ ...paddingStyle, ...style }}
+      padding={padding}
+      padding-x={paddingX}
+      padding-y={paddingY}
+      className={className}
       {...(props as object)}
     >
       {children}

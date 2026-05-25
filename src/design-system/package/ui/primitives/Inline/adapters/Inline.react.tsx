@@ -1,9 +1,9 @@
+import './Inline.element.ts';
 import type { ElementType } from 'react';
-import * as styles from '../Inline.css.ts';
 import type { InlineProps } from '../Inline.types.ts';
 
 export function Inline<T extends ElementType = 'div'>({
-  as,
+  as: _as,
   gap,
   align = 'center',
   justify = 'start',
@@ -12,17 +12,15 @@ export function Inline<T extends ElementType = 'div'>({
   className,
   ...props
 }: InlineProps<T>) {
-  const Tag = (as ?? 'div') as ElementType;
+  void _as;
+  const Tag = 'loom-inline' as ElementType;
   return (
     <Tag
-      className={[
-        styles.root,
-        wrap ? styles.wrap : undefined,
-        gap !== undefined ? styles.gap[gap] : undefined,
-        styles.align[align],
-        styles.justify[justify],
-        className,
-      ].filter(Boolean).join(' ')}
+      gap={gap}
+      align={align}
+      justify={justify}
+      wrap={wrap || undefined}
+      className={className}
       {...(props as object)}
     >
       {children}

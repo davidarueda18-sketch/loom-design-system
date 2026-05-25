@@ -1,49 +1,56 @@
-import type { ReactNode, CSSProperties } from 'react';
+import { useCallback, useState } from 'react';
+import type * as React from 'react';
+import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { Link, LINK_COLORS, LINK_UNDERLINES } from '../../../../../package/ui/primitives/Link/index.ts';
-import type { LinkUnderline } from '../../../../../package/ui/primitives/Link/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Link/adapters/Link.element.ts';
+import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Link',
-  component: Link,
   tags: ['autodocs'],
-  args: { children: 'Loom Design System' },
+  args: {
+    color: 'default',
+    underline: 'always',
+    href: '#',
+    label: 'Ir a la documentación',
+  },
   argTypes: {
     color:     { control: 'select', options: LINK_COLORS },
     underline: { control: 'select', options: LINK_UNDERLINES },
-    children:  { control: 'text' },
+    href:      { control: 'text' },
+    label:     { control: 'text' },
+    disabled:  { control: 'boolean' },
   },
-} satisfies Meta<typeof Link>;
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Link** — enlace inline canónico como Web Component.
+
+Uso recomendado:
+
+\`\`\`html
+<script type="module" src="@loom-sdc/design-system/elements"></script>
+<link rel="stylesheet" href="@loom-sdc/design-system/style.css" />
+
+<loom-link href="/docs" color="default" underline="always">
+  Ir a la documentación
+</loom-link>
+\`\`\`
+
+React también puede usar \`<loom-link>\` directamente o el wrapper opcional \`<Link />\`, que renderiza este custom element.
+        `.trim(),
+      },
+    },
+  },
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// ─── Metadata ─────────────────────────────────────────────────────────────────
-
-type StateDemo = { label: string; style?: CSSProperties; disabled?: boolean };
-
-const UNDERLINE_STATES: Record<LinkUnderline, StateDemo[]> = {
-  always: [
-    { label: 'Default' },
-    { label: 'Hover',    style: { textDecoration: 'underline', textUnderlineOffset: '2px' } },
-    { label: 'Disabled', disabled: true },
-  ],
-  hover: [
-    { label: 'Default' },
-    { label: 'Hover',    style: { textDecoration: 'underline', textUnderlineOffset: '2px' } },
-    { label: 'Disabled', disabled: true },
-  ],
-  none: [
-    { label: 'Default' },
-    { label: 'Hover',    style: { textDecoration: 'none' } },
-    { label: 'Disabled', disabled: true },
-  ],
-};
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
   <div style={{ marginBottom: '40px' }}>
@@ -74,150 +81,62 @@ const StateLabel = ({ children }: { children: string }) => (
   </div>
 );
 
-const InheritWrapper = ({ color, children }: { color: string; children: ReactNode }) => (
-  <div style={{ color, fontFamily: 'sans-serif', fontSize: '16px' }}>
-    {children}
-  </div>
-);
-
-// ─── Stories ─────────────────────────────────────────────────────────────────
+const getLoomLink = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-link'] => {
+  const host = canvasElement.querySelector('loom-link');
+  if (!(host instanceof HTMLElement)) {
+    throw new Error('Expected a loom-link host in the story canvas.');
+  }
+  return host as HTMLElementTagNameMap['loom-link'];
+};
 
 export const Default: Story = {
-  args: {
-    color:     'default',
-    underline: 'always',
-    href:      '#',
-    children:  'Ir a la documentación',
-  },
+  render: ({ color, underline, href, label, disabled }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-link
+        color={color as string}
+        underline={underline as string}
+        href={href as string}
+        aria-disabled={disabled ? 'true' : undefined}
+      >
+        {label as ReactNode}
+      </loom-link>
+    </div>
+  ),
   play: async ({ canvasElement }) => {
-    const link = canvasElement.querySelector('a');
-    if (!(link instanceof HTMLAnchorElement)) {
-      throw new Error('Expected the default Link story to render an anchor element.');
+    const host = getLoomLink(canvasElement);
+    await expect(host).toBeInTheDocument();
+
+    const shadowRoot = host.shadowRoot;
+    if (!shadowRoot) {
+      throw new Error('Expected loom-link to expose an open shadowRoot.');
     }
 
-    await expect(link).toBeInTheDocument();
-    await expect(link.textContent).toContain('Ir a la documentación');
-    await expect(link.getAttribute('href')).toBe('#');
-    await expect(link.className.length).toBeGreaterThan(0);
+    const inner = shadowRoot.querySelector('a[part="link"]');
+    if (!(inner instanceof HTMLAnchorElement)) {
+      throw new Error('Expected an inner anchor with part="link".');
+    }
+
+    await expect(inner.getAttribute('href')).toBe('#');
+    await expect(inner.textContent).toContain('Ir a la documentación');
   },
 };
 
-export const ColorVariants: Story = {
-  name: 'Variantes de color',
-  render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <StorySection title="default — usa el accent color del sistema">
-        <Row>
-          {LINK_UNDERLINES.map((underline) => (
-            <div key={underline}>
-              <StateLabel>{underline}</StateLabel>
-              <Link href="#" color="default" underline={underline}>
-                Enlace default
-              </Link>
-            </div>
-          ))}
-        </Row>
-      </StorySection>
-
-      <StorySection title="inherit — hereda el color del texto padre">
-        <Row>
-          {(
-            [
-              { label: 'sobre textPrimary', textColor: colorVars.textPrimary },
-              { label: 'sobre textSecondary', textColor: colorVars.textSecondary },
-              { label: 'sobre brandAccent', textColor: colorVars.brandAccent },
-            ] as Array<{ label: string; textColor: string }>
-          ).map(({ label, textColor }) => (
-            <div key={label}>
-              <StateLabel>{label}</StateLabel>
-              <InheritWrapper color={textColor}>
-                Texto con{' '}
-                <Link href="#" color="inherit" underline="always">
-                  enlace inline
-                </Link>{' '}
-                integrado.
-              </InheritWrapper>
-            </div>
-          ))}
-        </Row>
-      </StorySection>
-    </div>
-  ),
-};
-
-export const UnderlineVariants: Story = {
-  name: 'Variantes de subrayado',
-  render: () => (
-    <div style={{ padding: '24px' }}>
-      {LINK_UNDERLINES.map((underline) => (
-        <StorySection key={underline} title={underline}>
-          <Row>
-            {LINK_COLORS.map((color) => (
-              <Link key={color} href="#" color={color} underline={underline}>
-                {color} / {underline}
-              </Link>
-            ))}
-          </Row>
-        </StorySection>
-      ))}
-    </div>
-  ),
-};
-
-export const States: Story = {
-  name: 'Estados interactivos',
-  render: () => (
-    <div style={{ padding: '24px' }}>
-      {LINK_UNDERLINES.map((underline) => (
-        <StorySection key={underline} title={`underline: ${underline}`}>
-          <div style={{ display: 'flex', gap: '48px', flexWrap: 'wrap' }}>
-            {UNDERLINE_STATES[underline].map(({ label, style, disabled }) => (
-              <div key={label}>
-                <StateLabel>{label}</StateLabel>
-                <Row>
-                  {LINK_COLORS.map((color) => (
-                    <Link
-                      key={color}
-                      href="#"
-                      color={color}
-                      underline={underline}
-                      aria-disabled={disabled}
-                      style={style}
-                    >
-                      {color}
-                    </Link>
-                  ))}
-                </Row>
-              </div>
-            ))}
-          </div>
-        </StorySection>
-      ))}
-    </div>
-  ),
-};
-
-export const AllCombinations: Story = {
-  name: 'Todas las combinaciones',
+export const Variants: Story = {
+  name: 'Variantes',
   render: () => (
     <div style={{ padding: '24px' }}>
       {LINK_COLORS.map((color) => (
-        <StorySection key={color} title={`color: ${color}`}>
-          <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
+        <StorySection key={color} title={`color=${color}`}>
+          <Row>
             {LINK_UNDERLINES.map((underline) => (
               <div key={underline}>
                 <StateLabel>{underline}</StateLabel>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Link href="#" color={color} underline={underline}>
-                    Enlace activo
-                  </Link>
-                  <Link href="#" color={color} underline={underline} aria-disabled>
-                    Deshabilitado
-                  </Link>
-                </div>
+                <loom-link href="#" color={color} underline={underline}>
+                  {color} / {underline}
+                </loom-link>
               </div>
             ))}
-          </div>
+          </Row>
         </StorySection>
       ))}
     </div>
@@ -228,60 +147,163 @@ export const InlineUsage: Story = {
   name: 'Uso inline en texto',
   render: () => (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <StorySection title="Dentro de un párrafo — color default">
-        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textPrimary, maxWidth: '480px', margin: 0 }}>
+      <StorySection title="Dentro de un párrafo">
+        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textPrimary, maxWidth: '520px', margin: 0 }}>
           El sistema de diseño Loom está documentado en{' '}
-          <Link href="#" color="default" underline="always">la guía de contribución</Link>
+          <loom-link href="#" color="default" underline="always">la guía de contribución</loom-link>
           {' '}y en{' '}
-          <Link href="#" color="default" underline="hover">los tokens de diseño</Link>.
+          <loom-link href="#" color="default" underline="hover">los tokens de diseño</loom-link>.
         </p>
       </StorySection>
 
-      <StorySection title="Dentro de un párrafo — color inherit">
-        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textSecondary, maxWidth: '480px', margin: 0 }}>
+      <StorySection title="Heredando color del texto padre">
+        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textSecondary, maxWidth: '520px', margin: 0 }}>
           Consulta{' '}
-          <Link href="#" color="inherit" underline="always">nuestra documentación</Link>
+          <loom-link href="#" color="inherit" underline="always">nuestra documentación</loom-link>
           {' '}para más detalles sobre la{' '}
-          <Link href="#" color="inherit" underline="hover">arquitectura de tokens</Link>.
+          <loom-link href="#" color="inherit" underline="hover">arquitectura de tokens</loom-link>.
         </p>
       </StorySection>
     </div>
   ),
 };
 
-export const Polymorphic: Story = {
-  name: 'Polimórfico (as)',
+export const Disabled: Story = {
+  name: 'Estado deshabilitado',
   render: () => (
     <div style={{ padding: '24px' }}>
-      <StorySection title='as="a" (default) — enlace nativo'>
-        <Row>
-          {LINK_COLORS.map((color) => (
-            <Link key={color} href="#" color={color} underline="always">
-              {color}
-            </Link>
-          ))}
-        </Row>
-      </StorySection>
+      <Row>
+        {LINK_COLORS.map((color) => (
+          <loom-link key={color} href="#" color={color} underline="always" aria-disabled="true">
+            {color}
+          </loom-link>
+        ))}
+      </Row>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const host = getLoomLink(canvasElement);
+    const inner = host.shadowRoot?.querySelector('a[part="link"]');
+    await expect(inner).toBeInTheDocument();
+    await expect(inner?.getAttribute('aria-disabled')).toBe('true');
+    await expect(inner?.hasAttribute('href')).toBe(false);
+  },
+};
 
-      <StorySection title='as="button" — acción sin href'>
-        <Row>
-          {LINK_COLORS.map((color) => (
-            <Link key={color} as="button" color={color} underline="hover" type="button">
-              {color}
-            </Link>
-          ))}
-        </Row>
-      </StorySection>
+export const CustomEvents: Story = {
+  name: 'Eventos personalizados',
+  render: () => {
+    const [log, setLog] = useState<string[]>([]);
 
-      <StorySection title='as="span" — no interactivo, solo visual'>
-        <Row>
-          {LINK_COLORS.map((color) => (
-            <Link key={color} as="span" color={color} underline="none">
-              {color}
-            </Link>
-          ))}
-        </Row>
-      </StorySection>
+    const handleRef = useCallback((el: HTMLElement | null) => {
+      if (!el) return;
+
+      const handleClick = (event: Event) => {
+        const detail = (event as CustomEvent<{ href: string }>).detail;
+        setLog((prev) => [`loom-click href=${detail.href || '(empty)'}`, ...prev].slice(0, 8));
+      };
+      const handleFocus = () => {
+        setLog((prev) => ['loom-focus', ...prev].slice(0, 8));
+      };
+      const handleBlur = () => {
+        setLog((prev) => ['loom-blur', ...prev].slice(0, 8));
+      };
+
+      el.addEventListener('loom-click', handleClick);
+      el.addEventListener('loom-focus', handleFocus);
+      el.addEventListener('loom-blur', handleBlur);
+    }, []);
+
+    return (
+      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <loom-link href="#" color="default" underline="always" ref={handleRef as React.Ref<HTMLElement>}>
+          Trigger events
+        </loom-link>
+        <div style={{
+          minHeight: '80px',
+          border: `1px dashed ${colorVars.borderSubtle}`,
+          borderRadius: '8px',
+          padding: '10px',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          color: colorVars.textSecondary,
+        }}>
+          {log.length === 0 ? 'Sin eventos aún' : log.map((entry) => <div key={entry}>{entry}</div>)}
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const host = getLoomLink(canvasElement);
+    host.shadowRoot?.querySelector('a[part="link"]')?.dispatchEvent(
+      new MouseEvent('click', { bubbles: true, composed: true }),
+    );
+    await waitFor(async () => {
+      await expect(canvasElement.textContent ?? '').toContain('loom-click');
+    });
+  },
+};
+
+export const CSSParts: Story = {
+  decorators: [
+    (Story) => (
+      <>
+        <style>{`
+          .parts-demo loom-link::part(link) {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+          }
+        `}</style>
+        <div className="parts-demo">
+          <Story />
+        </div>
+      </>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Partes expuestas para override visual sin romper la encapsulación del shadow root:
+
+| Part name | Elemento | Qué personalizar |
+|---|---|---|
+| \`link\` | Inner \`<a>\` | typography, text-decoration, outline |
+        `.trim(),
+      },
+    },
+  },
+  render: () => (
+    <div style={{ padding: '24px' }}>
+      <loom-link href="#" color="default" underline="always">
+        Styled via ::part(link)
+      </loom-link>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const host = getLoomLink(canvasElement);
+    const inner = host.shadowRoot?.querySelector('a[part="link"]');
+    await expect(inner).toBeInTheDocument();
+    await waitFor(async () => {
+      await expect(getComputedStyle(inner!).textTransform).toBe('uppercase');
+    });
+  },
+};
+
+export const ReactWrapper: StoryObj<typeof Link> = {
+  name: 'React wrapper',
+  parameters: {
+    docs: {
+      description: {
+        story: '`<Link />` es una conveniencia React que renderiza internamente `<loom-link>`.',
+      },
+    },
+  },
+  render: () => (
+    <div style={{ padding: '24px' }}>
+      <Link href="#" color="default" underline="hover">
+        Wrapper React sobre loom-link
+      </Link>
     </div>
   ),
 };

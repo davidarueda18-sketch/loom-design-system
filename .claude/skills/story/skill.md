@@ -11,13 +11,13 @@ description: Generate Storybook documentation files for Foundations (tokens) and
 - Wrapper role: this file contains Storybook-specific execution guidance and rich examples.
 - Change policy: update contract laws first and keep this skill synchronized.
 
-Generates autonomous, dynamic Storybook stories for Foundations and UI components. All token data flows from imported vars objects — nothing is hardcoded.
+Generates autonomous, dynamic Storybook stories for Foundations and UI components. All token data flows from imported vars objects — nothing is hardcoded. For UI components, `loom-*` Web Components are the canonical public documentation surface; React wrappers are documented only as optional framework integration.
 
 ## When to Use
 
 - User asks to create a Foundation story (colors, spacing, radius, shadow, typography, motion, z-index, etc.)
-- User asks to create a React component story (Button, Input, Card, etc.)
 - User asks to create a Web Component (`loom-*`) story
+- User asks to create a React wrapper story for a Loom component
 - User asks to update/refactor an existing story to comply with the four laws
 
 ---
@@ -176,7 +176,7 @@ src/design-system/apps/storybook/
 │   └── [TokenGroup].stories.tsx   ← Foundation token docs
 └── ui/
     └── primitives/[Name]/
-        └── [Name].stories.tsx     ← Component docs (React + CE in the same file)
+        └── [Name].stories.tsx     ← Component docs (Web Component first, React wrapper optional)
 ```
 
 ---
@@ -253,9 +253,9 @@ export const Scale: Story = {
 
 ---
 
-## React Component Story Template
+## React Wrapper Story Template
 
-Use this when the component is a React component imported from the package (not a Custom Element).
+Use this only to document React integration ergonomics. The React component must be a thin wrapper over the matching `loom-*` custom element, not a separate visual implementation. Keep this story secondary to the canonical Web Component docs.
 
 ```tsx
 import React from 'react';
@@ -266,7 +266,7 @@ import { MyComponent } from '../../../package/ui/primitives/MyComponent/index.ts
 import { MY_VARIANTS, MY_SIZES } from '../../../package/ui/primitives/MyComponent/MyComponent.types.ts';
 
 const meta = {
-  title: 'Primitives/MyComponent',
+  title: 'Primitives/MyComponent/React Wrapper',
   component: MyComponent,
   tags: ['autodocs'],
   argTypes: {
@@ -324,16 +324,16 @@ export const Variants: Story = {
 
 ## Web Component (Custom Element) Story Template
 
-### Decision: React adapter story vs Custom Element story
+### Decision: Canonical Web Component story vs React wrapper story
 
-Write **both** in the same `.stories.tsx` file whenever a `loom-*` adapter exists for the component. Each serves a different purpose:
+Write the **Web Component story first** whenever a `loom-*` adapter exists for the component. Add a React wrapper story only when it clarifies framework-specific ergonomics. Each serves a different purpose:
 
 | Story type | Purpose | When to write |
 |---|---|---|
-| React stories | Document props, controls, autodocs | Always — React is the primary consumer |
-| Custom Element story | Verify the adapter end-to-end, document HTML / Angular / Vue usage | Always when a `loom-*` adapter exists |
+| Custom Element story | Verify the canonical runtime end-to-end, document HTML / Angular / Vue / React tag usage | Always when a `loom-*` adapter exists |
+| React wrapper story | Document optional wrapper props and React-only conveniences | Only when a React wrapper exists and adds ergonomic value |
 
-A Custom Element story that renders `<loom-button>` is NOT the same as a React story. It runs the real Custom Element lifecycle in the Storybook iframe, catching bugs that mocked React tests would miss.
+A Custom Element story that renders `<loom-button>` is the canonical story for a Loom UI component. It runs the real Custom Element lifecycle in the Storybook iframe, catching bugs that wrapper-only tests would miss.
 
 ### JSX Namespace — No `@ts-expect-error`
 
@@ -881,4 +881,4 @@ const EasingRow = ({ name, cssVar }: { name: string; cssVar: string }) => (
 3. **Read `.types.ts`** — get the exact variant/size/etc. constant objects to use in `Object.keys()`.
 4. **Check for an existing CE adapter** at `adapters/[Name].element.ts` — if it exists, include a Web Component story section.
 5. **Choose the correct preview** from the Law 4 table before writing any JSX.
-6. **Write React stories first**, then Web Component stories in the same file.
+6. **Write Web Component stories first**, then optional React wrapper stories in the same file or a clearly labeled secondary section.

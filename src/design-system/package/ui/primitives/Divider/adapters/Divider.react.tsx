@@ -1,4 +1,5 @@
-import * as styles from '../Divider.css.ts';
+import './Divider.element.ts';
+import type { ElementType } from 'react';
 import type { DividerProps } from '../Divider.types.ts';
 
 export function Divider({
@@ -12,40 +13,19 @@ export function Divider({
   style,
   ...props
 }: DividerProps) {
-  const isVertical = orientation === 'vertical';
-  const hasLabel   = Boolean(label);
-
-  const thicknessClass = isVertical ? styles.thicknessV[thickness] : styles.thicknessH[thickness];
-  const lineStyleClass = isVertical ? styles.lineStyleV[lineStyle]  : styles.lineStyleH[lineStyle];
-
-  const lineClasses = [styles.line, thicknessClass, lineStyleClass].join(' ');
-
-  const startSize = (hasLabel && labelPosition === 'start') ? 'fixed' : 'grow';
-  const endSize   = (hasLabel && labelPosition === 'end')   ? 'fixed' : 'grow';
+  const Tag = 'loom-divider' as ElementType;
 
   return (
-    <div
-      role="separator"
-      aria-orientation={orientation}
-      aria-label={label || undefined}
-      className={[
-        styles.root,
-        styles.orientations[orientation],
-        styles.colors[color],
-        className,
-      ].filter(Boolean).join(' ')}
+    <Tag
+      orientation={orientation}
+      label={label}
+      label-position={labelPosition}
+      color={color}
+      thickness={thickness}
+      line-style={lineStyle}
+      className={className}
       style={style}
-      {...props}
-    >
-      <span className={`${lineClasses} ${styles.lineSize[startSize]}`} aria-hidden="true" />
-      {hasLabel && (
-        <>
-          <span className={[styles.label, isVertical && styles.labelVertical].filter(Boolean).join(' ')}>
-            {label}
-          </span>
-          <span className={`${lineClasses} ${styles.lineSize[endSize]}`} aria-hidden="true" />
-        </>
-      )}
-    </div>
+      {...(props as object)}
+    />
   );
 }

@@ -10,7 +10,6 @@ import '../../../loom-web-components.d.ts';
 
 const meta = {
   title: 'Primitives/Tag',
-  component: Tag,
   tags: ['autodocs'],
   args: {
     value:    'positive',
@@ -26,30 +25,30 @@ const meta = {
     docs: {
       description: {
         component: `
-Tag informativo de solo visualización. Muestra el estado de una métrica con 3 variantes semánticas,
+Tag informativo canónico como Web Component. Muestra el estado de una métrica con 3 variantes semánticas,
 cada una con un icono estático y colores propios definidos por tokens.
 
-\`\`\`tsx
+\`\`\`html
 // Positivo — flecha tendencia alcista
-<Tag value="positive" label="23%" />
+<loom-tag value="positive" label="23%"></loom-tag>
 
 // Negativo — flecha tendencia bajista
-<Tag value="negative" label="−8%" />
+<loom-tag value="negative" label="-8%"></loom-tag>
 
 // Neutral — sin cambio
-<Tag value="neutral" label="0%" />
+<loom-tag value="neutral" label="0%"></loom-tag>
 
 // Sin icono
-<Tag value="positive" label="23%" showIcon={false} />
+<loom-tag value="positive" label="23%" show-icon="false"></loom-tag>
 \`\`\`
 
-**Web Component:** \`<loom-tag>\` expone los mismos props como atributos HTML.
+El wrapper React \`<Tag />\` renderiza internamente \`<loom-tag>\`.
 Usa \`::part(icon)\` y \`::part(label)\` para override CSS externo.
         `.trim(),
       },
     },
   },
-} satisfies Meta<typeof Tag>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -81,7 +80,17 @@ function Row({ children }: { children: React.ReactNode }) {
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: ({ value, label, showIcon }) => (
+    <div style={{ padding: '24px' }}>
+      <loom-tag
+        value={value as string}
+        label={label as string}
+        show-icon={showIcon === false ? 'false' : 'true'}
+      />
+    </div>
+  ),
+};
 
 export const Values: Story = {
   name: 'Variantes (value)',

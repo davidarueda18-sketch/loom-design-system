@@ -56,6 +56,7 @@ export default defineConfig({
         core:              path.resolve(dirname, 'src/design-system/package/index.core.ts'),
         elements:          path.resolve(dirname, 'src/design-system/package/index.elements.ts'),
         'custom-elements': path.resolve(dirname, 'src/design-system/package/index.custom-elements.ts'),
+        'react-jsx':       path.resolve(dirname, 'src/design-system/package/index.react-jsx.ts'),
         ...elementEntries,
       },
       formats: ['es', 'cjs'],

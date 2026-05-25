@@ -8,25 +8,53 @@ import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
+const stackImplementationCode = `import '@loom-sdc/design-system/elements';
+
+<loom-stack gap="md" align="stretch" justify="start">
+  <section>Primero</section>
+  <section>Segundo</section>
+</loom-stack>`;
+
 const meta = {
   title: 'Primitives/Stack',
-  component: Stack,
   tags: ['autodocs'],
   argTypes: {
     gap:     { control: 'select', options: Object.keys(spacingVars) },
     align:   { control: 'select', options: STACK_ALIGNS },
     justify: { control: 'select', options: STACK_JUSTIFIES },
-    as: {
-      control: 'select',
-      options: ['div', 'ul', 'ol', 'section', 'nav'],
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**Stack** es el primitive canónico para layout vertical con gap tokenizado y control de alineación.
+
+\`\`\`html
+<script type="module" src="@loom-sdc/design-system/elements"></script>
+
+<loom-stack gap="md" align="stretch" justify="start">
+  <section>Primero</section>
+  <section>Segundo</section>
+</loom-stack>
+\`\`\`
+
+El wrapper React \`<Stack />\` renderiza internamente \`<loom-stack>\`.
+        `.trim(),
+      },
     },
   },
-} satisfies Meta<typeof Stack>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+const Canvas = ({ children, maxWidth = 560 }: { children: ReactNode; maxWidth?: number }) => (
+  <div style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
+    {children}
+  </div>
+);
 
 const Item = ({ children, wide = false }: { children: ReactNode; wide?: boolean }) => (
   <div style={{
@@ -38,6 +66,9 @@ const Item = ({ children, wide = false }: { children: ReactNode; wide?: boolean 
     fontFamily: 'sans-serif',
     color: colorVars.textPrimary,
     width: wide ? '100%' : 'fit-content',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    overflowWrap: 'anywhere',
   }}>
     {children}
   </div>
@@ -69,12 +100,19 @@ const PropLabel = ({ children }: { children: string }) => (
 
 export const Default: Story = {
   args: { gap: 'md' },
+  parameters: {
+    docs: {
+      source: { code: '<loom-stack gap="md"><section>Elemento 1</section><section>Elemento 2</section></loom-stack>' },
+    },
+  },
   render: (args) => (
-    <Stack {...args}>
-      <Item wide>Elemento 1</Item>
-      <Item wide>Elemento 2</Item>
-      <Item wide>Elemento 3</Item>
-    </Stack>
+    <Canvas>
+      <loom-stack gap={args.gap as string} style={{ width: '100%' }}>
+        <Item wide>Elemento 1</Item>
+        <Item wide>Elemento 2</Item>
+        <Item wide>Elemento 3</Item>
+      </loom-stack>
+    </Canvas>
   ),
 };
 
@@ -103,10 +141,36 @@ export const JustifyCenter: Story = {
   name: 'Justify center',
   args: { gap: 'md', justify: 'center' },
   render: (args) => (
-    <Stack {...args} style={{ height: '300px', border: `1px dashed ${colorVars.borderDefault}` }}>
-      <Item wide>Centrado verticalmente</Item>
-      <Item wide>En el eje principal</Item>
-    </Stack>
+    <Canvas>
+      <loom-stack
+        gap={args.gap as string}
+        justify={args.justify as string}
+        style={{ height: '300px', width: '100%', border: `1px dashed ${colorVars.borderDefault}`, boxSizing: 'border-box' }}
+      >
+        <Item wide>Centrado verticalmente</Item>
+        <Item wide>En el eje principal</Item>
+      </loom-stack>
+    </Canvas>
+  ),
+};
+
+export const Implementation: Story = {
+  name: 'Implementación',
+  parameters: {
+    docs: {
+      description: {
+        story: '`gap`, `align` y `justify` son atributos reactivos. El contenido entra por slot y conserva su semántica HTML.',
+      },
+      source: { code: stackImplementationCode },
+    },
+  },
+  render: () => (
+    <Canvas>
+      <loom-stack gap="md" align="stretch" justify="start" style={{ width: '100%' }}>
+        <Item wide>Primero</Item>
+        <Item wide>Segundo</Item>
+      </loom-stack>
+    </Canvas>
   ),
 };
 
@@ -144,18 +208,18 @@ export const WebComponent: Story = {
     justify: { control: 'select', options: STACK_JUSTIFIES },
   },
   render: ({ gap, align, justify }) => (
-    <div style={{ padding: '24px' }}>
+    <Canvas>
       <loom-stack
         gap={gap as string}
         align={align as string}
         justify={justify as string}
-        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}
+        style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', width: '100%', boxSizing: 'border-box' }}
       >
         <Item wide>Elemento 1</Item>
         <Item>Elemento 2</Item>
         <Item wide>Elemento 3</Item>
       </loom-stack>
-    </div>
+    </Canvas>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-stack');
