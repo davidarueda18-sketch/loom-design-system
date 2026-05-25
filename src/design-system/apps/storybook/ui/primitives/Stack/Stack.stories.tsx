@@ -94,7 +94,7 @@ const StorySection = ({ title, children }: { title: string; children: ReactNode 
   </div>
 );
 
-const PropLabel = ({ children }: { children: string }) => (
+const PropLabel = ({ children }: { children: ReactNode }) => (
   <div style={{
     fontFamily: 'monospace', fontSize: '11px',
     color: colorVars.brandAccent, marginBottom: '4px',

@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { ProgressLinear } from '../../../../package/ui/primitives/Progress/index.ts';
+import { ProgressLinear } from '../../../../../package/ui/primitives/Progress';
 
 figma.connect(
   ProgressLinear,

@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { ProgressCircular } from '../../../../package/ui/primitives/Progress/index.ts';
+import { ProgressCircular } from '../../../../../package/ui/primitives/Progress';
 
 figma.connect(
   ProgressCircular,
