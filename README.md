@@ -1,85 +1,230 @@
-
 # @loom-sdc/design-system
 
-Framework-agnostic, token-driven Web Components library. Built for maximum efficiency and maintainability with Vite, TypeScript, and Vanilla Extract.
+Token-driven, framework-agnostic Web Components design system. Built with Vanilla Extract, Vite, and TypeScript — zero runtime overhead, full tree-shaking, native Custom Elements.
 
-[![](https://img.shields.io/badge/bundle%20size-efficient-blue)](https://bundlephobia.com/package/@loom-sdc/design-system)
-[![](https://img.shields.io/badge/TypeScript-6.x-blue.svg)](https://www.typescriptlang.org/)
-[![](https://img.shields.io/badge/Vite-8.x-9464fd.svg)](https://vitejs.dev/)
-[![](https://img.shields.io/badge/Web%20Components-native-29abe2.svg)](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
-
----
-
-## Filosofía de Consumo
-
-**Barrel Import**  
-Uso recomendado solo para prototipos o pruebas rápidas. Importa todos los elementos y tokens, sin optimización de peso.
-
-```js
-import '@loom-sdc/design-system/elements';
-```
-
-**Subpath Export (Producción/Tree-shaking)**  
-Importa y registra solo los componentes necesarios. Esto maximiza la eficiencia del bundle y permite tree-shaking real.
-
-```js
-import { LoomButton } from '@loom-sdc/design-system/elements/button';
-LoomButton.define(); // registra <loom-button>
-```
-
-- Cada subpath (`@loom-sdc/design-system/elements/<component>`) expone solo el componente correspondiente.
-- No uses el barrel en producción.
+[![npm version](https://img.shields.io/npm/v/@loom-sdc/design-system.svg)](https://www.npmjs.com/package/@loom-sdc/design-system)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178c6.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-9464fd.svg)](https://vitejs.dev/)
+[![Web Components](https://img.shields.io/badge/Web%20Components-native-29abe2.svg)](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
+[![Vanilla Extract](https://img.shields.io/badge/Vanilla%20Extract-zero%20runtime-ff5c00.svg)](https://vanilla-extract.style/)
+[![Storybook](https://img.shields.io/badge/Storybook-10.x-ff4785.svg)](https://storybook.js.org/)
 
 ---
 
-## Guía de Inicio Rápido
+## Overview
 
-### 1. Instalación
+Loom Design System provides a single, canonical layer of UI primitives as native Custom Elements (`loom-*` tags). Framework wrappers (React) are thin adapters — all visual logic lives in the Web Component layer.
+
+**Key principles:**
+
+- **Token-driven** — all design decisions (color, spacing, typography) are exposed as CSS custom properties via Vanilla Extract
+- **Framework-agnostic** — use in any framework, vanilla HTML, or no framework at all
+- **Tree-shakeable** — import only what you use via per-component subpath exports
+- **Zero runtime** — styles are compiled at build time with no JavaScript style injection
+
+---
+
+## Installation
 
 ```bash
 npm install @loom-sdc/design-system
 ```
 
-### 2. Importa el core de estilos y tokens (obligatorio)
+React peer dependency (optional):
 
-```js
-import '@loom-sdc/design-system/style.css'; // tokens y estilos globales
-import '@loom-sdc/design-system/fonts.css'; // opcional: fuentes TWK Everett
+```bash
+npm install react react-dom
 ```
 
-> **Nota:** Si alguno de estos archivos no existe en tu distribución, verifica la ruta y genera un placeholder.
+---
 
-### 3. Registro de un componente
+## Quick Start
+
+### 1. Import global styles (required)
+
+```js
+import '@loom-sdc/design-system/style.css'; // design tokens + global styles
+import '@loom-sdc/design-system/fonts.css'; // TWK Everett font-face (optional)
+```
+
+### 2. Register a component
 
 ```js
 import { LoomButton } from '@loom-sdc/design-system/elements/button';
 
-LoomButton.define(); // registra <loom-button>
+LoomButton.define(); // registers <loom-button> as a custom element
 ```
 
-Luego en tu HTML/JSX:
+### 3. Use in your markup
 
 ```html
-<loom-button>Click me</loom-button>
+<loom-button variant="primary" size="md">Get started</loom-button>
 ```
 
 ---
 
-## Tabla de Componentes Disponibles
+## Import Strategy
 
-| Nombre      | Ruta de Importación                                      | Tag de Custom Element |
-|-------------|---------------------------------------------------------|----------------------|
-| LoomBox     | @loom-sdc/design-system/elements/box                    | `<loom-box>`         |
-| LoomButton  | @loom-sdc/design-system/elements/button                 | `<loom-button>`      |
-| LoomInline  | @loom-sdc/design-system/elements/inline                 | `<loom-inline>`      |
-| LoomStack   | @loom-sdc/design-system/elements/stack                  | `<loom-stack>`       |
-| LoomText    | @loom-sdc/design-system/elements/text                   | `<loom-text>`        |
+### Production — subpath imports (recommended)
+
+Import and register only the components your application needs. This enables real tree-shaking and minimal bundle size.
+
+```js
+import { LoomButton } from '@loom-sdc/design-system/elements/button';
+import { LoomText }   from '@loom-sdc/design-system/elements/text';
+import { LoomStack }  from '@loom-sdc/design-system/elements/stack';
+
+LoomButton.define();
+LoomText.define();
+LoomStack.define();
+```
+
+### Prototyping — barrel import
+
+Registers all components at once. Not recommended for production.
+
+```js
+import '@loom-sdc/design-system/custom-elements'; // auto-registers everything
+```
+
+### Tokens only
+
+```js
+import '@loom-sdc/design-system/core';
+```
 
 ---
 
-## Configuración de TypeScript
+## Exports Reference
 
-Para evitar errores de tipos con los subpaths, asegúrate de tener en tu `tsconfig.json`:
+| Subpath | Description |
+|---|---|
+| `@loom-sdc/design-system` | Full barrel (all exports) |
+| `@loom-sdc/design-system/core` | Design tokens only |
+| `@loom-sdc/design-system/elements` | All components (tree-shakeable) |
+| `@loom-sdc/design-system/custom-elements` | Auto-registers all custom elements |
+| `@loom-sdc/design-system/react-jsx` | React wrappers |
+| `@loom-sdc/design-system/elements/<Component>` | Per-component subpath |
+| `@loom-sdc/design-system/style.css` | Global styles + tokens (mandatory) |
+| `@loom-sdc/design-system/fonts.css` | Font-face declarations |
+
+---
+
+## Components
+
+| Component | Subpath import | Custom element tag |
+|---|---|---|
+| `LoomBox` | `.../elements/box` | `<loom-box>` |
+| `LoomButton` | `.../elements/button` | `<loom-button>` |
+| `LoomIcon` | `.../elements/icon` | `<loom-icon>` |
+| `LoomInline` | `.../elements/inline` | `<loom-inline>` |
+| `LoomStack` | `.../elements/stack` | `<loom-stack>` |
+| `LoomText` | `.../elements/text` | `<loom-text>` |
+
+> Additional primitives (Divider, Fab, Link, Progress, Tag) are available in source and will be published in upcoming releases.
+
+---
+
+## Framework Usage
+
+### Vanilla HTML / Web Components
+
+```html
+<script type="module">
+  import '@loom-sdc/design-system/style.css';
+  import { LoomButton, LoomStack, LoomText } from '@loom-sdc/design-system/elements';
+
+  LoomButton.define();
+  LoomStack.define();
+  LoomText.define();
+</script>
+
+<loom-stack gap="md">
+  <loom-text variant="heading-lg">Hello, Loom</loom-text>
+  <loom-button variant="primary">Get started</loom-button>
+</loom-stack>
+```
+
+### React
+
+```tsx
+import '@loom-sdc/design-system/style.css';
+import { Button, Stack, Text } from '@loom-sdc/design-system/react-jsx';
+
+export function App() {
+  return (
+    <Stack gap="md">
+      <Text variant="heading-lg">Hello, Loom</Text>
+      <Button variant="primary" onClick={() => console.log('clicked')}>
+        Get started
+      </Button>
+    </Stack>
+  );
+}
+```
+
+### Angular (Custom Elements)
+
+```ts
+// app.config.ts
+import { ApplicationConfig } from '@angular/core';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideExperimentalZonelessChangeDetection()],
+};
+```
+
+```ts
+// app.module.ts
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { LoomButton } from '@loom-sdc/design-system/elements/button';
+
+LoomButton.define();
+
+@NgModule({ schemas: [CUSTOM_ELEMENTS_SCHEMA] })
+export class AppModule {}
+```
+
+```html
+<loom-button variant="primary">Submit</loom-button>
+```
+
+---
+
+## Design Tokens
+
+All tokens are exposed as CSS custom properties. Override them in your theme or consume them directly in CSS.
+
+### Token groups
+
+| Group | Description |
+|---|---|
+| `color` | Semantic color aliases |
+| `palette` | Raw color scale (50–950) |
+| `spacing` | 4px base grid (xs → 3xl) |
+| `typography` | Font size, weight, line height, letter spacing |
+| `fontFamily` | Brand and monospace font stacks |
+| `radius` | Border radius scale |
+| `shadow` | Elevation shadows |
+| `motion` | Duration and easing tokens |
+| `zIndex` | Layer stack |
+| `iconSize` | Icon size scale |
+
+### Example — custom theme override
+
+```css
+:root {
+  --loom-color-brand-primary: #your-brand-color;
+  --loom-spacing-md: 1rem;
+}
+```
+
+---
+
+## TypeScript Configuration
+
+Ensure your `tsconfig.json` uses `bundler` module resolution to resolve subpath exports correctly:
 
 ```json
 {
@@ -91,14 +236,73 @@ Para evitar errores de tipos con los subpaths, asegúrate de tener en tu `tsconf
 
 ---
 
-## Notas Técnicas
+## Development
 
-- Todos los componentes deben registrarse explícitamente con `.define()`.
-- Los estilos globales y tokens deben importarse siempre antes de usar cualquier componente.
-- El consumo granular mediante subpaths es obligatorio en producción para mantener bundles mínimos.
-- Si falta algún archivo de estilos global (`style.css`, `fonts.css`), crea un placeholder y verifica la ruta en tu distribución final.
+### Prerequisites
+
+- Node.js ≥ 20
+- npm ≥ 10
+
+### Setup
+
+```bash
+git clone <repo-url>
+cd loom-design-system
+npm install
+```
+
+### Commands
+
+| Command | Description |
+|---|---|
+| `npm run storybook` | Start Storybook dev server on port 6007 |
+| `npm run build:lib` | Build the library to `dist/` |
+| `npm run build-storybook` | Build static Storybook |
+| `npm run test-storybook` | Run Vitest browser tests (Playwright) |
+| `npm run lint` | Run ESLint |
+| `npx tsc -b --noEmit` | Type-check without emitting |
+| `npm run release` | Build and publish to npm |
+
+### Project structure
+
+```
+src/design-system/
+├── package/
+│   ├── tokens/           # Vanilla Extract token groups
+│   ├── ui/primitives/    # Component implementations
+│   ├── elements/         # Per-component subpath re-exports
+│   └── styles/           # Global shared CSS
+└── apps/storybook/
+    ├── foundations/      # Token documentation stories
+    └── ui/primitives/    # Component stories + interaction tests
+```
+
+### Component anatomy
+
+Every primitive under `ui/primitives/<Name>/` follows this structure:
+
+```
+Name.css.ts           # Vanilla Extract styles
+Name.types.ts         # TypeScript interfaces
+index.ts              # Public re-export
+adapters/
+  Name.element.ts     # Web Component (canonical)
+  Name.react.tsx      # React wrapper — renders <loom-name>, no logic
+```
 
 ---
 
-**Mantenibilidad y eficiencia de peso son prioritarios.**  
-No uses default exports. No dupliques tokens ni estilos. Usa siempre los subpaths para producción.
+## Contributing
+
+1. Follow the existing component anatomy strictly.
+2. Run `npx tsc -b --noEmit` before submitting any change.
+3. Add or update Storybook stories for any new component or token.
+4. Use named exports only — no default exports.
+5. Use type unions or `as const` objects — no TypeScript `enum`.
+6. All internal imports must include file extensions (`.ts`, `.tsx`, `.css.ts`).
+
+---
+
+## License
+
+Private — © Kyndryl. All rights reserved.
