@@ -33,3 +33,6 @@ export type { FabProps, FabSize, FabContent } from './Fab/index.ts';
 
 export { Badge, BADGE_STATES } from './Badge/index.ts';
 export type { BadgeProps, BadgeState } from './Badge/index.ts';
+
+export { StepperStep, LoomStepperStep, STEPPER_STEP_STATES } from './StepperStep/index.ts';
+export type { StepperStepState, StepperStepProps } from './StepperStep/index.ts';

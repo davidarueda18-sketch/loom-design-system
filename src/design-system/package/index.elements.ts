@@ -21,3 +21,5 @@ export { LoomProgressCircular } from './ui/primitives/Progress/adapters/Progress
 export { LoomTag } from './ui/primitives/Tag/adapters/Tag.element.ts';
 export { LoomFab } from './ui/primitives/Fab/adapters/Fab.element.ts';
 export { LoomBadge } from './ui/primitives/Badge/adapters/Badge.element.ts';
+export { LoomStepperStep } from './ui/primitives/StepperStep/adapters/StepperStep.element.ts';
+export { LoomStepper } from './ui/components/Stepper/adapters/Stepper.element.ts';

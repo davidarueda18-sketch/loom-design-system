@@ -91,6 +91,15 @@ declare module 'react' {
         state?: string;
         label?: string;
       };
+      'loom-stepper-step': LoomElementProps<HTMLElementTagNameMap['loom-stepper-step']> & {
+        step?: string;
+        label?: string;
+        state?: string;
+      };
+      'loom-stepper': LoomElementProps<HTMLElementTagNameMap['loom-stepper']> & {
+        steps?: string;
+        current?: string | number;
+      };
     }
   }
 }
