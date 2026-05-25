@@ -87,6 +87,10 @@ declare module 'react' {
         label?: string;
         disabled?: boolean;
       };
+      'loom-badge': LoomElementProps<HTMLElementTagNameMap['loom-badge']> & {
+        state?: string;
+        label?: string;
+      };
     }
   }
 }

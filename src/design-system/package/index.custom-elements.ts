@@ -8,6 +8,7 @@ import type { LoomLink }    from './ui/primitives/Link/adapters/Link.element.ts'
 import type { LoomProgressCircular } from './ui/primitives/Progress/adapters/ProgressCircular.element.ts';
 import type { LoomProgressLinear }   from './ui/primitives/Progress/adapters/ProgressLinear.element.ts';
 import type { LoomStack }   from './ui/primitives/Stack/adapters/Stack.element.ts';
+import type { LoomBadge }   from './ui/primitives/Badge/adapters/Badge.element.ts';
 import type { LoomTag }     from './ui/primitives/Tag/adapters/Tag.element.ts';
 import type { LoomText }    from './ui/primitives/Text/adapters/Text.element.ts';
 
@@ -23,6 +24,7 @@ declare global {
     'loom-progress-circular': LoomProgressCircular;
     'loom-progress-linear':   LoomProgressLinear;
     'loom-stack':   LoomStack;
+    'loom-badge':   LoomBadge;
     'loom-tag':     LoomTag;
     'loom-text':    LoomText;
   }

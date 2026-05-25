@@ -30,3 +30,6 @@ export type { TagProps, TagValue } from './Tag/index.ts';
 
 export { Fab, FAB_SIZES, FAB_CONTENTS } from './Fab/index.ts';
 export type { FabProps, FabSize, FabContent } from './Fab/index.ts';
+
+export { Badge, BADGE_STATES } from './Badge/index.ts';
+export type { BadgeProps, BadgeState } from './Badge/index.ts';

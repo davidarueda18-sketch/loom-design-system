@@ -20,3 +20,4 @@ export { LoomProgressLinear } from './ui/primitives/Progress/adapters/ProgressLi
 export { LoomProgressCircular } from './ui/primitives/Progress/adapters/ProgressCircular.element.ts';
 export { LoomTag } from './ui/primitives/Tag/adapters/Tag.element.ts';
 export { LoomFab } from './ui/primitives/Fab/adapters/Fab.element.ts';
+export { LoomBadge } from './ui/primitives/Badge/adapters/Badge.element.ts';
