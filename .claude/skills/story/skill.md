@@ -11,7 +11,7 @@ description: Generate Storybook documentation files for Foundations (tokens) and
 - Wrapper role: this file contains Storybook-specific execution guidance and rich examples.
 - Change policy: update contract laws first and keep this skill synchronized.
 
-Generates autonomous, dynamic Storybook stories for Foundations and UI components. All token data flows from imported vars objects — nothing is hardcoded. For UI components, `loom-*` Web Components are the canonical public documentation surface; React wrappers are documented only as optional framework integration.
+Generates autonomous, dynamic Storybook stories for Foundations and UI components. All token data flows from imported vars objects — nothing is hardcoded. For UI components, `loom-*` Web Components are the canonical public documentation surface; React wrappers are documented only as optional framework integration. Canonical UI examples compose with existing Loom primitives before using raw HTML layout wrappers.
 
 ## When to Use
 
@@ -23,6 +23,17 @@ Generates autonomous, dynamic Storybook stories for Foundations and UI component
 ---
 
 ## Four Mandatory Laws
+
+### UI Composition Rule — Loom primitives first
+
+For UI component stories, implementation snippets and canonical demos must use existing Loom primitives for layout and text whenever they cover the need:
+
+- Use `<loom-box>` for padding/container spacing.
+- Use `<loom-stack>` for vertical layout.
+- Use `<loom-inline>` for horizontal layout.
+- Use `<loom-text>` for textual demo content.
+
+Raw `<div>` / `<span>` wrappers are allowed only for Storybook-only scaffolding that has no Loom equivalent, such as a measurement frame, a test target, a CSS `::part()` decorator wrapper, or native semantic content that the library does not yet provide. Do not teach consumers to compose Loom components with ad hoc `div style={{ display: 'flex' }}` when `loom-inline` or `loom-stack` exists.
 
 ### Law 1 — Single Source of Truth
 
@@ -855,6 +866,7 @@ const EasingRow = ({ name, cssVar }: { name: string; cssVar: string }) => (
 - [ ] Preview component matches the token type (Law 4 table — no generic boxes for z-index, opacity, typography, or motion)
 - [ ] Story renders correctly in both dark and light themes
 - [ ] `.stories.tsx` file lives in the correct storybook folder
+- [ ] UI examples compose with Loom primitives (`loom-box`, `loom-stack`, `loom-inline`, `loom-text`) before raw `div` / `span` layout wrappers
 
 ### React Component Stories
 

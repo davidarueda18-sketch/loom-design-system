@@ -1,11 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
-import { Divider, DIVIDER_ORIENTATIONS, DIVIDER_LABEL_POSITIONS, DIVIDER_COLORS, DIVIDER_THICKNESSES, DIVIDER_LINE_STYLES } from '../../../../../package/ui/primitives/Divider/index.ts';
+import { DIVIDER_ORIENTATIONS, DIVIDER_LABEL_POSITIONS, DIVIDER_COLORS, DIVIDER_THICKNESSES, DIVIDER_LINE_STYLES } from '../../../../../package/ui/primitives/Divider/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Divider/adapters/Divider.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
+import '../../../../../package/ui/primitives/Text/adapters/Text.element.ts';
 import '../../../loom-web-components.d.ts';
+
+type DividerStoryArgs = {
+  orientation?: string;
+  label?: string;
+  labelPosition?: string;
+  color?: string;
+  thickness?: string;
+  lineStyle?: string;
+};
+
+type DividerWebComponentArgs = {
+  orientation?: string;
+  label?: string;
+  'label-position'?: string;
+  color?: string;
+  thickness?: string;
+  'line-style'?: string;
+};
 
 const meta = {
   title: 'Primitives/Divider',
@@ -38,12 +60,12 @@ label opcional con posición configurable, tokens de color, grosor y estilo de l
 // Con label centrado
 <loom-divider label="or"></loom-divider>
 
-// Vertical entre columnas
-<div style={{ display: 'flex', height: '80px', gap: '16px' }}>
-  <span>A</span>
+// Vertical entre columnas con primitives Loom
+<loom-inline gap="md" align="center" style="height: 80px">
+  <loom-text variant="body-md">A</loom-text>
   <loom-divider orientation="vertical"></loom-divider>
-  <span>B</span>
-</div>
+  <loom-text variant="body-md">B</loom-text>
+</loom-inline>
 \`\`\`
 
 El wrapper React \`<Divider />\` renderiza internamente \`<loom-divider>\`.
@@ -52,25 +74,24 @@ Usa \`::part(line)\`, \`::part(line-start)\`, \`::part(line-end)\` y \`::part(la
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<DividerStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<DividerStoryArgs>;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '40px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box padding-y="md" style={{ display: 'block' }}>
+      <loom-text
+        variant="overline"
+        style={{ color: colorVars.textSecondary, display: 'block', marginBottom: '16px' }}
+      >
         {title}
-      </h3>
+      </loom-text>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
@@ -78,7 +99,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export const Default: Story = {
   render: ({ orientation, label, labelPosition, color, thickness, lineStyle }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box padding="lg">
       <loom-divider
         orientation={orientation as string}
         label={label as string | undefined}
@@ -87,7 +108,7 @@ export const Default: Story = {
         thickness={thickness as string}
         line-style={lineStyle as string}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -101,20 +122,22 @@ export const LabelPositions: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px', color: colorVars.textPrimary }}>
+    <loom-box padding="lg" style={{ color: colorVars.textPrimary }}>
+      <loom-stack gap="xl2">
       <Section title="Sin label (línea pura)">
-        <Divider />
+        <loom-divider></loom-divider>
       </Section>
       <Section title="start">
-        <Divider label="or" labelPosition="start" />
+        <loom-divider label="or" label-position="start"></loom-divider>
       </Section>
       <Section title="center (default)">
-        <Divider label="or" labelPosition="center" />
+        <loom-divider label="or" label-position="center"></loom-divider>
       </Section>
       <Section title="end">
-        <Divider label="or" labelPosition="end" />
+        <loom-divider label="or" label-position="end"></loom-divider>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -127,25 +150,27 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px', color: colorVars.textPrimary }}>
+    <loom-box padding="lg" style={{ color: colorVars.textPrimary }}>
+      <loom-stack gap="xl2">
       <Section title="Sin label">
-        <div style={{ display: 'flex', alignItems: 'center', height: '80px', gap: '24px', fontFamily: 'sans-serif' }}>
-          <span>Sección A</span>
-          <Divider orientation="vertical" />
-          <span>Sección B</span>
-        </div>
+        <loom-inline gap="lg" align="center" style={{ height: '80px', fontFamily: 'sans-serif' }}>
+          <loom-text variant="body-md">Sección A</loom-text>
+          <loom-divider orientation="vertical"></loom-divider>
+          <loom-text variant="body-md">Sección B</loom-text>
+        </loom-inline>
       </Section>
       <Section title="Con label (start / center / end)">
-        <div style={{ display: 'flex', alignItems: 'stretch', height: '120px', gap: '24px', fontFamily: 'sans-serif' }}>
-          <span style={{ display: 'flex', alignItems: 'center' }}>Start</span>
-          <Divider orientation="vertical" label="or" labelPosition="start" />
-          <span style={{ display: 'flex', alignItems: 'center' }}>Center</span>
-          <Divider orientation="vertical" label="or" labelPosition="center" />
-          <span style={{ display: 'flex', alignItems: 'center' }}>End</span>
-          <Divider orientation="vertical" label="or" labelPosition="end" />
-        </div>
+        <loom-inline gap="lg" align="stretch" style={{ height: '120px', fontFamily: 'sans-serif' }}>
+          <loom-inline align="center"><loom-text variant="body-md">Start</loom-text></loom-inline>
+          <loom-divider orientation="vertical" label="or" label-position="start"></loom-divider>
+          <loom-inline align="center"><loom-text variant="body-md">Center</loom-text></loom-inline>
+          <loom-divider orientation="vertical" label="or" label-position="center"></loom-divider>
+          <loom-inline align="center"><loom-text variant="body-md">End</loom-text></loom-inline>
+          <loom-divider orientation="vertical" label="or" label-position="end"></loom-divider>
+        </loom-inline>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -159,13 +184,15 @@ export const Colors: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box padding="lg">
+      <loom-stack gap="xl">
       {DIVIDER_COLORS.map((c) => (
         <Section key={c} title={c}>
-          <Divider color={c} label="or" />
+          <loom-divider color={c} label="or"></loom-divider>
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -179,13 +206,15 @@ export const Thickness: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box padding="lg">
+      <loom-stack gap="xl">
       {DIVIDER_THICKNESSES.map((t) => (
         <Section key={t} title={`${t} (${t === 'thin' ? '1px' : t === 'medium' ? '2px' : '4px'})`}>
-          <Divider thickness={t} />
+          <loom-divider thickness={t}></loom-divider>
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -199,30 +228,25 @@ export const LineStyles: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box padding="lg">
+      <loom-stack gap="xl">
       <Section title="solid">
-        <Divider lineStyle="solid" label="or" />
+        <loom-divider line-style="solid" label="or"></loom-divider>
       </Section>
       <Section title="dashed">
-        <Divider lineStyle="dashed" label="or" />
+        <loom-divider line-style="dashed" label="or"></loom-divider>
       </Section>
       <Section title="dashed — vertical">
-        <div style={{ display: 'flex', alignItems: 'center', height: '80px', gap: '24px' }}>
-          <Divider orientation="vertical" lineStyle="dashed" />
-        </div>
+        <loom-inline align="center" style={{ height: '80px' }}>
+          <loom-divider orientation="vertical" line-style="dashed"></loom-divider>
+        </loom-inline>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
-export const WebComponent: StoryObj<{
-  orientation?: string;
-  label?: string;
-  'label-position'?: string;
-  color?: string;
-  thickness?: string;
-  'line-style'?: string;
-}> = {
+export const WebComponent: StoryObj<DividerWebComponentArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-divider)',
   parameters: {
@@ -255,7 +279,7 @@ CSS hooks: \`::part(line)\`, \`::part(line-start)\`, \`::part(line-end)\`, \`::p
     label:            { control: 'text' },
   },
   render: (args) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box padding="lg">
       <loom-divider
         orientation={args.orientation}
         label={args.label}
@@ -264,7 +288,7 @@ CSS hooks: \`::part(line)\`, \`::part(line-start)\`, \`::part(line-end)\`, \`::p
         thickness={args.thickness}
         line-style={args['line-style']}
       />
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-divider');
