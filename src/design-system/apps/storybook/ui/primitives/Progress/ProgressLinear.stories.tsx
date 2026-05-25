@@ -8,11 +8,23 @@ import {
   PROGRESS_SHAPES,
   PROGRESS_COLORS,
 } from '../../../../../package/ui/primitives/Progress/index.ts';
+import type { ProgressColor, ProgressShape, ProgressThickness } from '../../../../../package/ui/primitives/Progress/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/tokens/progress/progress.tokens.css.ts';
 import '../../../../../package/ui/primitives/Progress/adapters/ProgressLinear.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface ProgressLinearStoryArgs {
+  value?: number;
+  max?: number;
+  indeterminate?: boolean;
+  thickness?: ProgressThickness;
+  color?: ProgressColor;
+  shape?: ProgressShape;
+  label?: string;
+  showValue?: boolean;
+}
 
 const meta = {
   title: 'Primitives/Progress/Linear',
@@ -58,18 +70,18 @@ Hooks CSS: \`::part(track-host)\`, \`::part(track)\`, \`::part(active)\`, \`::pa
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<ProgressLinearStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ProgressLinearStoryArgs>;
 
 type ProgressLinearWebComponentArgs = {
   value?: number;
   max?: number;
   indeterminate?: boolean;
-  thickness?: string;
-  color?: string;
-  shape?: string;
+  thickness?: ProgressThickness;
+  color?: ProgressColor;
+  shape?: ProgressShape;
   label?: string;
   'show-value'?: boolean;
 };
@@ -97,14 +109,14 @@ export const Default: Story = {
   render: ({ value, max, indeterminate, thickness, color, shape, label, showValue }) => (
     <div style={{ padding: '24px' }}>
       <loom-progress-linear
-        value={value as number}
-        max={max as number}
-        indeterminate={(indeterminate as boolean) || undefined}
-        thickness={thickness as string}
-        color={color as string}
-        shape={shape as string}
-        label={label as string | undefined}
-        show-value={(showValue as boolean) || undefined}
+        value={value}
+        max={max}
+        indeterminate={indeterminate || undefined}
+        thickness={thickness}
+        color={color}
+        shape={shape}
+        label={label}
+        show-value={showValue || undefined}
       />
     </div>
   ),

@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { PlusIcon, BookmarkIcon, PencilIcon, ShareIcon } from '@heroicons/react/24/outline';
 import { Fab, FAB_SIZES, FAB_CONTENTS } from '../../../../../package/ui/primitives/Fab/index.ts';
-import type { FabSize } from '../../../../../package/ui/primitives/Fab/index.ts';
+import type { FabContent, FabSize } from '../../../../../package/ui/primitives/Fab/index.ts';
 import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
@@ -21,6 +21,14 @@ const ICON_SIZE_MAP = {
 
 // ─── State overrides — simulate pseudo-classes visually ──────────────────────
 type StateDemo = { label: string; style?: CSSProperties; disabled?: boolean };
+
+interface FabStoryArgs {
+  size: FabSize;
+  content: FabContent;
+  label: string;
+  icon?: ReactNode;
+  disabled?: boolean;
+}
 
 const FAB_STATES: StateDemo[] = [
   { label: 'Default' },
@@ -109,10 +117,10 @@ El wrapper React \`<Fab />\` renderiza internamente \`<loom-fab>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<FabStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<FabStoryArgs>;
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
@@ -126,10 +134,10 @@ export const Default: Story = {
   render: ({ size, content, label, disabled }) => (
     <div style={{ padding: '24px' }}>
       <loom-fab
-        size={size as string}
-        content={content as string}
-        label={label as string}
-        disabled={(disabled as boolean) || undefined}
+        size={size}
+        content={content}
+        label={label}
+        disabled={disabled || undefined}
       >
         {content !== 'text' && <PlusIcon style={{ width: '24px', height: '24px' }} />}
       </loom-fab>
@@ -371,7 +379,7 @@ export const CustomEvents: Story = {
   render: () => {
     const [log, setLog] = useState<string[]>([]);
 
-    const handleRef = useCallback((el: HTMLElement | null) => {
+    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-fab'] | null) => {
       if (!el) return;
       el.addEventListener('loom-click', () => {
         setLog((prev) => [`loom-click @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
@@ -390,7 +398,7 @@ export const CustomEvents: Story = {
           size="md"
           content="icon"
           label="Trigger events"
-          ref={handleRef as React.Ref<HTMLElement>}
+          ref={handleRef}
         >
           <PlusIcon style={{ width: '24px', height: '24px' }} />
         </loom-fab>

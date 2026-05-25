@@ -7,11 +7,11 @@ import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../loom-web-components.d.ts';
 
-type BoxStoryArgs = {
+interface BoxStoryArgs {
   padding?: string;
   paddingX?: string;
   paddingY?: string;
-};
+}
 
 const boxImplementationCode = `import '@loom-sdc/design-system/elements';
 
@@ -54,10 +54,10 @@ El wrapper React \`<Box />\` renderiza internamente \`<loom-box>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<BoxStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<BoxStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -107,9 +107,9 @@ const StorySection = ({ title, children }: { title: string; children: ReactNode 
 
 export const Default: Story = {
   args: {
-    padding: "lg",
-    paddingX: "xl3",
-    paddingY: "xl8"
+    padding: 'lg',
+    paddingX: 'xl3',
+    paddingY: 'xl8',
   },
   parameters: {
     docs: {
@@ -118,7 +118,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <Canvas>
-      <loom-box padding={args.padding as string} style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
+      <loom-box padding={args.padding} style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
         <DemoBlock>Contenido con padding</DemoBlock>
       </loom-box>
     </Canvas>
@@ -133,7 +133,7 @@ export const PaddingAxes: Story = {
       source: { code: '<loom-box padding-x="xl" padding-y="sm">Contenido</loom-box>' },
     },
   },
-  render: (args: BoxStoryArgs) => (
+  render: (args) => (
     <Canvas>
       <loom-box
         padding-x={args.paddingX}
@@ -194,9 +194,9 @@ export const WebComponent: Story = {
   render: ({ padding, paddingX, paddingY }) => (
     <Canvas>
       <loom-box
-        padding={padding as string}
-        padding-x={paddingX as string}
-        padding-y={paddingY as string}
+        padding={padding}
+        padding-x={paddingX}
+        padding-y={paddingY}
         style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}
       >
         <DemoBlock>loom-box con atributos reactivos</DemoBlock>

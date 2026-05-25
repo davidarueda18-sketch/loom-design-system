@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Text, variantTokenMap } from '../../../../../package/ui/primitives/Text/index.ts';
@@ -15,6 +15,13 @@ const textImplementationCode = `import '@loom-sdc/design-system/elements';
 <loom-text variant="body-md" align="start">
   Loom Design System
 </loom-text>`;
+
+interface TextStoryArgs {
+  variant?: TextVariant;
+  align?: string;
+  children?: ReactNode;
+  style?: CSSProperties;
+}
 
 const meta = {
   title: 'Primitives/Text',
@@ -46,10 +53,10 @@ El wrapper React \`<Text />\` renderiza internamente \`<loom-text>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<TextStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<TextStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -103,11 +110,11 @@ export const Default: Story = {
   render: ({ variant, align, children }) => (
     <Canvas>
       <loom-text
-        variant={variant as string}
-        align={align as string | undefined}
+        variant={variant}
+        align={align}
         style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary, overflowWrap: 'anywhere' }}
       >
-        {children as ReactNode}
+        {children}
       </loom-text>
     </Canvas>
   ),
@@ -176,11 +183,11 @@ export const WebComponent: Story = {
   render: ({ variant, align, children }) => (
     <Canvas>
       <loom-text
-        variant={variant as string}
-        align={align as string | undefined}
+        variant={variant}
+        align={align}
         style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary, overflowWrap: 'anywhere' }}
       >
-        {children as ReactNode}
+        {children}
       </loom-text>
     </Canvas>
   ),

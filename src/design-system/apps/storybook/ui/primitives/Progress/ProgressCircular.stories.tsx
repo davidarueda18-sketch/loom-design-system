@@ -7,11 +7,34 @@ import {
   PROGRESS_CIRCULAR_SIZES,
   PROGRESS_COLORS,
 } from '../../../../../package/ui/primitives/Progress/index.ts';
+import type { ProgressCircularSize, ProgressColor, ProgressThickness } from '../../../../../package/ui/primitives/Progress/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/tokens/progress/progress.tokens.css.ts';
 import '../../../../../package/ui/primitives/Progress/adapters/ProgressCircular.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface ProgressCircularStoryArgs {
+  value?: number;
+  max?: number;
+  indeterminate?: boolean;
+  thickness?: ProgressThickness;
+  size?: ProgressCircularSize;
+  color?: ProgressColor;
+  label?: string;
+  showValue?: boolean;
+}
+
+interface ProgressCircularWebComponentArgs {
+  value?: number;
+  max?: number;
+  indeterminate?: boolean;
+  thickness?: ProgressThickness;
+  size?: ProgressCircularSize;
+  color?: ProgressColor;
+  label?: string;
+  'show-value'?: boolean;
+}
 
 const meta = {
   title: 'Primitives/Progress/Circular',
@@ -56,10 +79,10 @@ Hooks CSS: \`::part(ring)\` (svg), \`::part(track)\`, \`::part(active)\`, \`::pa
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<ProgressCircularStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ProgressCircularStoryArgs>;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -92,14 +115,14 @@ export const Default: Story = {
   render: ({ value, max, indeterminate, thickness, size, color, label, showValue }) => (
     <div style={{ padding: '24px' }}>
       <loom-progress-circular
-        value={value as number}
-        max={max as number}
-        indeterminate={(indeterminate as boolean) || undefined}
-        thickness={thickness as string}
-        size={size as string}
-        color={color as string}
-        label={label as string | undefined}
-        show-value={(showValue as boolean) || undefined}
+        value={value}
+        max={max}
+        indeterminate={indeterminate || undefined}
+        thickness={thickness}
+        size={size}
+        color={color}
+        label={label}
+        show-value={showValue || undefined}
       />
     </div>
   ),
@@ -229,16 +252,7 @@ export const WithLabel: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  value?:         number;
-  max?:           number;
-  indeterminate?: boolean;
-  thickness?:     string;
-  size?:          string;
-  color?:         string;
-  label?:         string;
-  'show-value'?:  boolean;
-}> = {
+export const WebComponent: StoryObj<ProgressCircularWebComponentArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-progress-circular)',
   parameters: {
@@ -289,7 +303,7 @@ Tests automáticos verifican shadow DOM, ARIA y geometría SVG (stroke-dasharray
     const host = canvasElement.querySelector('loom-progress-circular');
     if (!(host instanceof HTMLElement)) throw new Error('Expected loom-progress-circular in canvas.');
 
-    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     await expect(host.shadowRoot).toBeTruthy();
     await expect(host.getAttribute('role')).toBe('progressbar');

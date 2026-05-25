@@ -7,6 +7,7 @@ import { BellIcon as BellMini } from '@heroicons/react/20/solid';
 import { BellIcon as BellMicro } from '@heroicons/react/16/solid';
 
 import { Icon, ICON_SIZES } from '../../../../../package/ui/primitives/Icon/index.ts';
+import type { IconColor, IconSize } from '../../../../../package/ui/primitives/Icon/index.ts';
 import { Button } from '../../../../../package/ui/primitives/Button/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
@@ -23,6 +24,19 @@ const COLOR_OPTIONS = [
   'feedbackDanger',
   'feedbackInfo',
 ] as const;
+
+interface IconStoryArgs {
+  size?: IconSize;
+  color?: IconColor;
+  label?: string;
+  children?: ReactNode;
+}
+
+interface IconWebComponentArgs {
+  size?: IconSize;
+  color?: IconColor;
+  label?: string;
+}
 
 const meta = {
   title: 'Primitives/Icon',
@@ -59,10 +73,10 @@ Para íconos informativos, pasa \`label\` para activar \`role="img"\`; omítelo 
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<IconStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<IconStoryArgs>;
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
   <div style={{ marginBottom: '40px' }}>
@@ -102,12 +116,7 @@ export const Default: Story = {
     children: <BellIcon />,
   },
   render: (args) => {
-    const { size, color, label, children } = args as {
-      size?: string;
-      color?: string;
-      label?: string;
-      children?: ReactNode;
-    };
+    const { size, color, label, children } = args;
     return (
       <div style={{ padding: '24px' }}>
         <loom-icon size={size} color={color} label={label}>
@@ -290,11 +299,7 @@ export const Polymorphic: Story = {
   )
 };
 
-export const WebComponent: StoryObj<{
-  size?: string;
-  color?: string;
-  label?: string;
-}> = {
+export const WebComponent: StoryObj<IconWebComponentArgs> = {
   name: 'Web Component (loom-icon)',
   parameters: {
     docs: {
@@ -316,9 +321,9 @@ export const WebComponent: StoryObj<{
   render: ({ size, color, label }) => (
     <div style={{ padding: '24px' }}>
       <loom-icon
-        size={size as string}
-        color={color as string | undefined}
-        label={label as string | undefined}
+        size={size}
+        color={color}
+        label={label}
       >
         <BellIcon />
       </loom-icon>

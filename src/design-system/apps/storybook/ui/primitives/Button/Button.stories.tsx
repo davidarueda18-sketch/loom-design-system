@@ -1,13 +1,20 @@
 import { useCallback, useState } from 'react';
-import type { ReactNode, CSSProperties, Ref } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Button, BUTTON_VARIANTS, BUTTON_SIZES } from '../../../../../package/ui/primitives/Button/index.ts';
-import type { ButtonVariant } from '../../../../../package/ui/primitives/Button/index.ts';
+import type { ButtonSize, ButtonVariant } from '../../../../../package/ui/primitives/Button/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface ButtonStoryArgs {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  disabled?: boolean;
+  children?: ReactNode;
+}
 
 const meta = {
   title: 'Primitives/Button',
@@ -34,10 +41,10 @@ El wrapper React \`<Button />\` renderiza internamente \`<loom-button>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<ButtonStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ButtonStoryArgs>;
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 // State overrides simulate pseudo-classes visually. Token refs keep them in sync
@@ -126,11 +133,11 @@ export const Default: Story = {
   render: ({ variant, size, disabled, children }) => (
     <div style={{ padding: '24px' }}>
       <loom-button
-        variant={variant as string}
-        size={size as string}
-        disabled={(disabled as boolean) || undefined}
+        variant={variant}
+        size={size}
+        disabled={disabled || undefined}
       >
-        {children as ReactNode}
+        {children}
       </loom-button>
     </div>
   ),
@@ -271,7 +278,7 @@ export const CustomEvents: Story = {
   render: () => {
     const [log, setLog] = useState<string[]>([]);
 
-    const handleRef = useCallback((el: HTMLElement | null) => {
+    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-button'] | null) => {
       if (!el) return;
 
       const handleClick = () => {
@@ -294,7 +301,7 @@ export const CustomEvents: Story = {
         <loom-button
           variant="primary"
           size="md"
-          ref={handleRef as Ref<HTMLElement>}
+          ref={handleRef}
         >
           Trigger events
         </loom-button>

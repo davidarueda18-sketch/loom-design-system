@@ -3,10 +3,17 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { StepperStep, STEPPER_STEP_STATES } from '../../../../../package/ui/primitives/StepperStep/index.ts';
+import type { StepperStepState } from '../../../../../package/ui/primitives/StepperStep/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/StepperStep/adapters/StepperStep.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface StepperStepStoryArgs {
+  step?: string;
+  label?: string;
+  state?: StepperStepState;
+}
 
 const meta = {
   title: 'Primitives/StepperStep',
@@ -39,10 +46,10 @@ CSS hooks: \`::part(circle)\`, \`::part(number)\`, \`::part(check)\`, \`::part(l
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<StepperStepStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<StepperStepStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -75,9 +82,9 @@ export const Default: Story = {
   render: ({ step, label, state }) => (
     <div style={{ padding: '24px' }}>
       <loom-stepper-step
-        step={step as string}
-        label={label as string}
-        state={state as string}
+        step={step}
+        label={label}
+        state={state}
       />
     </div>
   ),
@@ -112,11 +119,7 @@ export const States: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  step?: string;
-  label?: string;
-  state?: string;
-}> = {
+export const WebComponent: StoryObj<StepperStepStoryArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-stepper-step)',
   parameters: {

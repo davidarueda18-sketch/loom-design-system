@@ -179,6 +179,72 @@ import '../../../package/tokens/color/color.tokens.css.ts'; // side-effect — r
 
 ---
 
+## TypeScript Typing Pattern for Story Args
+
+Story files with controls must type their args explicitly. Do not rely on Storybook to infer custom control-only args from a bare `Meta` object; in this repo that can infer render args as `{}` or as the meta object shape.
+
+### Required pattern for custom args
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+interface ButtonStoryArgs {
+  variant?: string;
+  size?: string;
+  disabled?: boolean;
+  label?: string;
+}
+
+const meta = {
+  title: 'Primitives/Button',
+  tags: ['autodocs'],
+  args: {
+    variant: 'primary',
+    size: 'md',
+    disabled: false,
+    label: 'Button',
+  },
+  argTypes: {
+    variant: { control: 'select', options: BUTTON_VARIANTS },
+    size: { control: 'select', options: BUTTON_SIZES },
+    disabled: { control: 'boolean' },
+    label: { control: 'text' },
+  },
+} satisfies Meta<ButtonStoryArgs>;
+
+export default meta;
+type Story = StoryObj<ButtonStoryArgs>;
+```
+
+Use `StoryObj<StoryArgs>` for custom args even when the meta object is typed. Bare `StoryObj` is acceptable only for stories with no custom args or argTypes. `StoryObj<typeof meta>` is acceptable only when the component prop type is the intended args shape and no control-only args are introduced.
+
+### Custom element refs
+
+Refs for `loom-*` elements must use `HTMLElementTagNameMap`; do not cast to `React.Ref<HTMLElement>`, `Ref<HTMLElement>`, or `any`.
+
+```tsx
+const handleRef = React.useCallback((el: HTMLElementTagNameMap['loom-button'] | null) => {
+  if (!el) return;
+  el.addEventListener('loom-click', handleClick);
+}, []);
+
+<loom-button ref={handleRef}>Click me</loom-button>
+```
+
+Play/test helpers should also return the concrete custom element type:
+
+```tsx
+const getLoomButton = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-button'] => {
+  const host = canvasElement.querySelector('loom-button');
+  if (!(host instanceof HTMLElement)) {
+    throw new Error('Expected a loom-button host in the story canvas.');
+  }
+  return host as HTMLElementTagNameMap['loom-button'];
+};
+```
+
+---
+
 ## File Structure
 
 ```
@@ -389,6 +455,13 @@ Custom Element stories use `render()` without a typed `component` — so argType
 ```tsx
 import { BUTTON_VARIANTS, BUTTON_SIZES } from '../../../package/ui/primitives/Button/Button.types.ts';
 
+interface ButtonStoryArgs {
+  variant?: string;
+  size?: string;
+  disabled?: boolean;
+  label?: string;
+}
+
 const ceMeta = {
   title: 'Primitives/Button/Web Component',
   tags: ['autodocs'],
@@ -404,10 +477,10 @@ const ceMeta = {
     disabled: false,
     label:   'Click me',
   },
-} satisfies Meta;
+} satisfies Meta<ButtonStoryArgs>;
 
 export default ceMeta;
-type Story = StoryObj<typeof ceMeta>;
+type Story = StoryObj<ButtonStoryArgs>;
 
 export const Default: Story = {
   render: ({ variant, size, disabled, label }) => (
@@ -478,7 +551,7 @@ export const InteractiveEvents: Story = {
     const [log, setLog] = React.useState<string[]>([]);
 
     // Imperative listener — event listener on the element, not React synthetic event
-    const handleRef = React.useCallback((el: HTMLElement | null) => {
+    const handleRef = React.useCallback((el: HTMLElementTagNameMap['loom-button'] | null) => {
       if (!el) return;
       el.addEventListener('loom-click', (e) => {
         setLog((prev) => [`loom-click fired (composed=${(e as CustomEvent).composed})`, ...prev].slice(0, 8));
@@ -487,8 +560,7 @@ export const InteractiveEvents: Story = {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px' }}>
-        {/* ref prop is safe on any element in React — it just receives the DOM node */}
-        <loom-button variant="primary" size="md" ref={handleRef as React.Ref<HTMLElement>}>
+        <loom-button variant="primary" size="md" ref={handleRef}>
           Click me
         </loom-button>
 

@@ -3,10 +3,23 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { Tag, TAG_VALUES } from '../../../../../package/ui/primitives/Tag/index.ts';
+import type { TagValue } from '../../../../../package/ui/primitives/Tag/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Tag/adapters/Tag.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface TagStoryArgs {
+  value?: TagValue;
+  label?: string;
+  showIcon?: boolean;
+}
+
+interface TagWebComponentArgs {
+  value?: TagValue;
+  label?: string;
+  'show-icon'?: 'true' | 'false';
+}
 
 const meta = {
   title: 'Primitives/Tag',
@@ -48,10 +61,10 @@ Usa \`::part(icon)\` y \`::part(label)\` para override CSS externo.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<TagStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<TagStoryArgs>;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -84,8 +97,8 @@ export const Default: Story = {
   render: ({ value, label, showIcon }) => (
     <div style={{ padding: '24px' }}>
       <loom-tag
-        value={value as string}
-        label={label as string}
+        value={value}
+        label={label}
         show-icon={showIcon === false ? 'false' : 'true'}
       />
     </div>
@@ -141,11 +154,7 @@ export const WithoutIcon: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  value?:      string;
-  label?:      string;
-  'show-icon'?: string;
-}> = {
+export const WebComponent: StoryObj<TagWebComponentArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-tag)',
   parameters: {

@@ -125,7 +125,7 @@ export const Default: Story = {
     }
 
     await expect(inner.getAttribute('href')).toBe('#');
-    await expect(inner.textContent).toContain('Ir a la documentación');
+    await expect(host.textContent).toContain('Ir a la documentación');
   },
 };
 

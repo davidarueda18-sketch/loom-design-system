@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Inline, INLINE_ALIGNS, INLINE_JUSTIFIES } from '../../../../../package/ui/primitives/Inline/index.ts';
+import type { InlineAlign, InlineJustify } from '../../../../../package/ui/primitives/Inline/index.ts';
 import { Stack } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
@@ -15,6 +16,13 @@ const inlineImplementationCode = `import '@loom-sdc/design-system/elements';
   <button>Cancelar</button>
   <button>Guardar</button>
 </loom-inline>`;
+
+interface InlineStoryArgs {
+  gap?: string;
+  align?: InlineAlign;
+  justify?: InlineJustify;
+  wrap?: boolean;
+}
 
 const meta = {
   title: 'Primitives/Inline',
@@ -45,10 +53,10 @@ El wrapper React \`<Inline />\` renderiza internamente \`<loom-inline>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<InlineStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<InlineStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -106,7 +114,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <Canvas>
-      <loom-inline gap={args.gap as string} align={args.align as string} style={{ width: '100%' }}>
+      <loom-inline gap={args.gap} align={args.align} style={{ width: '100%' }}>
         <Chip>Elemento 1</Chip>
         <Chip>Elemento 2</Chip>
         <Chip>Elemento 3</Chip>
@@ -159,8 +167,8 @@ export const WithWrap: Story = {
   render: (args) => (
     <Canvas maxWidth={320}>
       <loom-inline
-        gap={args.gap as string}
-        wrap={(args.wrap as boolean) || undefined}
+        gap={args.gap}
+        wrap={args.wrap || undefined}
         style={{ width: '100%', border: `1px dashed ${colorVars.borderDefault}`, padding: '8px', borderRadius: '4px', boxSizing: 'border-box' }}
       >
         {['React', 'TypeScript', 'Vite', 'Vanilla Extract', 'Storybook', 'A11y'].map((tag) => (
@@ -227,10 +235,10 @@ export const WebComponent: Story = {
   render: ({ gap, align, justify, wrap }) => (
     <Canvas maxWidth={360}>
       <loom-inline
-        gap={gap as string}
-        align={align as string}
-        justify={justify as string}
-        wrap={(wrap as boolean) || undefined}
+        gap={gap}
+        align={align}
+        justify={justify}
+        wrap={wrap || undefined}
         style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', width: '100%', boxSizing: 'border-box' }}
       >
         <Chip>React</Chip>

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Stack, STACK_ALIGNS, STACK_JUSTIFIES } from '../../../../../package/ui/primitives/Stack/index.ts';
+import type { StackAlign, StackJustify } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
@@ -14,6 +15,12 @@ const stackImplementationCode = `import '@loom-sdc/design-system/elements';
   <section>Primero</section>
   <section>Segundo</section>
 </loom-stack>`;
+
+interface StackStoryArgs {
+  gap?: string;
+  align?: StackAlign;
+  justify?: StackJustify;
+}
 
 const meta = {
   title: 'Primitives/Stack',
@@ -43,10 +50,10 @@ El wrapper React \`<Stack />\` renderiza internamente \`<loom-stack>\`.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<StackStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<StackStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -107,7 +114,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <Canvas>
-      <loom-stack gap={args.gap as string} style={{ width: '100%' }}>
+      <loom-stack gap={args.gap} style={{ width: '100%' }}>
         <Item wide>Elemento 1</Item>
         <Item wide>Elemento 2</Item>
         <Item wide>Elemento 3</Item>
@@ -143,8 +150,8 @@ export const JustifyCenter: Story = {
   render: (args) => (
     <Canvas>
       <loom-stack
-        gap={args.gap as string}
-        justify={args.justify as string}
+        gap={args.gap}
+        justify={args.justify}
         style={{ height: '300px', width: '100%', border: `1px dashed ${colorVars.borderDefault}`, boxSizing: 'border-box' }}
       >
         <Item wide>Centrado verticalmente</Item>
@@ -210,9 +217,9 @@ export const WebComponent: Story = {
   render: ({ gap, align, justify }) => (
     <Canvas>
       <loom-stack
-        gap={gap as string}
-        align={align as string}
-        justify={justify as string}
+        gap={gap}
+        align={align}
+        justify={justify}
         style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px', width: '100%', boxSizing: 'border-box' }}
       >
         <Item wide>Elemento 1</Item>

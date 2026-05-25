@@ -3,10 +3,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { Badge, BADGE_STATES } from '../../../../../package/ui/primitives/Badge/index.ts';
+import type { BadgeState } from '../../../../../package/ui/primitives/Badge/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Badge/adapters/Badge.element.ts';
 import '../../../loom-web-components.d.ts';
+
+interface BadgeStoryArgs {
+  state?: BadgeState;
+  label?: string;
+}
 
 const meta = {
   title: 'Primitives/Badge',
@@ -52,10 +58,10 @@ Usa \`::part(dot)\` y \`::part(label)\` para override CSS externo.
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<BadgeStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<BadgeStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -87,7 +93,7 @@ function Row({ children }: { children: React.ReactNode }) {
 export const Default: Story = {
   render: ({ state, label }) => (
     <div style={{ padding: '24px' }}>
-      <loom-badge state={state as string} label={label as string} />
+      <loom-badge state={state} label={label} />
     </div>
   ),
 };
@@ -124,10 +130,7 @@ export const States: Story = {
   ),
 };
 
-export const WebComponent: StoryObj<{
-  state?: string;
-  label?: string;
-}> = {
+export const WebComponent: StoryObj<BadgeStoryArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-badge)',
   parameters: {
@@ -195,7 +198,6 @@ CSS hooks: \`::part(dot)\`, \`::part(label)\`.
 };
 
 export const CSSParts: Story = {
-  name: 'CSS Parts',
   decorators: [
     (Story) => (
       <>

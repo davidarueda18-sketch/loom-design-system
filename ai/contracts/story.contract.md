@@ -39,6 +39,16 @@ Generate Storybook docs for foundations and UI components with dynamic token-der
 - implementation snippets avoid raw `div`/`span` layout when a Loom primitive covers the need
 - React wrapper snippets are clearly labeled as wrappers over `loom-*`
 
+## Typing Requirements
+
+- Stories with `args`, `argTypes`, or render props must define an explicit file-level `StoryArgs` interface or type.
+- Meta objects for stories with custom args must use `satisfies Meta<StoryArgs>`, not bare `satisfies Meta`.
+- Story aliases for stories with custom args must use `StoryObj<StoryArgs>` so render args are checked directly.
+- Bare `StoryObj` is acceptable only for stories without custom args or argTypes.
+- `StoryObj<typeof meta>` is acceptable only when Storybook component props are the intended args shape and no custom control-only args are introduced.
+- Custom element refs must use `HTMLElementTagNameMap['loom-*']`; do not cast refs to `React.Ref<HTMLElement>`, `Ref<HTMLElement>`, or `any`.
+- Helper functions that query custom elements must return `HTMLElementTagNameMap['loom-*']` after checking the queried host exists.
+
 ## Verification Command
 
 - `npm run storybook` (manual check)
