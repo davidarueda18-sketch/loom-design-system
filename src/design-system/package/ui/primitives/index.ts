@@ -36,3 +36,6 @@ export type { BadgeProps, BadgeState } from './Badge/index.ts';
 
 export { StepperStep, LoomStepperStep, STEPPER_STEP_STATES } from './StepperStep/index.ts';
 export type { StepperStepState, StepperStepProps } from './StepperStep/index.ts';
+
+export { Checkbox, LoomCheckbox, CHECKBOX_STATES, CHECKBOX_SHAPES } from './Checkbox/index.ts';
+export type { CheckboxProps, CheckboxState, CheckboxShape, CheckboxChangeEventDetail } from './Checkbox/index.ts';
