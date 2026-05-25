@@ -66,6 +66,12 @@ declare module 'react' {
         label?:       string;
         'show-icon'?: string;
       }, HTMLElement>;
+      'loom-fab': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        size?:     string;
+        content?:  string;
+        label?:    string;
+        disabled?: boolean;
+      }, HTMLElement>;
     }
   }
 }
