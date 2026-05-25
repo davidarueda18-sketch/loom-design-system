@@ -61,6 +61,11 @@ declare module 'react' {
         label?:         string;
         'show-value'?:  boolean;
       }, HTMLElement>;
+      'loom-tag': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        value?:       string;
+        label?:       string;
+        'show-icon'?: string;
+      }, HTMLElement>;
     }
   }
 }

@@ -24,3 +24,6 @@ export type { DividerProps, DividerOrientation, DividerLabelPosition, DividerCol
 
 export { ProgressLinear, ProgressCircular, PROGRESS_THICKNESSES, PROGRESS_SHAPES, PROGRESS_CIRCULAR_SIZES, PROGRESS_COLORS } from './Progress/index.ts';
 export type { ProgressLinearProps, ProgressCircularProps, ProgressThickness, ProgressShape, ProgressCircularSize, ProgressColor } from './Progress/index.ts';
+
+export { Tag, TAG_VALUES } from './Tag/index.ts';
+export type { TagProps, TagValue } from './Tag/index.ts';

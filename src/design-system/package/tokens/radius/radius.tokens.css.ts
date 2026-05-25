@@ -6,6 +6,7 @@ export const radiusVars = createThemeContract({
   sm: null,
   md: null,
   lg: null,
+  full: null,
 });
 
 createGlobalTheme(':root', radiusVars, {
@@ -14,4 +15,5 @@ createGlobalTheme(':root', radiusVars, {
   sm: '6px',
   md: '8px',
   lg: '16px',
+  full: '9999px',
 });
