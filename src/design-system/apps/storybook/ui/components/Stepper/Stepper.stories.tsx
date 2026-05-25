@@ -168,6 +168,19 @@ El estado se actualiza desde React vía \`useState\`.
   render: () => <ControlledStepper />,
 };
 
+export const ResponsiveMobile: Story = {
+  name: 'Responsive — Mobile (375px)',
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+    docs: {
+      description: {
+        story: 'En viewports < 768px solo el paso activo muestra su label. El resto solo muestra la burbuja con el número o checkmark.',
+      },
+    },
+  },
+  render: () => <ControlledStepper />,
+};
+
 export const WebComponent: Story = {
   tags: ['test'],
   name: 'Web Component (loom-stepper)',

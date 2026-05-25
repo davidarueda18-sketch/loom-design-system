@@ -10,6 +10,13 @@ export const root = style({
   minWidth: 'min-content',
   maxWidth: '96px',
   flexShrink: 0,
+  '@media': {
+    'screen and (max-width: 767px)': {
+      width: '40px',
+      minWidth: '40px',
+      maxWidth: '40px',
+    },
+  },
 });
 
 export const circle = style({
@@ -69,7 +76,17 @@ export const label = style({
 });
 
 export const labelState = styleVariants({
-  default: { color: colorVars.textDisabled },
+  default: {
+    color: colorVars.textDisabled,
+    '@media': {
+      'screen and (max-width: 767px)': { display: 'none' },
+    },
+  },
   active: { color: colorVars.brandAccent },
-  completed: { color: colorVars.brandAccent },
+  completed: {
+    color: colorVars.brandAccent,
+    '@media': {
+      'screen and (max-width: 767px)': { display: 'none' },
+    },
+  },
 });
