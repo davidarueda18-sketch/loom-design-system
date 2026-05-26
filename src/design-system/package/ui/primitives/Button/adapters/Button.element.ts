@@ -1,8 +1,8 @@
 import * as styles from '../Button.css.ts';
-import * as textStyles from '../../Text/Text.css.ts';
+import * as textStyles from '../../../../tokens/typography/typography.styles.css.ts';
 import type { ButtonVariant, ButtonSize } from '../Button.types.ts';
-import type { TextVariant } from '../../Text/Text.types.ts';
-import { variantTokenMap } from '../../Text/Text.types.ts';
+import type { TextVariant } from '../../../../tokens/typography/index.ts';
+import { variantTokenMap } from '../../../../tokens/typography/index.ts';
 
 const labelVariant: Record<ButtonSize, TextVariant> = {
   sm: 'label-sm',

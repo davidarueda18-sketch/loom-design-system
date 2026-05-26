@@ -8,7 +8,6 @@ import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Divider/adapters/Divider.element.ts';
 import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
-import '../../../../../package/ui/primitives/Text/adapters/Text.element.ts';
 import '../../../loom-web-components.d.ts';
 
 type DividerStoryArgs = {
@@ -62,9 +61,9 @@ label opcional con posición configurable, tokens de color, grosor y estilo de l
 
 // Vertical entre columnas con primitives Loom
 <loom-inline gap="md" align="center" style="height: 80px">
-  <loom-text variant="body-md">A</loom-text>
+  <p class="loom-body-md">A</p>
   <loom-divider orientation="vertical"></loom-divider>
-  <loom-text variant="body-md">B</loom-text>
+  <p class="loom-body-md">B</p>
 </loom-inline>
 \`\`\`
 
@@ -84,12 +83,12 @@ type Story = StoryObj<DividerStoryArgs>;
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <loom-box padding-y="md" style={{ display: 'block' }}>
-      <loom-text
-        variant="overline"
-        style={{ color: colorVars.textSecondary, display: 'block', marginBottom: '16px' }}
+      <p
+        className="loom-overline"
+        style={{ color: colorVars.textSecondary, display: 'block', marginBottom: '16px', margin: '0 0 16px' }}
       >
         {title}
-      </loom-text>
+      </p>
       {children}
     </loom-box>
   );
@@ -153,19 +152,19 @@ export const Vertical: Story = {
     <loom-box padding="lg" style={{ color: colorVars.textPrimary }}>
       <loom-stack gap="xl2">
       <Section title="Sin label">
-        <loom-inline gap="lg" align="center" style={{ height: '80px', fontFamily: 'sans-serif' }}>
-          <loom-text variant="body-md">Sección A</loom-text>
+        <loom-inline gap="lg" align="center" style={{ height: '80px' }}>
+          <p className="loom-body-md" style={{ margin: 0 }}>Sección A</p>
           <loom-divider orientation="vertical"></loom-divider>
-          <loom-text variant="body-md">Sección B</loom-text>
+          <p className="loom-body-md" style={{ margin: 0 }}>Sección B</p>
         </loom-inline>
       </Section>
       <Section title="Con label (start / center / end)">
         <loom-inline gap="lg" align="stretch" style={{ height: '120px', fontFamily: 'sans-serif' }}>
-          <loom-inline align="center"><loom-text variant="body-md">Start</loom-text></loom-inline>
+          <loom-inline align="center"><p className="loom-body-md" style={{ margin: 0 }}>Start</p></loom-inline>
           <loom-divider orientation="vertical" label="or" label-position="start"></loom-divider>
-          <loom-inline align="center"><loom-text variant="body-md">Center</loom-text></loom-inline>
+          <loom-inline align="center"><p className="loom-body-md" style={{ margin: 0 }}>Center</p></loom-inline>
           <loom-divider orientation="vertical" label="or" label-position="center"></loom-divider>
-          <loom-inline align="center"><loom-text variant="body-md">End</loom-text></loom-inline>
+          <loom-inline align="center"><p className="loom-body-md" style={{ margin: 0 }}>End</p></loom-inline>
           <loom-divider orientation="vertical" label="or" label-position="end"></loom-divider>
         </loom-inline>
       </Section>

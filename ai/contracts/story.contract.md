@@ -27,7 +27,7 @@ Generate Storybook docs for foundations and UI components with dynamic token-der
 - Context-aware previews by token type
 - Web Component first: for UI components with a `loom-*` adapter, the primary docs, snippets, controls, play tests, events, and `::part()` examples must target the custom element
 - React wrapper secondary: React stories may exist only to document wrapper ergonomics and must not imply React is the canonical runtime
-- Loom composition first: UI implementation snippets and canonical demos must compose with existing Loom primitives (`loom-box`, `loom-stack`, `loom-inline`, `loom-text`, etc.) before falling back to raw `div`/`span` scaffolding. Raw HTML wrappers are allowed only as Storybook-only measurement/debug scaffolds or for native semantic content that Loom does not provide.
+- Loom composition first: UI implementation snippets and canonical demos must compose with existing Loom primitives (`loom-box`, `loom-stack`, `loom-inline`, etc.) before falling back to raw `div`/`span` scaffolding. For text content, use semantic HTML elements (`<p>`, `<h1>`–`<h6>`, `<span>`) with `loom-*` typography classes (e.g. `class="loom-body-md"`). Raw HTML wrappers are allowed only as Storybook-only measurement/debug scaffolds.
 
 ## Validation Checklist
 

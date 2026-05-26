@@ -10,7 +10,6 @@ import type { LoomProgressLinear }   from './ui/primitives/Progress/adapters/Pro
 import type { LoomStack }   from './ui/primitives/Stack/adapters/Stack.element.ts';
 import type { LoomBadge }   from './ui/primitives/Badge/adapters/Badge.element.ts';
 import type { LoomTag }     from './ui/primitives/Tag/adapters/Tag.element.ts';
-import type { LoomText }    from './ui/primitives/Text/adapters/Text.element.ts';
 import type { LoomStepperStep } from './ui/primitives/StepperStep/adapters/StepperStep.element.ts';
 import type { LoomStepper }     from './ui/components/Stepper/adapters/Stepper.element.ts';
 
@@ -28,7 +27,6 @@ declare global {
     'loom-stack':   LoomStack;
     'loom-badge':   LoomBadge;
     'loom-tag':     LoomTag;
-    'loom-text':         LoomText;
     'loom-stepper-step': LoomStepperStep;
     'loom-stepper':      LoomStepper;
   }

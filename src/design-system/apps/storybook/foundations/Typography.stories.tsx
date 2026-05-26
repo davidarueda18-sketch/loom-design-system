@@ -6,8 +6,8 @@ import { fontSizeVars } from '../../../package/tokens/fontSize/index.ts';
 import { fontWeightVars } from '../../../package/tokens/fontWeight/index.ts';
 import { lineHeightVars } from '../../../package/tokens/lineHeight/index.ts';
 import { letterSpacingVars } from '../../../package/tokens/letterSpacing/index.ts';
-import { Text, variantTokenMap } from '../../../package/ui/primitives/Text/index.ts';
-import type { TextVariant } from '../../../package/ui/primitives/Text/index.ts';
+import { variantTokenMap } from '../../../package/tokens/typography/index.ts';
+import type { TextVariant } from '../../../package/tokens/typography/index.ts';
 
 const meta = {
   title: 'Foundations/Typography',
@@ -92,9 +92,9 @@ const TypeScaleRow = ({ variant }: { variant: TextVariant }) => (
     <div style={{ fontSize: '11px', color: colorVars.textSecondary, fontFamily: 'monospace', marginBottom: '4px' }}>
       {variant}
     </div>
-    <Text variant={variant} style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary }}>
+    <p className={`loom-${variant}`} style={{ fontFamily: fontFamilyVars.sans, color: colorVars.textPrimary, margin: 0 }}>
       Loom Design System
-    </Text>
+    </p>
   </div>
 );
 

@@ -1,36 +1,35 @@
 import figma from '@figma/code-connect';
-import { Text } from '../../../package/ui/primitives/Text/index.ts';
-import '../loom-web-components.d.ts';
+import { TypographyText } from '../../../package/tokens/typography/index.ts';
 
 figma.connect(
-  Text,
+  TypographyText,
   'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=5-208',
   {
-    imports: ["import '@loom-sdc/design-system/custom-elements'"],
+    imports: ["import '@loom-sdc/design-system/style.css'"],
     props: {
       variant: figma.enum('Variant', {
-        'body/base':   'body-md',
-        'body/SM':     'body-sm',
-        'body/LG':     'body-lg',
-        'label/Base':  'label-md',
-        'label/SM':    'label-sm',
-        'label/LG':    'label-lg',
-        'heading/H1':  'heading-1',
-        'heading/H2':  'heading-2',
-        'heading/H3':  'heading-3',
-        'heading/H4':  'heading-4',
-        'heading/H5':  'heading-5',
-        'heading/H6':  'heading-6',
-        'display/LG':  'display-lg',
-        'display/XL':  'display-xl',
-        'display/2XL': 'display-2xl',
-        overline:      'overline',
-        caption:       'caption',
+        'body/base':   'loom-body-md',
+        'body/SM':     'loom-body-sm',
+        'body/LG':     'loom-body-lg',
+        'label/Base':  'loom-label-md',
+        'label/SM':    'loom-label-sm',
+        'label/LG':    'loom-label-lg',
+        'heading/H1':  'loom-heading-1',
+        'heading/H2':  'loom-heading-2',
+        'heading/H3':  'loom-heading-3',
+        'heading/H4':  'loom-heading-4',
+        'heading/H5':  'loom-heading-5',
+        'heading/H6':  'loom-heading-6',
+        'display/LG':  'loom-display-lg',
+        'display/XL':  'loom-display-xl',
+        'display/2XL': 'loom-display-2xl',
+        overline:      'loom-overline',
+        caption:       'loom-caption',
       }),
       content: figma.string('content'),
     },
     example: ({ variant, content }) => (
-      <loom-text variant={variant}>{content}</loom-text>
+      <p className={variant}>{content}</p>
     ),
   },
 );

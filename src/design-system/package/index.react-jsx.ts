@@ -25,10 +25,6 @@ declare module 'react' {
         justify?: string;
         wrap?: boolean;
       };
-      'loom-text': LoomElementProps<HTMLElementTagNameMap['loom-text']> & {
-        variant?: string;
-        align?: string;
-      };
       'loom-button': LoomElementProps<HTMLElementTagNameMap['loom-button']> & {
         variant?: string;
         size?: string;

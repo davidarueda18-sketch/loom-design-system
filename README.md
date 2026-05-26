@@ -71,11 +71,9 @@ Import and register only the components your application needs. This enables rea
 
 ```js
 import { LoomButton } from '@loom-sdc/design-system/elements/button';
-import { LoomText }   from '@loom-sdc/design-system/elements/text';
 import { LoomStack }  from '@loom-sdc/design-system/elements/stack';
 
 LoomButton.define();
-LoomText.define();
 LoomStack.define();
 ```
 
@@ -119,7 +117,6 @@ import '@loom-sdc/design-system/core';
 | `LoomIcon` | `.../elements/icon` | `<loom-icon>` |
 | `LoomInline` | `.../elements/inline` | `<loom-inline>` |
 | `LoomStack` | `.../elements/stack` | `<loom-stack>` |
-| `LoomText` | `.../elements/text` | `<loom-text>` |
 
 > Additional primitives (Divider, Fab, Link, Progress, Tag) are available in source and will be published in upcoming releases.
 
@@ -132,15 +129,14 @@ import '@loom-sdc/design-system/core';
 ```html
 <script type="module">
   import '@loom-sdc/design-system/style.css';
-  import { LoomButton, LoomStack, LoomText } from '@loom-sdc/design-system/elements';
+  import { LoomButton, LoomStack } from '@loom-sdc/design-system/elements';
 
   LoomButton.define();
   LoomStack.define();
-  LoomText.define();
 </script>
 
 <loom-stack gap="md">
-  <loom-text variant="heading-lg">Hello, Loom</loom-text>
+  <h1 class="loom-heading-1">Hello, Loom</h1>
   <loom-button variant="primary">Get started</loom-button>
 </loom-stack>
 ```
@@ -149,12 +145,12 @@ import '@loom-sdc/design-system/core';
 
 ```tsx
 import '@loom-sdc/design-system/style.css';
-import { Button, Stack, Text } from '@loom-sdc/design-system/react-jsx';
+import { Button, Stack } from '@loom-sdc/design-system/react-jsx';
 
 export function App() {
   return (
     <Stack gap="md">
-      <Text variant="heading-lg">Hello, Loom</Text>
+      <h1 className="loom-heading-1">Hello, Loom</h1>
       <Button variant="primary" onClick={() => console.log('clicked')}>
         Get started
       </Button>
