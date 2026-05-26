@@ -39,3 +39,6 @@ export type { StepperStepState, StepperStepProps } from './StepperStep/index.ts'
 
 export { Checkbox, LoomCheckbox, CHECKBOX_STATES, CHECKBOX_SHAPES } from './Checkbox/index.ts';
 export type { CheckboxProps, CheckboxState, CheckboxShape, CheckboxChangeEventDetail } from './Checkbox/index.ts';
+
+export { IconButton, ICON_BUTTON_VARIANTS, ICON_BUTTON_SIZES } from './IconButton/index.ts';
+export type { IconButtonProps, IconButtonVariant, IconButtonSize } from './IconButton/index.ts';

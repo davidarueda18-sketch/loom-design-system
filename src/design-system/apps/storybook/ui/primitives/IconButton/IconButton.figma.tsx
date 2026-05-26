@@ -1,0 +1,43 @@
+import figma from '@figma/code-connect';
+import { BookmarkIcon } from '@heroicons/react/24/outline';
+import { IconButton } from '../../../../../package/ui/primitives/IconButton/index.ts';
+import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
+
+figma.connect(
+  IconButton,
+  'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=151-3149',
+  {
+    props: {
+      variant: figma.enum('Variant', {
+        Filled:  'filled',
+        Ghost:   'ghost',
+        Outline: 'outline',
+        Brand:   'brand',
+      }),
+      size: figma.enum('Size', {
+        SM: 'sm',
+        MD: 'md',
+        LG: 'lg',
+      }),
+      disabled: figma.enum('State', {
+        Disabled: true,
+      }),
+      selected: figma.enum('State', {
+        Selected: true,
+      }),
+    },
+    example: ({ variant, size, disabled, selected }) => (
+      <IconButton
+        variant={variant}
+        size={size}
+        disabled={disabled}
+        selected={selected}
+        aria-label="Label"
+      >
+        <Icon size={size === 'sm' ? 'mini' : 'md'}>
+          <BookmarkIcon />
+        </Icon>
+      </IconButton>
+    ),
+  },
+);

@@ -100,6 +100,31 @@ declare module 'react' {
         steps?: string;
         current?: string | number;
       };
+      'loom-select': LoomElementProps<HTMLElementTagNameMap['loom-select']> & {
+        label?: string;
+        placeholder?: string;
+        value?: string;
+        name?: string;
+        disabled?: boolean | '';
+        error?: boolean | '';
+        'error-message'?: string;
+        open?: boolean | '';
+      };
+      'loom-select-option': LoomElementProps<HTMLElementTagNameMap['loom-select-option']> & {
+        value?: string;
+        label?: string;
+        disabled?: boolean | '';
+        selected?: boolean | '';
+        description?: string;
+        'leading-icon'?: string;
+      };
+      'loom-select-menu': LoomElementProps<HTMLElementTagNameMap['loom-select-menu']>;
+      'loom-icon-button': LoomElementProps<HTMLElementTagNameMap['loom-icon-button']> & {
+        variant?: string;
+        size?: string;
+        disabled?: boolean;
+        selected?: boolean | '';
+      };
     }
   }
 }
