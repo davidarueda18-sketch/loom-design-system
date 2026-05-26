@@ -1,7 +1,7 @@
 {
   "codeConnect": {
     "include": ["/**/*.{tsx,jsx}"],
-    "label": "React",
+    "label": "Web Components",
     "interactiveSetupFigmaFileUrl": "https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?m=auto&t=8owWvzdkQV1Cw75D-6"
   }
 }

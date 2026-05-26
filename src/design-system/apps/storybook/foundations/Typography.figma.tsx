@@ -1,10 +1,12 @@
 import figma from '@figma/code-connect';
 import { Text } from '../../../package/ui/primitives/Text/index.ts';
+import '../loom-web-components.d.ts';
 
 figma.connect(
   Text,
   'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=5-208',
   {
+    imports: ["import '@loom-sdc/design-system/custom-elements'"],
     props: {
       variant: figma.enum('Variant', {
         'body/base':   'body-md',
@@ -28,7 +30,7 @@ figma.connect(
       content: figma.string('content'),
     },
     example: ({ variant, content }) => (
-      <Text variant={variant}>{content}</Text>
+      <loom-text variant={variant}>{content}</loom-text>
     ),
   },
 );

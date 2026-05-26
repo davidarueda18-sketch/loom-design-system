@@ -1,10 +1,12 @@
 import figma from '@figma/code-connect';
 import { ProgressCircular } from '../../../../../package/ui/primitives/Progress';
+import '../../../loom-web-components.d.ts';
 
 figma.connect(
   ProgressCircular,
   'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=84-3554',
   {
+    imports: ["import '@loom-sdc/design-system/custom-elements'"],
     props: {
       value: figma.enum('Value', {
         '25':  25,
@@ -30,13 +32,13 @@ figma.connect(
       showValue: figma.boolean('Show Value'),
     },
     example: ({ value, indeterminate, thickness, size, label, showValue }) => (
-      <ProgressCircular
+      <loom-progress-circular
         value={value}
         indeterminate={indeterminate}
         thickness={thickness}
         size={size}
         label={label}
-        showValue={showValue}
+        show-value={showValue}
       />
     ),
   },

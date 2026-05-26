@@ -1,10 +1,12 @@
 import figma from '@figma/code-connect';
 import { ProgressLinear } from '../../../../../package/ui/primitives/Progress';
+import '../../../loom-web-components.d.ts';
 
 figma.connect(
   ProgressLinear,
   'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=84-3477',
   {
+    imports: ["import '@loom-sdc/design-system/custom-elements'"],
     props: {
       value: figma.enum('Progress', {
         '0':   0,
@@ -31,13 +33,13 @@ figma.connect(
       showValue: figma.boolean('Show Value'),
     },
     example: ({ value, indeterminate, thickness, shape, label, showValue }) => (
-      <ProgressLinear
+      <loom-progress-linear
         value={value}
         indeterminate={indeterminate}
         thickness={thickness}
         shape={shape}
         label={label}
-        showValue={showValue}
+        show-value={showValue}
       />
     ),
   },

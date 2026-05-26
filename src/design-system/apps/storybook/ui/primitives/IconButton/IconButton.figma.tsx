@@ -1,12 +1,12 @@
 import figma from '@figma/code-connect';
-import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { IconButton } from '../../../../../package/ui/primitives/IconButton/index.ts';
-import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
+import '../../../loom-web-components.d.ts';
 
 figma.connect(
   IconButton,
   'https://www.figma.com/design/AxsVyBx9rgoxlemUd8DjJ9/LOOM-Design-System?node-id=151-3149',
   {
+    imports: ["import '@loom-sdc/design-system/custom-elements'"],
     props: {
       variant: figma.enum('Variant', {
         Filled:  'filled',
@@ -27,17 +27,15 @@ figma.connect(
       }),
     },
     example: ({ variant, size, disabled, selected }) => (
-      <IconButton
+      <loom-icon-button
         variant={variant}
         size={size}
         disabled={disabled}
         selected={selected}
         aria-label="Label"
       >
-        <Icon size={size === 'sm' ? 'mini' : 'md'}>
-          <BookmarkIcon />
-        </Icon>
-      </IconButton>
+        <svg>{'<!-- icon SVG -->'}</svg>
+      </loom-icon-button>
     ),
   },
 );

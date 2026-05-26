@@ -125,6 +125,13 @@ declare module 'react' {
         disabled?: boolean;
         selected?: boolean | '';
       };
+      'loom-checkbox': LoomElementProps<HTMLElementTagNameMap['loom-checkbox']> & {
+        label?: string;
+        checked?: boolean;
+        indeterminate?: boolean;
+        disabled?: boolean;
+        shape?: string;
+      };
     }
   }
 }
