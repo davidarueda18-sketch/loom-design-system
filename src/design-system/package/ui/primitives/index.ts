@@ -39,3 +39,6 @@ export type { CheckboxProps, CheckboxState, CheckboxShape, CheckboxChangeEventDe
 
 export { IconButton, ICON_BUTTON_VARIANTS, ICON_BUTTON_SIZES } from './IconButton/index.ts';
 export type { IconButtonProps, IconButtonVariant, IconButtonSize } from './IconButton/index.ts';
+
+export { Toggle, LoomToggle, TOGGLE_STATES } from './Toggle/index.ts';
+export type { ToggleProps, ToggleState, ToggleChangeEventDetail } from './Toggle/index.ts';
