@@ -1,5 +1,5 @@
 ---
-name: code-connect
+name: figma-code-connect
 description: Generate or fix Figma Code Connect files (.figma.tsx) for Loom Design System components. Enforces the 7 mandatory laws — correct published-package imports, loom-* canonical tags, boolean coercion, default-value omission, multi-variant splitting, kebab-case attributes, and type-first discovery.
 ---
 
@@ -28,17 +28,17 @@ canonical `loom-*` tag, no redundant default values, and attributes in valid HTM
 
 ### Mode A — Create (default)
 
-Invoked as `/code-connect [ComponentName]`.
+Invoked as `/figma-code-connect [ComponentName]`.
 
 If the component name is provided as the skill argument, skip Step 1 and go directly to Step 2.
 If not provided, ask before proceeding.
 
 ### Mode B — Fix existing
 
-Invoked as `/code-connect fix` or `/code-connect fix [ComponentName]`.
+Invoked as `/figma-code-connect fix` or `/figma-code-connect fix [ComponentName]`.
 
 Read the existing file, apply all 7 laws to the current content, and write the corrected version.
-For `/code-connect fix` (no name), fix ALL `.figma.tsx` files in the repo.
+For `/figma-code-connect fix` (no name), fix ALL `.figma.tsx` files in the repo.
 
 ---
 
@@ -474,7 +474,7 @@ Note: foundation files are one level shallower — relative import depths change
 
 ## Fix Mode Procedure
 
-When invoked as `/code-connect fix [ComponentName]` or `/code-connect fix`:
+When invoked as `/figma-code-connect fix [ComponentName]` or `/figma-code-connect fix`:
 
 1. Read the existing `.figma.tsx` file(s)
 2. Apply the validation checklist to identify violations
