@@ -128,6 +128,13 @@ declare module 'react' {
         disabled?: boolean;
         shape?: string;
       };
+      'loom-toggle': LoomElementProps<HTMLElementTagNameMap['loom-toggle']> & {
+        label?: string;
+        checked?: boolean;
+        disabled?: boolean;
+        name?: string;
+        value?: string;
+      };
     }
   }
 }

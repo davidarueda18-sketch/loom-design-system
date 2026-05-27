@@ -12,6 +12,11 @@ import type { LoomBadge }   from './ui/primitives/Badge/adapters/Badge.element.t
 import type { LoomTag }     from './ui/primitives/Tag/adapters/Tag.element.ts';
 import type { LoomStepperStep } from './ui/primitives/StepperStep/adapters/StepperStep.element.ts';
 import type { LoomStepper }     from './ui/components/Stepper/adapters/Stepper.element.ts';
+import type { LoomSelect }      from './ui/components/Select/adapters/Select.element.ts';
+import type { LoomSelectMenu, LoomSelectOption } from './ui/components/Select/menu/adapters/SelectMenu.element.ts';
+import type { LoomIconButton }  from './ui/primitives/IconButton/adapters/IconButton.element.ts';
+import type { LoomCheckbox }    from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
+import type { LoomToggle }      from './ui/primitives/Toggle/adapters/Toggle.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -29,6 +34,12 @@ declare global {
     'loom-tag':     LoomTag;
     'loom-stepper-step': LoomStepperStep;
     'loom-stepper':      LoomStepper;
+    'loom-select':        LoomSelect;
+    'loom-select-menu':   LoomSelectMenu;
+    'loom-select-option': LoomSelectOption;
+    'loom-icon-button':   LoomIconButton;
+    'loom-checkbox':      LoomCheckbox;
+    'loom-toggle':        LoomToggle;
   }
 }
 

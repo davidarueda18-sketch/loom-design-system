@@ -25,3 +25,5 @@ export { LoomStepper } from './ui/components/Stepper/adapters/Stepper.element.ts
 export { LoomSelect } from './ui/components/Select/adapters/Select.element.ts';
 export { LoomSelectMenu, LoomSelectOption } from './ui/components/Select/menu/adapters/SelectMenu.element.ts';
 export { LoomIconButton } from './ui/primitives/IconButton/adapters/IconButton.element.ts';
+export { LoomCheckbox } from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
+export { LoomToggle } from './ui/primitives/Toggle/adapters/Toggle.element.ts';
