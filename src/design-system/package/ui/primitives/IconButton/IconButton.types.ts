@@ -14,7 +14,7 @@ export interface IconButtonOwnProps {
   selected?:    boolean;
   /** Required — icon-only buttons must have an accessible text alternative. */
   'aria-label': string;
-  /** The icon to render. Use <Icon> or a plain SVG. */
+  /** The icon to render. Wrap any SVG source in <Icon> to apply size tokens and a11y defaults. */
   children:     ReactNode;
 }
 

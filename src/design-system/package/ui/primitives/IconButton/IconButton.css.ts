@@ -1,4 +1,4 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { colorVars, radiusVars } from '../../../tokens/index.ts';
 
 export const host = style({
@@ -22,6 +22,11 @@ export const root = style({
   },
 });
 
+// Slotted content inside disabled root gets reduced opacity
+globalStyle(`${root}:disabled ::slotted(*), ${root}[aria-disabled="true"] ::slotted(*)`, {
+  opacity: 0.3,
+});
+
 export const variant = styleVariants({
   filled: {
     background: colorVars.surfaceRaised,
@@ -40,9 +45,6 @@ export const variant = styleVariants({
       '&:disabled, &[aria-disabled="true"]': {
         background: colorVars.surfaceSubtle,
         border: 'none',
-      },
-      '&:disabled ::slotted(*), &[aria-disabled="true"] ::slotted(*)': {
-        opacity: '0.3',
       },
     },
   },
@@ -63,9 +65,6 @@ export const variant = styleVariants({
       },
       '&:disabled, &[aria-disabled="true"]': {
         background: 'transparent',
-      },
-      '&:disabled ::slotted(*), &[aria-disabled="true"] ::slotted(*)': {
-        opacity: '0.3',
       },
     },
   },
@@ -93,9 +92,6 @@ export const variant = styleVariants({
       '&:disabled, &[aria-disabled="true"]': {
         background: 'transparent',
         borderColor: colorVars.borderStrong,
-      },
-      '&:disabled ::slotted(*), &[aria-disabled="true"] ::slotted(*)': {
-        opacity: '0.3',
       },
     },
   },
@@ -128,9 +124,6 @@ export const variant = styleVariants({
       '&:disabled, &[aria-disabled="true"]': {
         background: colorVars.surfaceSubtle,
         border: 'none',
-      },
-      '&:disabled ::slotted(*), &[aria-disabled="true"] ::slotted(*)': {
-        opacity: '0.3',
       },
     },
   },

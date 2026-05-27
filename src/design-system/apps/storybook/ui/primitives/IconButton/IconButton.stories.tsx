@@ -276,7 +276,7 @@ export const Toggle: Story = {
           selected={saved || undefined}
           ref={handleRef}
         >
-          <BookmarkIcon style={{ width: '24px', height: '24px' }} />
+          <Icon size="md"><BookmarkIcon /></Icon>
         </loom-icon-button>
         <span style={{ fontFamily: 'monospace', fontSize: '13px', color: colorVars.textSecondary }}>
           selected: {String(saved)}
@@ -323,7 +323,7 @@ export const WebComponent: StoryObj<{
         selected={selected || undefined}
         aria-label="Notificaciones"
       >
-        <BellIcon style={{ width: '24px', height: '24px' }} />
+        <loom-icon size="md"><BellIcon /></loom-icon>
       </loom-icon-button>
     </div>
   ),
@@ -360,7 +360,7 @@ export const CustomEvents: Story = {
     return (
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <loom-icon-button variant="filled" size="md" aria-label="Trigger events" ref={handleRef}>
-          <MagnifyingGlassIcon style={{ width: '24px', height: '24px' }} />
+          <loom-icon size="md"><MagnifyingGlassIcon /></loom-icon>
         </loom-icon-button>
         <div style={{
           minHeight: '80px', border: `1px dashed ${colorVars.borderSubtle}`,
@@ -416,7 +416,7 @@ Parte expuesta para override sin romper la encapsulación del shadow root:
       {ICON_BUTTON_VARIANTS.map(variant => (
         <div key={variant} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <loom-icon-button variant={variant} size="md" aria-label={`${variant} square via ::part(button)`}>
-            <PencilIcon style={{ width: '24px', height: '24px' }} />
+            <loom-icon size="md"><PencilIcon /></loom-icon>
           </loom-icon-button>
           <SizeLabel>{variant}</SizeLabel>
         </div>

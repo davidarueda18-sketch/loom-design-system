@@ -139,7 +139,7 @@ export const Default: Story = {
         label={label}
         disabled={disabled || undefined}
       >
-        {content !== 'text' && <PlusIcon style={{ width: '24px', height: '24px' }} />}
+        {content !== 'text' && <loom-icon size={ICON_SIZE_MAP[size]}><PlusIcon /></loom-icon>}
       </loom-fab>
     </div>
   ),
@@ -354,7 +354,7 @@ export const WebComponent: StoryObj<{
         label={label}
         disabled={disabled || undefined}
       >
-        {content !== 'text' && <PlusIcon style={{ width: '24px', height: '24px' }} />}
+        {content !== 'text' && <loom-icon size="md"><PlusIcon /></loom-icon>}
       </loom-fab>
     </div>
   ),
@@ -400,7 +400,7 @@ export const CustomEvents: Story = {
           label="Trigger events"
           ref={handleRef}
         >
-          <PlusIcon style={{ width: '24px', height: '24px' }} />
+          <loom-icon size="md"><PlusIcon /></loom-icon>
         </loom-fab>
         <div style={{
           minHeight: '80px',
@@ -467,7 +467,7 @@ Partes expuestas para override visual sin romper la encapsulación del shadow ro
     <div style={{ padding: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
         <loom-fab size="md" content="icon" label="Esquina cuadrada vía ::part(button)">
-          <PlusIcon style={{ width: '24px', height: '24px' }} />
+          <loom-icon size="md"><PlusIcon /></loom-icon>
         </loom-fab>
         <span style={{ fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary }}>icon</span>
       </div>
