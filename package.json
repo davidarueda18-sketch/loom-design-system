@@ -45,6 +45,8 @@
   "sideEffects": [
     "dist/style.css",
     "dist/fonts.css",
+    "dist/custom-elements.mjs",
+    "dist/custom-elements.cjs",
     "dist/elements.mjs",
     "dist/elements.cjs",
     "dist/elements/*.mjs",

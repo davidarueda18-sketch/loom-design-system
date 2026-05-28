@@ -8,26 +8,6 @@ import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Toggle/adapters/Toggle.element.ts';
 import '../../../loom-web-components.d.ts';
 
-// ─── JSX namespace for loom-toggle ───────────────────────────────────────────
-
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      'loom-toggle': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElementTagNameMap['loom-toggle']> & {
-          checked?: boolean | '';
-          disabled?: boolean | '';
-          label?: string;
-          name?: string;
-          value?: string;
-        },
-        HTMLElementTagNameMap['loom-toggle']
-      >;
-    }
-  }
-}
-
 // ─── Story arg interfaces ─────────────────────────────────────────────────────
 
 interface ToggleStoryArgs {
@@ -121,8 +101,8 @@ export const Default: Story = {
   render: ({ checked, disabled, label }) => (
     <div style={{ padding: '24px' }}>
       <loom-toggle
-        {...(checked  ? { checked: '' }  : {})}
-        {...(disabled ? { disabled: '' } : {})}
+        checked={checked}
+        disabled={disabled}
         label={label}
       />
     </div>
@@ -151,9 +131,9 @@ export const States: Story = {
       <Section title="Con label">
         <Column>
           <loom-toggle label="Off — desactivado" />
-          <loom-toggle checked="" label="On — activado" />
-          <loom-toggle disabled="" label="Disabled off — no disponible" />
-          <loom-toggle checked="" disabled="" label="Disabled on — no disponible" />
+          <loom-toggle checked={true} label="On — activado" />
+          <loom-toggle disabled={true} label="Disabled off — no disponible" />
+          <loom-toggle checked={true} disabled={true} label="Disabled on — no disponible" />
         </Column>
       </Section>
     </div>
@@ -214,9 +194,9 @@ export const WithLabel: Story = {
       <Section title="Labels contextuales">
         <Column>
           <loom-toggle label="Recibir notificaciones push" />
-          <loom-toggle checked="" label="Modo oscuro activado" />
-          <loom-toggle disabled="" label="Sincronización automática (no disponible)" />
-          <loom-toggle checked="" disabled="" label="Función premium (no disponible en tu plan)" />
+          <loom-toggle checked={true} label="Modo oscuro activado" />
+          <loom-toggle disabled={true} label="Sincronización automática (no disponible)" />
+          <loom-toggle checked={true} disabled={true} label="Función premium (no disponible en tu plan)" />
         </Column>
       </Section>
     </div>
@@ -252,16 +232,16 @@ CSS hooks: \`::part(root)\`, \`::part(track)\`, \`::part(thumb)\`, \`::part(labe
   render: (args) => (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <loom-toggle
-        {...(args.checked  ? { checked: '' }  : {})}
-        {...(args.disabled ? { disabled: '' } : {})}
+        checked={args.checked}
+        disabled={args.disabled}
         label={args.label}
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: `1px solid ${colorVars.borderDefault}`, paddingTop: '16px' }}>
         {TOGGLE_STATES.map((s) => (
           <loom-toggle
             key={s}
-            {...(s === 'on'       ? { checked: '' }  : {})}
-            {...(s === 'disabled' ? { disabled: '' } : {})}
+            checked={s === 'on'}
+            disabled={s === 'disabled'}
             label={s}
           />
         ))}

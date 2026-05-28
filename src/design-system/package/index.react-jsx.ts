@@ -144,6 +144,16 @@ declare module 'react' {
         duration?: number | string;
         position?: string;
       };
+      'loom-tab-item': LoomElementProps<HTMLElementTagNameMap['loom-tab-item']> & {
+        value?: string;
+        label?: string;
+        active?: boolean | '';
+        disabled?: boolean | '';
+        'show-icon'?: boolean | '';
+      };
+      'loom-tab-group': LoomElementProps<HTMLElementTagNameMap['loom-tab-group']> & {
+        active?: string;
+      };
     }
   }
 }

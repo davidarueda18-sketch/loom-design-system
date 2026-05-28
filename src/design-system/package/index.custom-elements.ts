@@ -1,3 +1,5 @@
+export * from './index.elements.ts';
+
 import type { LoomBox }     from './ui/primitives/Box/adapters/Box.element.ts';
 import type { LoomButton }  from './ui/primitives/Button/adapters/Button.element.ts';
 import type { LoomDivider } from './ui/primitives/Divider/adapters/Divider.element.ts';
@@ -18,6 +20,8 @@ import type { LoomIconButton }  from './ui/primitives/IconButton/adapters/IconBu
 import type { LoomCheckbox }    from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
 import type { LoomToggle }      from './ui/primitives/Toggle/adapters/Toggle.element.ts';
 import type { LoomToast }       from './ui/components/Toast/adapters/Toast.element.ts';
+import type { LoomTabItemElement } from './ui/primitives/TabItem/TabItem.types.ts';
+import type { LoomTabGroupElement } from './ui/components/TabGroup/TabGroup.types.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -42,6 +46,8 @@ declare global {
     'loom-checkbox':      LoomCheckbox;
     'loom-toggle':        LoomToggle;
     'loom-toast':         LoomToast;
+    'loom-tab-item':      LoomTabItemElement;
+    'loom-tab-group':     LoomTabGroupElement;
   }
 }
 

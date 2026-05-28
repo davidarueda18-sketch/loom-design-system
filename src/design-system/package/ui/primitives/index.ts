@@ -42,3 +42,6 @@ export type { IconButtonProps, IconButtonVariant, IconButtonSize } from './IconB
 
 export { Toggle, LoomToggle, TOGGLE_STATES } from './Toggle/index.ts';
 export type { ToggleProps, ToggleState, ToggleChangeEventDetail } from './Toggle/index.ts';
+
+export { TabItem, LoomTabItem, TAB_ITEM_STATES } from './TabItem/index.ts';
+export type { TabItemProps, TabItemState, TabItemSelectEventDetail, LoomTabItemElement } from './TabItem/index.ts';

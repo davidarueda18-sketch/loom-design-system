@@ -28,3 +28,5 @@ export { LoomIconButton } from './ui/primitives/IconButton/adapters/IconButton.e
 export { LoomCheckbox } from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
 export { LoomToggle } from './ui/primitives/Toggle/adapters/Toggle.element.ts';
 export { LoomToast } from './ui/components/Toast/adapters/Toast.element.ts';
+export { LoomTabItem } from './ui/primitives/TabItem/adapters/TabItem.element.ts';
+export { LoomTabGroup } from './ui/components/TabGroup/adapters/TabGroup.element.ts';

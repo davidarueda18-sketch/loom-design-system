@@ -12,3 +12,6 @@ export type {
   ToastDismissEventDetail,
   ToastActionEventDetail,
 } from './Toast/index.ts';
+
+export { TabGroup, LoomTabGroup } from './TabGroup/index.ts';
+export type { TabGroupProps, TabGroupChangeEventDetail, LoomTabGroupElement } from './TabGroup/index.ts';
