@@ -135,6 +135,15 @@ declare module 'react' {
         name?: string;
         value?: string;
       };
+      'loom-toast': LoomElementProps<HTMLElementTagNameMap['loom-toast']> & {
+        type?: string;
+        title?: string;
+        description?: string;
+        dismissible?: boolean;
+        'action-label'?: string;
+        duration?: number | string;
+        position?: string;
+      };
     }
   }
 }

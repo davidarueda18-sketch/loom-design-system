@@ -27,3 +27,4 @@ export { LoomSelectMenu, LoomSelectOption } from './ui/components/Select/menu/ad
 export { LoomIconButton } from './ui/primitives/IconButton/adapters/IconButton.element.ts';
 export { LoomCheckbox } from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
 export { LoomToggle } from './ui/primitives/Toggle/adapters/Toggle.element.ts';
+export { LoomToast } from './ui/components/Toast/adapters/Toast.element.ts';

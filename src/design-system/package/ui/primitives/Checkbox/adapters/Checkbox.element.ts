@@ -1,5 +1,6 @@
 import * as styles from '../Checkbox.css.ts';
 import type { CheckboxState } from '../Checkbox.types.ts';
+import { ICON_CHECK, ICON_DASH } from '../../../../icons/index.ts';
 
 // ─── Law 8: module-level VE sheet cache ───────────────────────────────────────
 
@@ -31,17 +32,6 @@ function getVESheet(anchorClass: string): CSSStyleSheet | null {
   return null;
 }
 
-// ─── SVG Icons ────────────────────────────────────────────────────────────────
-
-const ICON_CHECK =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" aria-hidden="true">' +
-  '<path fill-rule="evenodd" d="M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0Z" clip-rule="evenodd" />' +
-  '</svg>';
-
-const ICON_DASH =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" aria-hidden="true">' +
-  '<rect x="3" y="7" width="10" height="2" rx="1"/>' +
-  '</svg>';
 
 // ─── LoomCheckbox — Template C (form-associated) ─────────────────────────────
 

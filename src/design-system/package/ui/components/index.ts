@@ -3,3 +3,12 @@ export type { StepperState, StepperProps, StepperChangeEventDetail } from './Ste
 
 export { Select, LoomSelect, SELECT_STATES } from './Select/index.ts';
 export type { SelectState, SelectProps, SelectChangeEventDetail } from './Select/index.ts';
+
+export { Toast, LoomToast, TOAST_TYPES, TOAST_POSITIONS } from './Toast/index.ts';
+export type {
+  ToastProps,
+  ToastType,
+  ToastPosition,
+  ToastDismissEventDetail,
+  ToastActionEventDetail,
+} from './Toast/index.ts';

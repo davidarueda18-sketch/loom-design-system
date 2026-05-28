@@ -17,6 +17,7 @@ import type { LoomSelectMenu, LoomSelectOption } from './ui/components/Select/me
 import type { LoomIconButton }  from './ui/primitives/IconButton/adapters/IconButton.element.ts';
 import type { LoomCheckbox }    from './ui/primitives/Checkbox/adapters/Checkbox.element.ts';
 import type { LoomToggle }      from './ui/primitives/Toggle/adapters/Toggle.element.ts';
+import type { LoomToast }       from './ui/components/Toast/adapters/Toast.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -40,6 +41,7 @@ declare global {
     'loom-icon-button':   LoomIconButton;
     'loom-checkbox':      LoomCheckbox;
     'loom-toggle':        LoomToggle;
+    'loom-toast':         LoomToast;
   }
 }
 
