@@ -154,6 +154,11 @@ declare module 'react' {
       'loom-tab-group': LoomElementProps<HTMLElementTagNameMap['loom-tab-group']> & {
         active?: string;
       };
+      'loom-modal': LoomElementProps<HTMLElementTagNameMap['loom-modal']> & {
+        open?: boolean | '';
+        title?: string;
+        size?: string;
+      };
     }
   }
 }

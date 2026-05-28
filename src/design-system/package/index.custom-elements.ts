@@ -22,6 +22,7 @@ import type { LoomToggle }      from './ui/primitives/Toggle/adapters/Toggle.ele
 import type { LoomToast }       from './ui/components/Toast/adapters/Toast.element.ts';
 import type { LoomTabItemElement } from './ui/primitives/TabItem/TabItem.types.ts';
 import type { LoomTabGroupElement } from './ui/components/TabGroup/TabGroup.types.ts';
+import type { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -48,6 +49,7 @@ declare global {
     'loom-toast':         LoomToast;
     'loom-tab-item':      LoomTabItemElement;
     'loom-tab-group':     LoomTabGroupElement;
+    'loom-modal':         LoomModal;
   }
 }
 

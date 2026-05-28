@@ -15,3 +15,6 @@ export type {
 
 export { TabGroup, LoomTabGroup } from './TabGroup/index.ts';
 export type { TabGroupProps, TabGroupChangeEventDetail, LoomTabGroupElement } from './TabGroup/index.ts';
+
+export { Modal, LoomModal, MODAL_SIZES } from './Modal/index.ts';
+export type { ModalProps, ModalSize, ModalCloseEventDetail } from './Modal/index.ts';
