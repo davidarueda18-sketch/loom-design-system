@@ -23,6 +23,7 @@ import type { LoomToast }       from './ui/components/Toast/adapters/Toast.eleme
 import type { LoomTabItemElement } from './ui/primitives/TabItem/TabItem.types.ts';
 import type { LoomTabGroupElement } from './ui/components/TabGroup/TabGroup.types.ts';
 import type { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
+import type { LoomMetricCard } from './ui/components/MetricCard/adapters/MetricCard.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -50,6 +51,7 @@ declare global {
     'loom-tab-item':      LoomTabItemElement;
     'loom-tab-group':     LoomTabGroupElement;
     'loom-modal':         LoomModal;
+    'loom-metric-card':   LoomMetricCard;
   }
 }
 

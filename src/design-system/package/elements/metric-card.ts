@@ -1,0 +1,1 @@
+export { LoomMetricCard } from '../ui/components/MetricCard/adapters/MetricCard.element.ts';

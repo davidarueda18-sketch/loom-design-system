@@ -21,3 +21,6 @@ export type { ModalProps, ModalSize, ModalCloseEventDetail } from './Modal/index
 
 export { Card, LoomCard, CARD_VARIANTS } from './Card/index.ts';
 export type { CardProps, CardVariant } from './Card/index.ts';
+
+export { MetricCard, LoomMetricCard } from './MetricCard/index.ts';
+export type { MetricCardProps } from './MetricCard/index.ts';

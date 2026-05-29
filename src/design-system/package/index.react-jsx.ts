@@ -165,6 +165,11 @@ declare module 'react' {
         title?: string;
         description?: string;
       };
+      'loom-metric-card': LoomElementProps<HTMLElementTagNameMap['loom-metric-card']> & {
+        title?: string;
+        metric?: string;
+        description?: string;
+      };
     }
   }
 }
