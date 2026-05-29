@@ -1,20 +1,22 @@
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import { Inline, INLINE_ALIGNS, INLINE_JUSTIFIES } from '../../../../../package/ui/primitives/Inline/index.ts';
+import { INLINE_ALIGNS, INLINE_JUSTIFIES } from '../../../../../package/ui/primitives/Inline/index.ts';
 import type { InlineAlign, InlineJustify } from '../../../../../package/ui/primitives/Inline/index.ts';
-import { Stack } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
 import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 const inlineImplementationCode = `import '@loom-sdc/design-system/elements';
 
 <loom-inline gap="sm" align="center" justify="start" wrap>
-  <button>Cancelar</button>
-  <button>Guardar</button>
+  <loom-button variant="outline">Cancelar</loom-button>
+  <loom-button>Guardar</loom-button>
 </loom-inline>`;
 
 interface InlineStoryArgs {
@@ -43,8 +45,8 @@ const meta = {
 <script type="module" src="@loom-sdc/design-system/elements"></script>
 
 <loom-inline gap="sm" align="center" justify="start" wrap>
-  <button>Cancelar</button>
-  <button>Guardar</button>
+  <loom-button variant="outline">Cancelar</loom-button>
+  <loom-button>Guardar</loom-button>
 </loom-inline>
 \`\`\`
 
@@ -61,42 +63,36 @@ type Story = StoryObj<InlineStoryArgs>;
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const Canvas = ({ children, maxWidth = 560 }: { children: ReactNode; maxWidth?: number }) => (
-  <div style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
+  <loom-box display="block" style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Chip = ({ children }: { children: ReactNode }) => (
-  <div style={{
+  <loom-box display="inline-block" padding-x="smMd" style={{
     background: colorVars.surfaceRaised,
     border: `1px solid ${colorVars.borderSubtle}`,
-    padding: '6px 14px',
+    paddingTop: '6px',
+    paddingBottom: '6px',
     borderRadius: '999px',
-    fontSize: '13px',
-    fontFamily: 'sans-serif',
     color: colorVars.textPrimary,
     whiteSpace: 'nowrap' as const,
   }}>
-    {children}
-  </div>
+    <span className="loom-body-sm">{children}</span>
+  </loom-box>
 );
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '32px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 12px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '32px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 12px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const PropLabel = ({ children }: { children: string }) => (
-  <span style={{
-    fontFamily: 'monospace', fontSize: '11px',
+  <span className="loom-caption" style={{
     color: colorVars.brandAccent, width: '72px', flexShrink: 0,
   }}>
     {children}
@@ -125,39 +121,39 @@ export const Default: Story = {
 
 export const Align: Story = {
   render: () => (
-    <div style={{ padding: '24px' }}>
-      <Stack gap="md">
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
         {INLINE_ALIGNS.map((align) => (
-          <Inline key={align} gap="sm" align={align}
+          <loom-inline key={align} gap="sm" align={align}
             style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}
           >
             <PropLabel>{align}</PropLabel>
             <Chip>A</Chip>
-            <span style={{ fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 700, color: colorVars.textPrimary }}>B grande</span>
+            <span className="loom-title-sm" style={{ color: colorVars.textPrimary }}>B grande</span>
             <Chip>C</Chip>
-          </Inline>
+          </loom-inline>
         ))}
-      </Stack>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
 export const Justify: Story = {
   render: () => (
-    <div style={{ padding: '24px' }}>
-      <Stack gap="md">
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
         {INLINE_JUSTIFIES.map((justify) => (
-          <Inline key={justify} gap="sm" justify={justify}
+          <loom-inline key={justify} gap="sm" justify={justify}
             style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}
           >
             <PropLabel>{justify}</PropLabel>
             <Chip>A</Chip>
             <Chip>B</Chip>
             <Chip>C</Chip>
-          </Inline>
+          </loom-inline>
         ))}
-      </Stack>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -192,8 +188,8 @@ export const Implementation: Story = {
   render: () => (
     <Canvas>
       <loom-inline gap="sm" align="center" justify="start" wrap style={{ width: '100%' }}>
-        <Chip>Cancelar</Chip>
-        <Chip>Guardar</Chip>
+        <loom-button variant="outline">Cancelar</loom-button>
+        <loom-button>Guardar</loom-button>
       </loom-inline>
     </Canvas>
   ),
@@ -202,20 +198,20 @@ export const Implementation: Story = {
 export const GapComparison: Story = {
   name: 'Comparación de gaps',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="Todos los valores de gap">
-        <Stack gap="sm">
+        <loom-stack gap="sm">
           {(Object.keys(spacingVars) as Array<keyof typeof spacingVars>).map((size) => (
-            <Inline key={size} gap={size} align="center">
+            <loom-inline key={size} gap={size} align="center">
               <PropLabel>{size}</PropLabel>
               <Chip>A</Chip>
               <Chip>B</Chip>
               <Chip>C</Chip>
-            </Inline>
+            </loom-inline>
           ))}
-        </Stack>
+        </loom-stack>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 

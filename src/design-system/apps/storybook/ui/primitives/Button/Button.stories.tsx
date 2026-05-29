@@ -6,7 +6,10 @@ import { Button, BUTTON_VARIANTS, BUTTON_SIZES } from '../../../../../package/ui
 import type { ButtonSize, ButtonVariant } from '../../../../../package/ui/primitives/Button/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface ButtonStoryArgs {
@@ -86,32 +89,26 @@ const VARIANT_STATES: Record<ButtonVariant, StateDemo[]> = {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '40px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 16px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '40px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Row = ({ children }: { children: ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+  <loom-inline gap="smMd" align="center" wrap>
     {children}
-  </div>
+  </loom-inline>
 );
 
 const StateLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontSize: '10px', fontWeight: 700, fontFamily: 'monospace',
-    textTransform: 'uppercase', letterSpacing: '0.08em',
+  <p className="loom-caption" style={{
     color: colorVars.textSecondary, marginBottom: '6px',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 const getLoomButton = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-button'] => {
@@ -131,7 +128,7 @@ export const Default: Story = {
     children: 'Guardar cambios',
   },
   render: ({ variant, size, disabled, children }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-button
         variant={variant}
         size={size}
@@ -139,14 +136,14 @@ export const Default: Story = {
       >
         {children}
       </loom-button>
-    </div>
+    </loom-box>
   ),
 };
 
 export const Variants: Story = {
   name: 'Variantes',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="Variantes">
         <Row>
           {BUTTON_VARIANTS.map((variant) => (
@@ -154,14 +151,14 @@ export const Variants: Story = {
           ))}
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
 export const Sizes: Story = {
   name: 'Tamaños',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       {BUTTON_VARIANTS.map((variant) => (
         <StorySection key={variant} title={variant}>
           <Row>
@@ -171,36 +168,36 @@ export const Sizes: Story = {
           </Row>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
 export const States: Story = {
   name: 'Estados interactivos',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       {BUTTON_VARIANTS.map((variant) => (
         <StorySection key={variant} title={variant}>
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+          <loom-inline gap="lg" wrap>
             {VARIANT_STATES[variant].map(({ label, style, disabled }) => (
-              <div key={label}>
+              <loom-box key={label} display="block">
                 <StateLabel>{label}</StateLabel>
                 <Button variant={variant} size="md" disabled={disabled} style={style}>
                   {label}
                 </Button>
-              </div>
+              </loom-box>
             ))}
-          </div>
+          </loom-inline>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
 export const AllCombinations: Story = {
   name: 'Todas las combinaciones',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       {BUTTON_VARIANTS.map((variant) => (
         <StorySection key={variant} title={variant}>
           <Row>
@@ -211,14 +208,14 @@ export const AllCombinations: Story = {
           </Row>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
 export const Polymorphic: Story = {
   name: 'Polimórfico (as)',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title='as="a" — renderiza como enlace'>
         <Row>
           {BUTTON_VARIANTS.map((variant) => (
@@ -226,7 +223,7 @@ export const Polymorphic: Story = {
           ))}
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -244,7 +241,7 @@ export const WebComponent: StoryObj<ButtonWebComponentArgs> = {
     label: { control: 'text' },
   },
   render: ({ variant, size, disabled, label }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-button
         variant={variant as string}
         size={size as string}
@@ -252,7 +249,7 @@ export const WebComponent: StoryObj<ButtonWebComponentArgs> = {
       >
         {label as ReactNode}
       </loom-button>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomButton(canvasElement);
@@ -297,7 +294,8 @@ export const CustomEvents: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="md">
         <loom-button
           variant="primary"
           size="md"
@@ -305,18 +303,18 @@ export const CustomEvents: Story = {
         >
           Trigger events
         </loom-button>
-        <div style={{
+        <loom-box display="block" padding="smMd" style={{
           minHeight: '80px',
           border: `1px dashed ${colorVars.borderSubtle}`,
           borderRadius: '8px',
-          padding: '10px',
-          fontFamily: 'monospace',
-          fontSize: '12px',
           color: colorVars.textSecondary,
         }}>
-          {log.length === 0 ? 'No events yet' : log.map((entry, idx) => <div key={idx}>{entry}</div>)}
-        </div>
-      </div>
+          {log.length === 0
+            ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
+            : log.map((entry, idx) => <p key={idx} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
   play: async ({ canvasElement }) => {
@@ -342,9 +340,9 @@ export const CSSParts: Story = {
             letter-spacing: 0.08em;
           }
         `}</style>
-        <div className="parts-demo">
+        <loom-box display="block" className="parts-demo">
           <Story />
-        </div>
+        </loom-box>
       </>
     ),
   ],
@@ -363,11 +361,11 @@ Partes expuestas para override visual:
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-button variant="outline" size="md">
         Styled via ::part(button)
       </loom-button>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomButton(canvasElement);

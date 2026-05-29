@@ -5,6 +5,9 @@ import { expect } from 'storybook/test';
 import { TAB_ITEM_STATES } from '../../../../../package/ui/primitives/TabItem/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../../../package/ui/primitives/TabItem/adapters/TabItem.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -96,16 +99,12 @@ type Story = StoryObj<TabItemStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
@@ -123,8 +122,8 @@ function DemoIcon() {
 
 export const Default: Story = {
   render: ({ label, value, active, disabled, showIcon }) => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
-      <div style={{ display: 'inline-flex', borderBottom: `1px solid ${colorVars.borderDefault}` }}>
+    <loom-box display="block" padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
+      <loom-box display="inline-flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
         <loom-tab-item
           value={value}
           label={label}
@@ -134,8 +133,8 @@ export const Default: Story = {
         >
           {showIcon && <DemoIcon />}
         </loom-tab-item>
-      </div>
-    </div>
+      </loom-box>
+    </loom-box>
   ),
 };
 
@@ -149,9 +148,10 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
+      <loom-stack gap="lg">
       <Section title="Estados funcionales">
-        <div style={{ display: 'flex', gap: '0', borderBottom: `1px solid ${colorVars.borderDefault}` }}>
+        <loom-box display="flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
           {TAB_ITEM_STATES.filter(s => s !== 'hover').map((s) => (
             <loom-tab-item
               key={s}
@@ -161,9 +161,10 @@ export const States: Story = {
               {...(s === 'disabled' ? { disabled: '' } : {})}
             />
           ))}
-        </div>
+        </loom-box>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -177,9 +178,10 @@ export const WithIcon: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase, display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
+      <loom-stack gap="xl">
       <Section title="Con ícono — todos los estados">
-        <div style={{ display: 'flex', gap: '0', borderBottom: `1px solid ${colorVars.borderDefault}` }}>
+        <loom-box display="flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
           {TAB_ITEM_STATES.filter(s => s !== 'hover').map((s) => (
             <loom-tab-item
               key={s}
@@ -192,10 +194,10 @@ export const WithIcon: Story = {
               <DemoIcon />
             </loom-tab-item>
           ))}
-        </div>
+        </loom-box>
       </Section>
       <Section title="Sin ícono (show-icon ausente)">
-        <div style={{ display: 'flex', gap: '0', borderBottom: `1px solid ${colorVars.borderDefault}` }}>
+        <loom-box display="flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
           {TAB_ITEM_STATES.filter(s => s !== 'hover').map((s) => (
             <loom-tab-item
               key={s}
@@ -205,9 +207,10 @@ export const WithIcon: Story = {
               {...(s === 'disabled' ? { disabled: '' } : {})}
             />
           ))}
-        </div>
+        </loom-box>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -232,21 +235,22 @@ export const Interactive: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div style={{ borderBottom: `1px solid ${colorVars.borderDefault}`, display: 'inline-flex' }}>
+      <loom-box display="block" padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
+        <loom-stack gap="lg">
+        <loom-box display="inline-flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
           <loom-tab-item ref={handleRef} value="tab1" label="Haz clic aquí" />
-        </div>
-        <div style={{
-          fontFamily: 'monospace', fontSize: '12px', minHeight: '60px',
+        </loom-box>
+        <loom-box display="block" padding-y="md" style={{
+          minHeight: '60px',
           color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-          paddingTop: '16px',
         }}>
           {log.length === 0
-            ? <span style={{ opacity: 0.5 }}>Sin eventos — haz clic en la pestaña</span>
-            : log.map((entry, i) => <div key={i}>{entry}</div>)
+            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos — haz clic en la pestaña</p>
+            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
           }
-        </div>
-      </div>
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
 };
@@ -275,8 +279,8 @@ CSS hooks: \`::part(root)\`, \`::part(label)\`, \`::part(icon-slot)\`.
     showIcon: false,
   },
   render: (args) => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
-      <div style={{ borderBottom: `1px solid ${colorVars.borderDefault}`, display: 'inline-flex' }}>
+    <loom-box display="block" padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
+      <loom-box display="inline-flex" style={{ borderBottom: `1px solid ${colorVars.borderDefault}` }}>
         <loom-tab-item
           value={args.value}
           label={args.label}
@@ -284,8 +288,8 @@ CSS hooks: \`::part(root)\`, \`::part(label)\`, \`::part(icon-slot)\`.
           {...(args.disabled  ? { disabled: '' }   : {})}
           {...(args.showIcon  ? { 'show-icon': '' } : {})}
         />
-      </div>
-    </div>
+      </loom-box>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-tab-item');

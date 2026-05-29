@@ -8,7 +8,10 @@ import type { FabContent, FabSize } from '../../../../../package/ui/primitives/F
 import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Fab/adapters/Fab.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 // ─── Icon size map ────────────────────────────────────────────────────────────
@@ -41,40 +44,34 @@ const FAB_STATES: StateDemo[] = [
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '40px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 16px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '40px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Row = ({ children }: { children: ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+  <loom-inline gap="md" align="center" wrap>
     {children}
-  </div>
+  </loom-inline>
 );
 
 const StateLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontSize: '10px', fontWeight: 700, fontFamily: 'monospace',
-    textTransform: 'uppercase', letterSpacing: '0.08em',
+  <p className="loom-caption" style={{
     color: colorVars.textSecondary, marginBottom: '6px',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 const SizeLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary, marginTop: '6px', textAlign: 'center',
+  <p className="loom-caption" style={{
+    color: colorVars.textSecondary, marginTop: '6px', textAlign: 'center',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -132,7 +129,7 @@ export const Default: Story = {
     icon: <Icon size="md"><PlusIcon /></Icon>,
   },
   render: ({ size, content, label, disabled }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-fab
         size={size}
         content={content}
@@ -141,7 +138,7 @@ export const Default: Story = {
       >
         {content !== 'text' && <loom-icon size={ICON_SIZE_MAP[size]}><PlusIcon /></loom-icon>}
       </loom-fab>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -155,28 +152,28 @@ export const Sizes: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', color: colorVars.textPrimary }}>
+    <loom-box display="block" padding="lg" style={{ color: colorVars.textPrimary }}>
       <StorySection title="content=icon">
         <Row>
           {FAB_SIZES.map((size) => (
-            <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <loom-stack key={size} gap="xs" align="center">
               <Fab size={size} label={`Tamaño ${size}`} icon={<Icon size={ICON_SIZE_MAP[size]}><PlusIcon /></Icon>} />
               <SizeLabel>{size}</SizeLabel>
-            </div>
+            </loom-stack>
           ))}
         </Row>
       </StorySection>
       <StorySection title="content=text">
         <Row>
           {FAB_SIZES.map((size) => (
-            <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <loom-stack key={size} gap="xs" align="center">
               <Fab size={size} content="text" label="99+" />
               <SizeLabel>{size}</SizeLabel>
-            </div>
+            </loom-stack>
           ))}
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -190,7 +187,7 @@ export const Contents: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="icon — ícono centrado, label como aria-label">
         <Row>
           <Fab label="Agregar" icon={<Icon size="md"><PlusIcon /></Icon>} />
@@ -206,7 +203,7 @@ export const Contents: Story = {
           <Fab content="text" label="99+" />
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -220,11 +217,11 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="icon — tamaño MD">
-        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+        <loom-inline gap="lg" wrap>
           {FAB_STATES.map(({ label, style, disabled }) => (
-            <div key={label}>
+            <loom-box key={label} display="block">
               <StateLabel>{label}</StateLabel>
               <Fab
                 size="md"
@@ -233,14 +230,14 @@ export const States: Story = {
                 disabled={disabled}
                 style={style}
               />
-            </div>
+            </loom-box>
           ))}
-        </div>
+        </loom-inline>
       </StorySection>
       <StorySection title="text — tamaño MD">
-        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+        <loom-inline gap="lg" wrap>
           {FAB_STATES.map(({ label, style, disabled }) => (
-            <div key={label}>
+            <loom-box key={label} display="block">
               <StateLabel>{label}</StateLabel>
               <Fab
                 size="md"
@@ -249,23 +246,23 @@ export const States: Story = {
                 disabled={disabled}
                 style={style}
               />
-            </div>
+            </loom-box>
           ))}
-        </div>
+        </loom-inline>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
 export const AllCombinations: Story = {
   name: 'Todas las combinaciones',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       {FAB_CONTENTS.map((content) => (
         <StorySection key={content} title={`content=${content}`}>
           <Row>
             {FAB_SIZES.map((size) => (
-              <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <loom-stack key={size} gap="xs" align="center">
                 <Fab
                   size={size}
                   content={content}
@@ -273,9 +270,9 @@ export const AllCombinations: Story = {
                   icon={content === 'icon' ? <Icon size={ICON_SIZE_MAP[size]}><PlusIcon /></Icon> : undefined}
                 />
                 <SizeLabel>{size}</SizeLabel>
-              </div>
+              </loom-stack>
             ))}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+            <loom-stack gap="xs" align="center">
               <Fab
                 size="md"
                 content={content}
@@ -284,11 +281,11 @@ export const AllCombinations: Story = {
                 disabled
               />
               <SizeLabel>disabled</SizeLabel>
-            </div>
+            </loom-stack>
           </Row>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
@@ -302,13 +299,13 @@ export const Polymorphic: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title='as="a" — renderiza como enlace'>
         <Row>
           <Fab as="a" href="#" label="Enlace" icon={<Icon size="md"><PlusIcon /></Icon>} />
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -347,7 +344,7 @@ export const WebComponent: StoryObj<{
     disabled: { control: 'boolean' },
   },
   render: ({ size, content, label, disabled }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-fab
         size={size}
         content={content}
@@ -356,7 +353,7 @@ export const WebComponent: StoryObj<{
       >
         {content !== 'text' && <loom-icon size="md"><PlusIcon /></loom-icon>}
       </loom-fab>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomFab(canvasElement);
@@ -393,7 +390,8 @@ export const CustomEvents: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="md">
         <loom-fab
           size="md"
           content="icon"
@@ -402,21 +400,19 @@ export const CustomEvents: Story = {
         >
           <loom-icon size="md"><PlusIcon /></loom-icon>
         </loom-fab>
-        <div style={{
+        <loom-box display="block" padding="smMd" style={{
           minHeight: '80px',
           border: `1px dashed ${colorVars.borderSubtle}`,
           borderRadius: '8px',
-          padding: '10px',
-          fontFamily: 'monospace',
-          fontSize: '12px',
           color: colorVars.textSecondary,
         }}>
           {log.length === 0
-            ? <span style={{ opacity: 0.5 }}>Sin eventos aún — interactúa con el FAB</span>
-            : log.map((entry, i) => <div key={i}>{entry}</div>)
+            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — interactúa con el FAB</p>
+            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
           }
-        </div>
-      </div>
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
   play: async ({ canvasElement }) => {
@@ -443,9 +439,9 @@ export const CSSParts: Story = {
             letter-spacing: 0.05em;
           }
         `}</style>
-        <div className="parts-demo">
+        <loom-box display="block" className="parts-demo">
           <Story />
-        </div>
+        </loom-box>
       </>
     ),
   ],
@@ -464,19 +460,21 @@ Partes expuestas para override visual sin romper la encapsulación del shadow ro
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+    <loom-box display="block" padding="lg">
+      <loom-inline gap="md" align="start" wrap>
+      <loom-stack gap="xs" align="center">
         <loom-fab size="md" content="icon" label="Esquina cuadrada vía ::part(button)">
           <loom-icon size="md"><PlusIcon /></loom-icon>
         </loom-fab>
-        <span style={{ fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary }}>icon</span>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+        <span className="loom-caption" style={{ color: colorVars.textSecondary }}>icon</span>
+      </loom-stack>
+      <loom-stack gap="xs" align="center">
         <loom-fab size="md" content="text" label="42">
         </loom-fab>
-        <span style={{ fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary }}>text (italic via ::part(label))</span>
-      </div>
-    </div>
+        <span className="loom-caption" style={{ color: colorVars.textSecondary }}>text (italic via ::part(label))</span>
+      </loom-stack>
+      </loom-inline>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomFab(canvasElement);

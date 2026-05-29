@@ -6,28 +6,11 @@ import { CHECKBOX_STATES, CHECKBOX_SHAPES } from '../../../../../package/ui/prim
 import type { CheckboxShape } from '../../../../../package/ui/primitives/Checkbox/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Checkbox/adapters/Checkbox.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
-
-// ─── JSX namespace for loom-checkbox ─────────────────────────────────────────
-
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      'loom-checkbox': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElementTagNameMap['loom-checkbox']> & {
-          checked?: boolean | '';
-          indeterminate?: boolean | '';
-          disabled?: boolean | '';
-          label?: string;
-          shape?: CheckboxShape;
-        },
-        HTMLElementTagNameMap['loom-checkbox']
-      >;
-    }
-  }
-}
 
 interface CheckboxStoryArgs {
   checked: boolean;
@@ -99,24 +82,20 @@ type Story = StoryObj<CheckboxStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function Column({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <loom-stack gap="md">
       {children}
-    </div>
+    </loom-stack>
   );
 }
 
@@ -126,15 +105,15 @@ export const Default: Story = {
   render: (args) => {
     const { checked, indeterminate, disabled, label, shape } = args;
     return (
-      <div style={{ padding: '24px' }}>
+      <loom-box display="block" padding="lg">
         <loom-checkbox
-          {...(checked       ? { checked: '' }       : {})}
-          {...(indeterminate ? { indeterminate: '' }  : {})}
-          {...(disabled      ? { disabled: '' }       : {})}
+          {...(checked       ? { checked: true }       : {})}
+          {...(indeterminate ? { indeterminate: true }  : {})}
+          {...(disabled      ? { disabled: true }       : {})}
           label={label}
           shape={shape}
         />
-      </div>
+      </loom-box>
     );
   },
 };
@@ -149,14 +128,15 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Sin label">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+        <loom-inline gap="md" align="center" wrap>
           <loom-checkbox />
           <loom-checkbox checked />
           <loom-checkbox indeterminate />
           <loom-checkbox disabled />
-        </div>
+        </loom-inline>
       </Section>
       <Section title="Con label">
         <Column>
@@ -166,7 +146,8 @@ export const States: Story = {
           <loom-checkbox disabled label="Disabled — no disponible" />
         </Column>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -193,22 +174,23 @@ export const Interactive: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="lg">
         <loom-checkbox
           label="Haz clic para ver el evento"
           ref={handleRef}
         />
-        <div style={{
-          fontFamily: 'monospace', fontSize: '12px', minHeight: '80px',
+        <loom-box display="block" padding-y="md" style={{
+          minHeight: '80px',
           color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-          paddingTop: '16px',
         }}>
           {log.length === 0
-            ? <span style={{ opacity: 0.5 }}>Sin eventos aún — haz clic en el checkbox</span>
-            : log.map((entry, i) => <div key={i}>{entry}</div>)
+            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — haz clic en el checkbox</p>
+            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
           }
-        </div>
-      </div>
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
 };
@@ -223,7 +205,8 @@ export const WithLabel: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Labels contextuales">
         <Column>
           <loom-checkbox label="Recordarme en este dispositivo" />
@@ -232,7 +215,8 @@ export const WithLabel: Story = {
           <loom-checkbox disabled label="Esta opción no está disponible" />
         </Column>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -265,25 +249,27 @@ CSS hooks: \`::part(root)\`, \`::part(box)\`, \`::part(icon)\`, \`::part(label)\
     label:         { control: 'text' },
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <loom-checkbox
-        {...(args.checked       ? { checked: '' }       : {})}
-        {...(args.indeterminate ? { indeterminate: '' }  : {})}
-        {...(args.disabled      ? { disabled: '' }       : {})}
+        {...(args.checked       ? { checked: true }       : {})}
+        {...(args.indeterminate ? { indeterminate: true }  : {})}
+        {...(args.disabled      ? { disabled: true }       : {})}
         label={args.label}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: `1px solid ${colorVars.borderDefault}`, paddingTop: '16px' }}>
+      <loom-stack gap="smMd" style={{ borderTop: `1px solid ${colorVars.borderDefault}`, paddingTop: '16px' }}>
         {CHECKBOX_STATES.map((s) => (
           <loom-checkbox
             key={s}
-            {...(s === 'checked'       ? { checked: '' }       : {})}
-            {...(s === 'indeterminate' ? { indeterminate: '' }  : {})}
-            {...(s === 'disabled'      ? { disabled: '' }       : {})}
+            {...(s === 'checked'       ? { checked: true }       : {})}
+            {...(s === 'indeterminate' ? { indeterminate: true }  : {})}
+            {...(s === 'disabled'      ? { disabled: true }       : {})}
             label={s}
           />
         ))}
-      </div>
-    </div>
+      </loom-stack>
+      </loom-stack>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-checkbox');
@@ -335,22 +321,24 @@ export const Shape: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Square (por defecto)">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+        <loom-inline gap="md" align="start" wrap>
           {(CHECKBOX_SHAPES).map((shape) => (
             <Column key={shape}>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary, marginBottom: '4px' }}>
+              <p className="loom-caption" style={{ color: colorVars.textSecondary, margin: '0 0 4px' }}>
                 shape="{shape}"
-              </div>
+              </p>
               <loom-checkbox label="Default" shape={shape} />
-              <loom-checkbox checked="" label="Checked" shape={shape} />
-              <loom-checkbox indeterminate="" label="Indeterminate" shape={shape} />
-              <loom-checkbox disabled="" label="Disabled" shape={shape} />
+              <loom-checkbox checked={true} label="Checked" shape={shape} />
+              <loom-checkbox indeterminate={true} label="Indeterminate" shape={shape} />
+              <loom-checkbox disabled={true} label="Disabled" shape={shape} />
             </Column>
           ))}
-        </div>
+        </loom-inline>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };

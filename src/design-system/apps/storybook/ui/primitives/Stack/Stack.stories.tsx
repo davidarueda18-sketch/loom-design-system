@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import { Stack, STACK_ALIGNS, STACK_JUSTIFIES } from '../../../../../package/ui/primitives/Stack/index.ts';
+import { STACK_ALIGNS, STACK_JUSTIFIES } from '../../../../../package/ui/primitives/Stack/index.ts';
 import type { StackAlign, StackJustify } from '../../../../../package/ui/primitives/Stack/index.ts';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -58,49 +59,41 @@ type Story = StoryObj<StackStoryArgs>;
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const Canvas = ({ children, maxWidth = 560 }: { children: ReactNode; maxWidth?: number }) => (
-  <div style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
+  <loom-box display="block" style={{ width: '100%', maxWidth: `${maxWidth}px`, minWidth: 0, boxSizing: 'border-box', overflow: 'hidden' }}>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Item = ({ children, wide = false }: { children: ReactNode; wide?: boolean }) => (
-  <div style={{
+  <loom-box display="block" padding-x="md" padding-y="smMd" style={{
     background: colorVars.surfaceRaised,
     border: `1px solid ${colorVars.borderSubtle}`,
-    padding: '12px 16px',
     borderRadius: '4px',
-    fontSize: '13px',
-    fontFamily: 'sans-serif',
     color: colorVars.textPrimary,
     width: wide ? '100%' : 'fit-content',
     maxWidth: '100%',
     boxSizing: 'border-box',
     overflowWrap: 'anywhere',
   }}>
-    {children}
-  </div>
+    <p className="loom-body-sm" style={{ margin: 0 }}>{children}</p>
+  </loom-box>
 );
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '32px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 12px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '32px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 12px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const PropLabel = ({ children }: { children: ReactNode }) => (
-  <div style={{
-    fontFamily: 'monospace', fontSize: '11px',
+  <p className="loom-caption" style={{
     color: colorVars.brandAccent, marginBottom: '4px',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
@@ -125,22 +118,22 @@ export const Default: Story = {
 
 export const Align: Story = {
   render: () => (
-    <div style={{ padding: '24px' }}>
-      <Stack gap="xl">
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
         {STACK_ALIGNS.map((align) => (
-          <div key={align}>
+          <loom-box key={align} display="block">
             <PropLabel>align="{align}"</PropLabel>
-            <Stack gap="xs" align={align}
+            <loom-stack gap="xs" align={align}
               style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}
             >
               <Item wide>Elemento ancho</Item>
               <Item>Elemento ajustado</Item>
               <Item wide>Elemento ancho</Item>
-            </Stack>
-          </div>
+            </loom-stack>
+          </loom-box>
         ))}
-      </Stack>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -184,22 +177,22 @@ export const Implementation: Story = {
 export const GapComparison: Story = {
   name: 'Comparación de gaps',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="Todos los valores de gap">
-        <Stack gap="xl2">
+        <loom-stack gap="xl2">
           {(Object.keys(spacingVars) as Array<keyof typeof spacingVars>).map((size) => (
-            <div key={size}>
+            <loom-box key={size} display="block">
               <PropLabel>gap="{size}"</PropLabel>
-              <Stack gap={size} style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}>
+              <loom-stack gap={size} style={{ border: `1px dashed ${colorVars.borderSubtle}`, padding: '8px', borderRadius: '4px' }}>
                 <Item wide>A</Item>
                 <Item wide>B</Item>
                 <Item wide>C</Item>
-              </Stack>
-            </div>
+              </loom-stack>
+            </loom-box>
           ))}
-        </Stack>
+        </loom-stack>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 

@@ -5,6 +5,9 @@ import { expect } from 'storybook/test';
 import { TOGGLE_STATES } from '../../../../../package/ui/primitives/Toggle/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../../../package/ui/primitives/Toggle/adapters/Toggle.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -74,24 +77,20 @@ type Story = StoryObj<ToggleStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function Column({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <loom-stack gap="md">
       {children}
-    </div>
+    </loom-stack>
   );
 }
 
@@ -99,13 +98,13 @@ function Column({ children }: { children: React.ReactNode }) {
 
 export const Default: Story = {
   render: ({ checked, disabled, label }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-toggle
         checked={checked}
         disabled={disabled}
         label={label}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -119,14 +118,15 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Sin label">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', alignItems: 'center' }}>
+        <loom-inline gap="lg" align="center" wrap>
           <loom-toggle />
           <loom-toggle checked />
           <loom-toggle disabled />
           <loom-toggle checked disabled />
-        </div>
+        </loom-inline>
       </Section>
       <Section title="Con label">
         <Column>
@@ -136,7 +136,8 @@ export const States: Story = {
           <loom-toggle checked={true} disabled={true} label="Disabled on — no disponible" />
         </Column>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -163,19 +164,20 @@ export const Interactive: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="lg">
         <loom-toggle label="Haz clic para ver el evento" ref={handleRef} />
-        <div style={{
-          fontFamily: 'monospace', fontSize: '12px', minHeight: '80px',
+        <loom-box display="block" padding-y="md" style={{
+          minHeight: '80px',
           color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-          paddingTop: '16px',
         }}>
           {log.length === 0
-            ? <span style={{ opacity: 0.5 }}>Sin eventos aún — haz clic en el toggle</span>
-            : log.map((entry, i) => <div key={i}>{entry}</div>)
+            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — haz clic en el toggle</p>
+            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
           }
-        </div>
-      </div>
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
 };
@@ -190,7 +192,8 @@ export const WithLabel: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Labels contextuales">
         <Column>
           <loom-toggle label="Recibir notificaciones push" />
@@ -199,7 +202,8 @@ export const WithLabel: Story = {
           <loom-toggle checked={true} disabled={true} label="Función premium (no disponible en tu plan)" />
         </Column>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -230,13 +234,14 @@ CSS hooks: \`::part(root)\`, \`::part(track)\`, \`::part(thumb)\`, \`::part(labe
     label:    { control: 'text' },
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <loom-toggle
         checked={args.checked}
         disabled={args.disabled}
         label={args.label}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: `1px solid ${colorVars.borderDefault}`, paddingTop: '16px' }}>
+      <loom-stack gap="smMd" style={{ borderTop: `1px solid ${colorVars.borderDefault}`, paddingTop: '16px' }}>
         {TOGGLE_STATES.map((s) => (
           <loom-toggle
             key={s}
@@ -245,8 +250,9 @@ CSS hooks: \`::part(root)\`, \`::part(track)\`, \`::part(thumb)\`, \`::part(labe
             label={s}
           />
         ))}
-      </div>
-    </div>
+      </loom-stack>
+      </loom-stack>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-toggle');

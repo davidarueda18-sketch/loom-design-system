@@ -6,6 +6,9 @@ import { Tag, TAG_VALUES } from '../../../../../package/ui/primitives/Tag/index.
 import type { TagValue } from '../../../../../package/ui/primitives/Tag/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../../../package/ui/primitives/Tag/adapters/Tag.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -70,24 +73,20 @@ type Story = StoryObj<TagStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+    <loom-inline gap="smMd" align="center" wrap>
       {children}
-    </div>
+    </loom-inline>
   );
 }
 
@@ -95,13 +94,13 @@ function Row({ children }: { children: React.ReactNode }) {
 
 export const Default: Story = {
   render: ({ value, label, showIcon }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-tag
         value={value}
         label={label}
         show-icon={showIcon === false ? 'false' : 'true'}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -115,7 +114,8 @@ export const Values: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Con icono (default)">
         <Row>
           {TAG_VALUES.map((v) => (
@@ -130,7 +130,8 @@ export const Values: Story = {
           <Tag value="neutral" label="0%" />
         </Row>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -144,13 +145,13 @@ export const WithoutIcon: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         {TAG_VALUES.map((v) => (
           <Tag key={v} value={v} label="23%" showIcon={false} />
         ))}
       </Row>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -181,19 +182,21 @@ CSS hooks: \`::part(icon)\`, \`::part(label)\`.
     'show-icon': { control: 'select', options: ['true', 'false'] },
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <loom-tag
         value={args.value}
         label={args.label}
         show-icon={args['show-icon']}
       />
 
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+      <loom-inline gap="smMd" wrap>
         {TAG_VALUES.map((v) => (
           <loom-tag key={v} value={v} label="23%" />
         ))}
-      </div>
-    </div>
+      </loom-inline>
+      </loom-stack>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-tag');

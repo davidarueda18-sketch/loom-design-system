@@ -6,7 +6,10 @@ import { Link, LINK_COLORS, LINK_UNDERLINES } from '../../../../../package/ui/pr
 import type { LinkColor, LinkUnderline } from '../../../../../package/ui/primitives/Link/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Link/adapters/Link.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface LinkStoryArgs {
@@ -61,32 +64,26 @@ export default meta;
 type Story = StoryObj<LinkStoryArgs>;
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '40px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 16px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '40px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Row = ({ children }: { children: ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '24px' }}>
+  <loom-inline gap="lg" align="center" wrap>
     {children}
-  </div>
+  </loom-inline>
 );
 
 const StateLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontSize: '10px', fontWeight: 700, fontFamily: 'monospace',
-    textTransform: 'uppercase', letterSpacing: '0.08em',
+  <p className="loom-caption" style={{
     color: colorVars.textSecondary, marginBottom: '6px',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 const getLoomLink = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-link'] => {
@@ -99,7 +96,7 @@ const getLoomLink = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-li
 
 export const Default: Story = {
   render: ({ color, underline, href, label, disabled }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-link
         color={color as string}
         underline={underline as string}
@@ -108,7 +105,7 @@ export const Default: Story = {
       >
         {label as ReactNode}
       </loom-link>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomLink(canvasElement);
@@ -132,31 +129,34 @@ export const Default: Story = {
 export const Variants: Story = {
   name: 'Variantes',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       {LINK_COLORS.map((color) => (
         <StorySection key={color} title={`color=${color}`}>
           <Row>
             {LINK_UNDERLINES.map((underline) => (
-              <div key={underline}>
+              <loom-box key={underline} display="block">
                 <StateLabel>{underline}</StateLabel>
                 <loom-link href="#" color={color} underline={underline}>
                   {color} / {underline}
                 </loom-link>
-              </div>
+              </loom-box>
             ))}
           </Row>
         </StorySection>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
 export const InlineUsage: Story = {
   name: 'Uso inline en texto',
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <StorySection title="Dentro de un párrafo">
-        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textPrimary, maxWidth: '520px', margin: 0 }}>
+        <p className="loom-body-md" style={{ color: colorVars.textPrimary, maxWidth: '520px', margin: 0 }}>
           El sistema de diseño Loom está documentado en{' '}
           <loom-link href="#" color="default" underline="always">la guía de contribución</loom-link>
           {' '}y en{' '}
@@ -165,21 +165,22 @@ export const InlineUsage: Story = {
       </StorySection>
 
       <StorySection title="Heredando color del texto padre">
-        <p style={{ fontFamily: 'sans-serif', fontSize: '16px', lineHeight: 1.6, color: colorVars.textSecondary, maxWidth: '520px', margin: 0 }}>
+        <p className="loom-body-md" style={{ color: colorVars.textSecondary, maxWidth: '520px', margin: 0 }}>
           Consulta{' '}
           <loom-link href="#" color="inherit" underline="always">nuestra documentación</loom-link>
           {' '}para más detalles sobre la{' '}
           <loom-link href="#" color="inherit" underline="hover">arquitectura de tokens</loom-link>.
         </p>
       </StorySection>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
 export const Disabled: Story = {
   name: 'Estado deshabilitado',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         {LINK_COLORS.map((color) => (
           <loom-link key={color} href="#" color={color} underline="always" aria-disabled="true">
@@ -187,7 +188,7 @@ export const Disabled: Story = {
           </loom-link>
         ))}
       </Row>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomLink(canvasElement);
@@ -223,22 +224,23 @@ export const CustomEvents: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="md">
         <loom-link href="#" color="default" underline="always" ref={handleRef}>
           Trigger events
         </loom-link>
-        <div style={{
+        <loom-box display="block" padding="smMd" style={{
           minHeight: '80px',
           border: `1px dashed ${colorVars.borderSubtle}`,
           borderRadius: '8px',
-          padding: '10px',
-          fontFamily: 'monospace',
-          fontSize: '12px',
           color: colorVars.textSecondary,
         }}>
-          {log.length === 0 ? 'Sin eventos aún' : log.map((entry) => <div key={entry}>{entry}</div>)}
-        </div>
-      </div>
+          {log.length === 0
+            ? <p className="loom-caption" style={{ margin: 0 }}>Sin eventos aún</p>
+            : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
   play: async ({ canvasElement }) => {
@@ -262,9 +264,9 @@ export const CSSParts: Story = {
             letter-spacing: 0.08em;
           }
         `}</style>
-        <div className="parts-demo">
+        <loom-box display="block" className="parts-demo">
           <Story />
-        </div>
+        </loom-box>
       </>
     ),
   ],
@@ -282,11 +284,11 @@ Partes expuestas para override visual sin romper la encapsulación del shadow ro
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-link href="#" color="default" underline="always">
         Styled via ::part(link)
       </loom-link>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomLink(canvasElement);
@@ -308,10 +310,10 @@ export const ReactWrapper: StoryObj<typeof Link> = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Link href="#" color="default" underline="hover">
         Wrapper React sobre loom-link
       </Link>
-    </div>
+    </loom-box>
   ),
 };

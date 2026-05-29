@@ -6,6 +6,9 @@ import { StepperStep, STEPPER_STEP_STATES } from '../../../../../package/ui/prim
 import type { StepperStepState } from '../../../../../package/ui/primitives/StepperStep/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../../../package/ui/primitives/StepperStep/adapters/StepperStep.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -55,24 +58,20 @@ type Story = StoryObj<StepperStepStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: '24px' }}>
+    <loom-inline gap="lg" align="start" wrap>
       {children}
-    </div>
+    </loom-inline>
   );
 }
 
@@ -80,13 +79,13 @@ function Row({ children }: { children: React.ReactNode }) {
 
 export const Default: Story = {
   render: ({ step, label, state }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-stepper-step
         step={step}
         label={label}
         state={state}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -100,7 +99,8 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Todos los estados">
         <Row>
           {STEPPER_STEP_STATES.map((s) => (
@@ -115,7 +115,8 @@ export const States: Story = {
           <StepperStep step="3" label="Confirmación" state="default" />
         </Row>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -143,9 +144,11 @@ La story incluye pruebas automáticas que validan el shadow DOM y el cambio de e
     label: { control: 'text' },
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+    <loom-box display="block" padding="lg">
+      <loom-inline gap="lg" align="start">
       <loom-stepper-step step={args.step} label={args.label} state={args.state} />
-    </div>
+      </loom-inline>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-stepper-step');

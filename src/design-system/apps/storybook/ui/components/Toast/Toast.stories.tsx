@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent } from 'storybook/test';
 
@@ -8,6 +8,8 @@ import type { LoomToast } from '../../../../../package/ui/components/Toast/adapt
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Toast/adapters/Toast.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface ToastStoryArgs {
@@ -88,26 +90,22 @@ type Story = StoryObj<ToastStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div style={{ marginBottom: '40px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block">
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
-function ToastStack({ children }: { children: React.ReactNode }) {
+function ToastStack({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <loom-stack gap="smMd">
       {children}
-    </div>
+    </loom-stack>
   );
 }
 
@@ -156,7 +154,7 @@ export const Default: Story = {
     position: 'top-right',
   },
   render: ({ type, title, description, dismissible, 'action-label': actionLabel, duration, position }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-toast
         type={type}
         title={title}
@@ -166,7 +164,7 @@ export const Default: Story = {
         duration={duration}
         position={position || undefined}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -180,25 +178,27 @@ export const Types: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-      <Section title="Expanded — con descripción">
-        <ToastStack>
-          <loom-toast type="success" title="Toast de éxito"   description="Tu perfil se ha actualizado correctamente con la información más reciente." dismissible />
-          <loom-toast type="info"    title="Toast informativo" description="Revisa los cambios y contáctanos si tienes alguna pregunta." dismissible />
-          <loom-toast type="warning" title="Toast de advertencia" description="Estos podrían ser intentos de phishing o contener virus dañinos." dismissible />
-          <loom-toast type="error"   title="Toast de error"   description="Por favor, inténtalo de nuevo o contacta con nuestro equipo de soporte." dismissible />
-        </ToastStack>
-      </Section>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
+        <Section title="Expanded — con descripción">
+          <ToastStack>
+            <loom-toast type="success" title="Toast de éxito"   description="Tu perfil se ha actualizado correctamente con la información más reciente." dismissible />
+            <loom-toast type="info"    title="Toast informativo" description="Revisa los cambios y contáctanos si tienes alguna pregunta." dismissible />
+            <loom-toast type="warning" title="Toast de advertencia" description="Estos podrían ser intentos de phishing o contener virus dañinos." dismissible />
+            <loom-toast type="error"   title="Toast de error"   description="Por favor, inténtalo de nuevo o contacta con nuestro equipo de soporte." dismissible />
+          </ToastStack>
+        </Section>
 
-      <Section title="Compact — solo título">
-        <ToastStack>
-          <loom-toast type="success" title="Toast de éxito"       dismissible />
-          <loom-toast type="info"    title="Toast informativo"     dismissible />
-          <loom-toast type="warning" title="Toast de advertencia"  dismissible />
-          <loom-toast type="error"   title="Toast de error"        dismissible />
-        </ToastStack>
-      </Section>
-    </div>
+        <Section title="Compact — solo título">
+          <ToastStack>
+            <loom-toast type="success" title="Toast de éxito"       dismissible />
+            <loom-toast type="info"    title="Toast informativo"     dismissible />
+            <loom-toast type="warning" title="Toast de advertencia"  dismissible />
+            <loom-toast type="error"   title="Toast de error"        dismissible />
+          </ToastStack>
+        </Section>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -212,16 +212,18 @@ export const WithAction: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-      <Section title="Snackbar con acción">
-        <ToastStack>
-          <loom-toast type="info"    title="Archivo eliminado"   action-label="Deshacer" dismissible />
-          <loom-toast type="success" title="Cambios guardados"   action-label="Ver"       dismissible />
-          <loom-toast type="warning" title="Borrador sin guardar" action-label="Guardar"  description="Tienes cambios pendientes." dismissible />
-          <loom-toast type="error"   title="Fallo al enviar"     action-label="Reintentar" description="La conexión se ha interrumpido." dismissible />
-        </ToastStack>
-      </Section>
-    </div>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
+        <Section title="Snackbar con acción">
+          <ToastStack>
+            <loom-toast type="info"    title="Archivo eliminado"   action-label="Deshacer" dismissible />
+            <loom-toast type="success" title="Cambios guardados"   action-label="Ver"       dismissible />
+            <loom-toast type="warning" title="Borrador sin guardar" action-label="Guardar"  description="Tienes cambios pendientes." dismissible />
+            <loom-toast type="error"   title="Fallo al enviar"     action-label="Reintentar" description="La conexión se ha interrumpido." dismissible />
+          </ToastStack>
+        </Section>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -246,7 +248,7 @@ export const AutoDismiss: Story = {
     };
 
     return (
-      <div style={{ padding: '24px' }}>
+      <loom-box display="block" padding="lg">
         <Section title="Auto-dismiss (hover para pausar)">
           <ToastStack>
             {toasts.map((toast) => (
@@ -257,13 +259,13 @@ export const AutoDismiss: Story = {
               />
             ))}
             {toasts.length === 0 && (
-              <p style={{ fontFamily: 'sans-serif', fontSize: '14px', color: colorVars.textSecondary }}>
+              <p className="loom-body-md" style={{ color: colorVars.textSecondary, margin: 0 }}>
                 Todos los toasts han sido cerrados.
               </p>
             )}
           </ToastStack>
         </Section>
-      </div>
+      </loom-box>
     );
   },
 };
@@ -279,10 +281,12 @@ export const Positions: Story = {
     layout: 'fullscreen',
   },
   render: () => (
-    <div style={{ minHeight: '100vh', backgroundColor: colorVars.surfaceBase, position: 'relative' }}>
-      <div style={{ padding: '200px 24px', textAlign: 'center', fontFamily: 'sans-serif', fontSize: '14px', color: colorVars.textSecondary }}>
-        Los toasts están posicionados en las esquinas y centro de la pantalla.
-      </div>
+    <loom-box display="block" style={{ minHeight: '100vh', backgroundColor: colorVars.surfaceBase, position: 'relative' }}>
+      <loom-box display="block" padding-x="lg" style={{ paddingTop: '200px', paddingBottom: '200px', textAlign: 'center' }}>
+        <p className="loom-body-md" style={{ color: colorVars.textSecondary, margin: 0 }}>
+          Los toasts están posicionados en las esquinas y centro de la pantalla.
+        </p>
+      </loom-box>
 
       <loom-toast type="success" title="Top Right"   position="top-right"     dismissible />
       <loom-toast type="info"    title="Top Center"  position="top-center"    dismissible />
@@ -290,7 +294,7 @@ export const Positions: Story = {
       <loom-toast type="error"   title="Bottom Right" position="bottom-right" dismissible />
       <loom-toast type="info"    title="Bottom Center" position="bottom-center" dismissible />
       <loom-toast type="success" title="Bottom Left"  position="bottom-left"  dismissible />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -304,13 +308,13 @@ export const NoDismiss: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Section title="Persistentes (sin dismiss)">
         <ToastStack>
           <loom-toast type="info" title="Mantenimiento programado" description="El sistema estará en mantenimiento el sábado de 2:00 a 4:00 AM." dismissible={false} />
         </ToastStack>
       </Section>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -337,15 +341,17 @@ evento dismiss, y cambio de tipo por atributo.
     dismissible: true,
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <loom-toast
-        id="test-toast"
-        type={args.type}
-        title={args.title}
-        description={args.description}
-        dismissible={args.dismissible}
-      />
-    </div>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
+        <loom-toast
+          id="test-toast"
+          type={args.type}
+          title={args.title}
+          description={args.description}
+          dismissible={args.dismissible}
+        />
+      </loom-stack>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-toast');
@@ -395,7 +401,6 @@ evento dismiss, y cambio de tipo por atributo.
 };
 
 export const CSSParts: Story = {
-  name: 'CSS Parts',
   decorators: [
     (Story) => (
       <>
@@ -412,7 +417,9 @@ export const CSSParts: Story = {
             border-radius: 50%;
           }
         `}</style>
-        <div className="parts-demo"><Story /></div>
+        <loom-box display="block" className="parts-demo">
+          <Story />
+        </loom-box>
       </>
     ),
   ],
@@ -434,16 +441,18 @@ Consumers pueden sobreescribir los internos via CSS parts:
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {TOAST_TYPES.map((type) => (
-        <loom-toast
-          key={type}
-          type={type}
-          title={`Toast ${type}`}
-          description="Descripción personalizada via ::part()"
-          dismissible
-        />
-      ))}
-    </div>
+    <loom-box display="block" padding="lg">
+      <ToastStack>
+        {TOAST_TYPES.map((type) => (
+          <loom-toast
+            key={type}
+            type={type}
+            title={`Toast ${type}`}
+            description="Descripción personalizada via ::part()"
+            dismissible
+          />
+        ))}
+      </ToastStack>
+    </loom-box>
   ),
 };

@@ -8,10 +8,13 @@ import { BellIcon as BellMicro } from '@heroicons/react/16/solid';
 
 import { Icon, ICON_SIZES } from '../../../../../package/ui/primitives/Icon/index.ts';
 import type { IconColor, IconSize } from '../../../../../package/ui/primitives/Icon/index.ts';
-import { Button } from '../../../../../package/ui/primitives/Button/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
 import '../../../../../package/ui/primitives/Icon/adapters/Icon.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 const COLOR_OPTIONS = [
@@ -79,35 +82,27 @@ export default meta;
 type Story = StoryObj<IconStoryArgs>;
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '40px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 16px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '40px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Row = ({ children }: { children: ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '24px' }}>
+  <loom-inline gap="lg" align="center" wrap>
     {children}
-  </div>
+  </loom-inline>
 );
 
 const Cell = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-    <div style={{
-      fontSize: '10px', fontWeight: 700, fontFamily: 'monospace',
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary,
-    }}>
+  <loom-stack gap="sm" align="center">
+    <p className="loom-caption" style={{ color: colorVars.textSecondary, margin: 0 }}>
       {label}
-    </div>
+    </p>
     {children}
-  </div>
+  </loom-stack>
 );
 
 export const Default: Story = {
@@ -118,11 +113,11 @@ export const Default: Story = {
   render: (args) => {
     const { size, color, label, children } = args;
     return (
-      <div style={{ padding: '24px' }}>
+      <loom-box display="block" padding="lg">
         <loom-icon size={size} color={color} label={label}>
           {children}
         </loom-icon>
-      </div>
+      </loom-box>
     );
   },
 };
@@ -137,7 +132,7 @@ export const Sizes: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', color: colorVars.textPrimary }}>
+    <loom-box display="block" padding="lg" style={{ color: colorVars.textPrimary }}>
       <StorySection title="Outline 24px (Heroicons outline)">
         <Row>
           {ICON_SIZES.map((s) => (
@@ -156,7 +151,7 @@ export const Sizes: Story = {
           <Cell label="solid 24"><Icon size="md"><BellSolid /></Icon></Cell>
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -170,7 +165,7 @@ export const Colors: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <StorySection title="Con prop color (token semántico)">
         <Row>
           {COLOR_OPTIONS.map((c) => (
@@ -180,7 +175,7 @@ export const Colors: Story = {
           ))}
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -194,22 +189,24 @@ export const InheritsCurrentColor: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
       <StorySection title="El SVG hereda el color del padre vía currentColor">
-        <div style={{ color: colorVars.brandPrimary, fontFamily: 'sans-serif', fontSize: '16px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        <loom-inline gap="sm" align="center" style={{ color: colorVars.brandPrimary }}>
           <Icon size="md"><StarIcon /></Icon>
-          <span>Hereda brandPrimary del contenedor</span>
-        </div>
-        <div style={{ color: colorVars.feedbackDanger, fontFamily: 'sans-serif', fontSize: '16px', display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+          <span className="loom-body-md">Hereda brandPrimary del contenedor</span>
+        </loom-inline>
+        <loom-inline gap="sm" align="center" style={{ color: colorVars.feedbackDanger, marginTop: '12px' }}>
           <Icon size="md"><ExclamationTriangleIcon /></Icon>
-          <span>Hereda feedbackDanger del contenedor</span>
-        </div>
-        <div style={{ color: colorVars.feedbackSuccess, fontFamily: 'sans-serif', fontSize: '16px', display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+          <span className="loom-body-md">Hereda feedbackDanger del contenedor</span>
+        </loom-inline>
+        <loom-inline gap="sm" align="center" style={{ color: colorVars.feedbackSuccess, marginTop: '12px' }}>
           <Icon size="md"><CheckCircleIcon /></Icon>
-          <span>Hereda feedbackSuccess del contenedor</span>
-        </div>
+          <span className="loom-body-md">Hereda feedbackSuccess del contenedor</span>
+        </loom-inline>
       </StorySection>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -229,21 +226,21 @@ export const Accessibility: Story = {
   },
 
   render: () => (
-    <div style={{ padding: '24px', color: colorVars.textPrimary }}>
+    <loom-box display="block" padding="lg" style={{ color: colorVars.textPrimary }}>
       <StorySection title="Decorativo — sin label, aria-hidden">
         <Row>
           <Icon size="md"><BookmarkIcon /></Icon>
-          <span style={{ fontFamily: 'sans-serif' }}>El ícono es decorativo, el lector de pantalla lo ignora.</span>
+          <span className="loom-body-md">El ícono es decorativo, el lector de pantalla lo ignora.</span>
         </Row>
       </StorySection>
 
       <StorySection title='Informativo — con label, role="img"'>
         <Row>
           <Icon size="md" label="Marcar como favorito"><BookmarkIcon /></Icon>
-          <span style={{ fontFamily: 'sans-serif' }}>El ícono es anunciado como "Marcar como favorito".</span>
+          <span className="loom-body-md">El ícono es anunciado como "Marcar como favorito".</span>
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   )
 };
 
@@ -257,23 +254,25 @@ export const InsideButton: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
       <StorySection title="Ícono + texto (hereda color del botón)">
         <Row>
-          <Button variant="primary"><Icon size="sm"><BellIcon /></Icon>Notificaciones</Button>
-          <Button variant="outline"><Icon size="sm"><BellIcon /></Icon>Notificaciones</Button>
-          <Button variant="text"><Icon size="sm"><BellIcon /></Icon>Notificaciones</Button>
+          <loom-button variant="primary"><loom-icon size="sm"><BellIcon /></loom-icon>Notificaciones</loom-button>
+          <loom-button variant="outline"><loom-icon size="sm"><BellIcon /></loom-icon>Notificaciones</loom-button>
+          <loom-button variant="text"><loom-icon size="sm"><BellIcon /></loom-icon>Notificaciones</loom-button>
         </Row>
       </StorySection>
 
       <StorySection title="Solo ícono (con label para a11y)">
         <Row>
-          <Button variant="primary" aria-label="Favorito"><Icon size="sm"><HeartIcon /></Icon></Button>
-          <Button variant="outline" aria-label="Favorito"><Icon size="sm"><HeartIcon /></Icon></Button>
-          <Button variant="text" aria-label="Favorito"><Icon size="sm"><HeartIcon /></Icon></Button>
+          <loom-button variant="primary" aria-label="Favorito"><loom-icon size="sm"><HeartIcon /></loom-icon></loom-button>
+          <loom-button variant="outline" aria-label="Favorito"><loom-icon size="sm"><HeartIcon /></loom-icon></loom-button>
+          <loom-button variant="text" aria-label="Favorito"><loom-icon size="sm"><HeartIcon /></loom-icon></loom-button>
         </Row>
       </StorySection>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -287,7 +286,7 @@ export const Polymorphic: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', color: colorVars.textPrimary }}>
+    <loom-box display="block" padding="lg" style={{ color: colorVars.textPrimary }}>
       <StorySection title="Como elementos semánticos distintos">
         <Row>
           <Cell label='as="span"'><Icon as="span" size="md"><BellIcon /></Icon></Cell>
@@ -295,7 +294,7 @@ export const Polymorphic: Story = {
           <Cell label='as="figure"'><Icon as="figure" size="md" style={{ margin: 0 }}><BellIcon /></Icon></Cell>
         </Row>
       </StorySection>
-    </div>
+    </loom-box>
   )
 };
 
@@ -319,7 +318,7 @@ export const WebComponent: StoryObj<IconWebComponentArgs> = {
     label: { control: 'text' },
   },
   render: ({ size, color, label }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-icon
         size={size}
         color={color}
@@ -327,7 +326,7 @@ export const WebComponent: StoryObj<IconWebComponentArgs> = {
       >
         <BellIcon />
       </loom-icon>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-icon');

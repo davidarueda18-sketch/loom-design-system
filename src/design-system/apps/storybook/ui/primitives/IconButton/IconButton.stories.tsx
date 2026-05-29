@@ -8,7 +8,10 @@ import type { IconButtonVariant, IconButtonSize } from '../../../../../package/u
 import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/IconButton/adapters/IconButton.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 // ─── Icon size per button size ────────────────────────────────────────────────
@@ -32,41 +35,35 @@ const STATES: StateDemo[] = [
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '40px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 16px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '40px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 const Row = ({ children }: { children: ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+  <loom-inline gap="md" align="center" wrap>
     {children}
-  </div>
+  </loom-inline>
 );
 
 const StateLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontSize: '10px', fontWeight: 700, fontFamily: 'monospace',
-    textTransform: 'uppercase', letterSpacing: '0.08em',
+  <p className="loom-caption" style={{
     color: colorVars.textSecondary, marginBottom: '6px',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 const SizeLabel = ({ children }: { children: string }) => (
-  <div style={{
-    fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary,
+  <p className="loom-caption" style={{
+    color: colorVars.textSecondary,
     marginTop: '6px', textAlign: 'center',
   }}>
     {children}
-  </div>
+  </p>
 );
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -127,7 +124,7 @@ type Story = StoryObj<IconButtonStoryArgs>;
 // ─── Default ─────────────────────────────────────────────────────────────────
 export const Default: Story = {
   render: ({ variant, size, disabled, selected }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <IconButton
         variant={variant}
         size={size}
@@ -137,7 +134,7 @@ export const Default: Story = {
       >
         <Icon size={ICON_SIZE_MAP[size]}><MagnifyingGlassIcon /></Icon>
       </IconButton>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -152,22 +149,22 @@ export const Sizes: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', color: colorVars.textPrimary }}>
+    <loom-box display="block" padding="lg" style={{ color: colorVars.textPrimary }}>
       {ICON_BUTTON_VARIANTS.map(variant => (
         <StorySection key={variant} title={`variant=${variant}`}>
           <Row>
             {ICON_BUTTON_SIZES.map(size => (
-              <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <loom-stack key={size} gap="xs" align="center">
                 <IconButton size={size} variant={variant} aria-label={`Tamaño ${size}`}>
                   <Icon size={ICON_SIZE_MAP[size]}><BookmarkIcon /></Icon>
                 </IconButton>
                 <SizeLabel>{size}</SizeLabel>
-              </div>
+              </loom-stack>
             ))}
           </Row>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
@@ -182,18 +179,18 @@ export const Variants: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         {ICON_BUTTON_VARIANTS.map(variant => (
-          <div key={variant} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <loom-stack key={variant} gap="xs" align="center">
             <IconButton variant={variant} size="md" aria-label={variant}>
               <Icon size="md"><PencilIcon /></Icon>
             </IconButton>
             <SizeLabel>{variant}</SizeLabel>
-          </div>
+          </loom-stack>
         ))}
       </Row>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -208,7 +205,7 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <style>{`
         /* Hover — todos usan brandAccentPressed (#283739) */
         .state-hover loom-icon-button::part(button)                   { background: ${colorVars.brandAccentPressed}; }
@@ -227,9 +224,9 @@ export const States: Story = {
       `}</style>
       {ICON_BUTTON_VARIANTS.map(variant => (
         <StorySection key={variant} title={`variant=${variant}`}>
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+          <loom-inline gap="lg" wrap>
             {STATES.map(({ label, disabled, selected }) => (
-              <div key={label} className={`state-${label.toLowerCase()}`}>
+              <loom-box key={label} display="block" className={`state-${label.toLowerCase()}`}>
                 <StateLabel>{label}</StateLabel>
                 <IconButton
                   variant={variant}
@@ -240,12 +237,12 @@ export const States: Story = {
                 >
                   <Icon size="md"><ShareIcon /></Icon>
                 </IconButton>
-              </div>
+              </loom-box>
             ))}
-          </div>
+          </loom-inline>
         </StorySection>
       ))}
-    </div>
+    </loom-box>
   ),
 };
 
@@ -268,7 +265,8 @@ export const Toggle: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', gap: '24px', alignItems: 'center' }}>
+      <loom-box display="block" padding="lg">
+        <loom-inline gap="lg" align="center">
         <loom-icon-button
           variant="filled"
           size="md"
@@ -278,10 +276,11 @@ export const Toggle: Story = {
         >
           <Icon size="md"><BookmarkIcon /></Icon>
         </loom-icon-button>
-        <span style={{ fontFamily: 'monospace', fontSize: '13px', color: colorVars.textSecondary }}>
+        <span className="loom-caption" style={{ color: colorVars.textSecondary }}>
           selected: {String(saved)}
         </span>
-      </div>
+        </loom-inline>
+      </loom-box>
     );
   },
 };
@@ -315,7 +314,7 @@ export const WebComponent: StoryObj<{
     selected: { control: 'boolean' },
   },
   render: ({ variant, size, disabled, selected }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-icon-button
         variant={variant}
         size={size}
@@ -325,7 +324,7 @@ export const WebComponent: StoryObj<{
       >
         <loom-icon size="md"><BellIcon /></loom-icon>
       </loom-icon-button>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host  = getLoomIconButton(canvasElement);
@@ -358,21 +357,22 @@ export const CustomEvents: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <loom-box display="block" padding="lg">
+        <loom-stack gap="md">
         <loom-icon-button variant="filled" size="md" aria-label="Trigger events" ref={handleRef}>
           <loom-icon size="md"><MagnifyingGlassIcon /></loom-icon>
         </loom-icon-button>
-        <div style={{
+        <loom-box display="block" padding="smMd" style={{
           minHeight: '80px', border: `1px dashed ${colorVars.borderSubtle}`,
-          borderRadius: '8px', padding: '10px',
-          fontFamily: 'monospace', fontSize: '12px', color: colorVars.textSecondary,
+          borderRadius: '8px', color: colorVars.textSecondary,
         }}>
           {log.length === 0
-            ? <span style={{ opacity: 0.5 }}>Sin eventos aún — interactúa con el botón</span>
-            : log.map((e, i) => <div key={i}>{e}</div>)
+            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — interactúa con el botón</p>
+            : log.map((e, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{e}</p>)
           }
-        </div>
-      </div>
+        </loom-box>
+        </loom-stack>
+      </loom-box>
     );
   },
   play: async ({ canvasElement }) => {
@@ -394,7 +394,7 @@ export const CSSParts: Story = {
         <style>{`
           .parts-demo loom-icon-button::part(button) { border-radius: 8px; }
         `}</style>
-        <div className="parts-demo"><Story /></div>
+        <loom-box display="block" className="parts-demo"><Story /></loom-box>
       </>
     ),
   ],
@@ -412,16 +412,18 @@ Parte expuesta para override sin romper la encapsulación del shadow root:
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+    <loom-box display="block" padding="lg">
+      <loom-inline gap="md" align="start" wrap>
       {ICON_BUTTON_VARIANTS.map(variant => (
-        <div key={variant} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+        <loom-stack key={variant} gap="xs" align="center">
           <loom-icon-button variant={variant} size="md" aria-label={`${variant} square via ::part(button)`}>
             <loom-icon size="md"><PencilIcon /></loom-icon>
           </loom-icon-button>
           <SizeLabel>{variant}</SizeLabel>
-        </div>
+        </loom-stack>
       ))}
-    </div>
+      </loom-inline>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = getLoomIconButton(canvasElement);

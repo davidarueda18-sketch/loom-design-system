@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
@@ -7,6 +7,9 @@ import type { BadgeState } from '../../../../../package/ui/primitives/Badge/inde
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Badge/adapters/Badge.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface BadgeStoryArgs {
@@ -65,26 +68,22 @@ type Story = StoryObj<BadgeStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
-function Row({ children }: { children: React.ReactNode }) {
+function Row({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+    <loom-inline gap="smMd" align="center" wrap>
       {children}
-    </div>
+    </loom-inline>
   );
 }
 
@@ -92,9 +91,9 @@ function Row({ children }: { children: React.ReactNode }) {
 
 export const Default: Story = {
   render: ({ state, label }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-badge state={state} label={label} />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -108,7 +107,8 @@ export const States: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
       <Section title="Todos los estados">
         <Row>
           {BADGE_STATES.map((s) => (
@@ -126,7 +126,8 @@ export const States: Story = {
           <Badge state="info"     label="Disponible" />
         </Row>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -155,15 +156,17 @@ CSS hooks: \`::part(dot)\`, \`::part(label)\`.
     label: { control: 'text' },
   },
   render: (args) => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <loom-badge state={args.state} label={args.label} />
 
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+      <loom-inline gap="smMd" wrap>
         {BADGE_STATES.map((s) => (
           <loom-badge key={s} state={s} label={s} />
         ))}
-      </div>
-    </div>
+      </loom-inline>
+      </loom-stack>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-badge');
@@ -213,9 +216,9 @@ export const CSSParts: Story = {
             text-transform: uppercase;
           }
         `}</style>
-        <div className="parts-demo">
+        <loom-box display="block" className="parts-demo">
           <Story />
-        </div>
+        </loom-box>
       </>
     ),
   ],
@@ -234,15 +237,17 @@ Consumer aplica \`::part(dot)\` y \`::part(label)\` para personalizar los intern
     },
   },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '24px' }}>
-      <div style={{ fontFamily: 'sans-serif', fontSize: '13px', color: colorVars.textSecondary, marginBottom: '8px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
+      <p className="loom-body-sm" style={{ color: colorVars.textSecondary, margin: '0 0 8px' }}>
         Consumer aplica <code>::part(dot)</code> (cuadrado) y <code>::part(label)</code> (bold + uppercase):
-      </div>
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+      </p>
+      <loom-inline gap="smMd" wrap>
         {BADGE_STATES.map((s) => (
           <loom-badge key={s} state={s} label={s} />
         ))}
-      </div>
-    </div>
+      </loom-inline>
+      </loom-stack>
+    </loom-box>
   ),
 };

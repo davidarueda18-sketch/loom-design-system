@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Modal/adapters/Modal.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 import { MODAL_SIZES } from '../../../../../package/ui/components/Modal/Modal.types.ts';
@@ -44,7 +47,7 @@ mediante el slot por defecto, y los botones de acción se envían a través de \
 
 \`\`\`html
 <loom-modal open title="Título del modal" size="md">
-  <p>¿Estás seguro de que deseas continuar?</p>
+  <p class="loom-body-md">¿Estás seguro de que deseas continuar?</p>
   <loom-button slot="footer" variant="outline">Cancelar</loom-button>
   <loom-button slot="footer" variant="primary">Confirmar</loom-button>
 </loom-modal>
@@ -69,54 +72,51 @@ type Story = StoryObj<ModalStoryArgs>;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-const footerButtonBase: React.CSSProperties = {
-  padding: '8px 16px',
-  border: '1px solid #444',
-  borderRadius: '6px',
-  cursor: 'pointer',
-  fontFamily: 'sans-serif',
-  fontSize: '13px',
-  fontWeight: 500,
-};
+function LoomButtonAction({
+  id,
+  label,
+  onClick,
+  slot,
+  variant = 'primary',
+}: {
+  id?: string;
+  label: string;
+  onClick?: () => void;
+  slot?: string;
+  variant?: 'primary' | 'outline' | 'text';
+}) {
+  const ref = useRef<HTMLElementTagNameMap['loom-button'] | null>(null);
 
-function TriggerButton({ label, onClick }: { label: string; onClick: () => void }) {
+  useEffect(() => {
+    const button = ref.current;
+    if (!button || onClick === undefined) return;
+    button.addEventListener('loom-click', onClick);
+    return () => button.removeEventListener('loom-click', onClick);
+  }, [onClick]);
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        ...footerButtonBase,
-        background: '#e55b3c',
-        color: '#fff',
-        border: '1px solid #e55b3c',
-        padding: '10px 20px',
-        fontSize: '14px',
-      }}
+    <loom-button
+      ref={ref}
+      id={id}
+      slot={slot}
+      variant={variant}
+      size="md"
     >
       {label}
-    </button>
+    </loom-button>
   );
 }
 
-function CancelBtn({ onClick, slot }: { onClick: () => void; slot?: string }) {
-  return (
-    <button type="button" slot={slot} onClick={onClick} style={{ ...footerButtonBase, background: 'transparent', color: colorVars.textPrimary }}>
-      Cancelar
-    </button>
-  );
+function TriggerButton({ label, onClick, id }: { label: string; onClick: () => void; id?: string }) {
+  return <LoomButtonAction id={id} label={label} onClick={onClick} />;
 }
 
-function ConfirmBtn({ onClick, slot }: { onClick?: () => void; slot?: string }) {
-  return (
-    <button
-      type="button"
-      slot={slot}
-      onClick={onClick}
-      style={{ ...footerButtonBase, background: '#e55b3c', color: '#fff', border: '1px solid #e55b3c' }}
-    >
-      Confirmar
-    </button>
-  );
+function CancelBtn({ onClick, slot, id }: { onClick: () => void; slot?: string; id?: string }) {
+  return <LoomButtonAction id={id} slot={slot} label="Cancelar" variant="outline" onClick={onClick} />;
+}
+
+function ConfirmBtn({ onClick, slot, id }: { onClick?: () => void; slot?: string; id?: string }) {
+  return <LoomButtonAction id={id} slot={slot} label="Confirmar" onClick={onClick} />;
 }
 
 // ─── Controlled modal helper ──────────────────────────────────────────────────
@@ -129,8 +129,8 @@ function ControlledModal({
 }: {
   title: string;
   size?: ModalSize;
-  footer?: React.ReactNode;
-  children?: React.ReactNode;
+  footer?: ReactNode;
+  children?: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLElementTagNameMap['loom-modal'] | null>(null);
@@ -152,15 +152,17 @@ function ControlledModal({
   }, []);
 
   return (
-    <div style={{ padding: '48px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-      <TriggerButton label="Abrir modal" onClick={() => setIsOpen(true)} />
+    <loom-box display="block" padding="xl2">
+      <loom-inline justify="center" align="start">
+        <TriggerButton label="Abrir modal" onClick={() => setIsOpen(true)} />
+      </loom-inline>
       <loom-modal
         ref={ref}
         title={title}
         size={size}
       >
         {children === undefined ? (
-          <p style={{ margin: 0, fontFamily: 'sans-serif', fontSize: '14px', color: colorVars.textSecondary }}>
+          <p className="loom-body-md" style={{ margin: 0, color: colorVars.textSecondary }}>
             Contenido del modal. Puedes proyectar cualquier elemento HTML aquí.
           </p>
         ) : children}
@@ -173,7 +175,7 @@ function ControlledModal({
             </>
           )}
       </loom-modal>
-    </div>
+    </loom-box>
   );
 }
 
@@ -185,7 +187,7 @@ export const Default: Story = {
 
 export const Sizes: Story = {
   args: {
-    size: "sm"
+    size: 'sm',
   },
 
   name: 'Tamaños',
@@ -206,17 +208,19 @@ export const Sizes: Story = {
       xl: 'XL — min 840px / max 880px',
     };
     return (
-      <div style={{ padding: '40px', display: 'flex', flexWrap: 'wrap', gap: '16px', backgroundColor: colorVars.surfaceBase }}>
-        {MODAL_SIZES.map((size) => (
-          <ControlledModal
-            key={size}
-            title={sizeLabels[size]}
-            size={size}
-          />
-        ))}
-      </div>
+      <loom-box display="block" padding="xl" style={{ backgroundColor: colorVars.surfaceBase }}>
+        <loom-inline gap="md" align="start" justify="start" wrap>
+          {MODAL_SIZES.map((size) => (
+            <ControlledModal
+              key={size}
+              title={sizeLabels[size]}
+              size={size}
+            />
+          ))}
+        </loom-inline>
+      </loom-box>
     );
-  }
+  },
 };
 
 export const SingleAction: Story = {
@@ -282,38 +286,29 @@ function WebComponentExample() {
   };
 
   return (
-    <div style={{ padding: '48px', display: 'flex', justifyContent: 'center' }}>
-      <button
-        type="button"
-        id="modal-trigger"
-        onClick={() => setModalOpen(true)}
-        style={{ ...footerButtonBase, background: '#e55b3c', color: '#fff', border: '1px solid #e55b3c', padding: '10px 20px', fontSize: '14px' }}
-      >
-        Abrir modal
-      </button>
-      <loom-modal ref={ref} title="Título de prueba" size="md">
-        <p style={{ margin: 0, fontFamily: 'sans-serif', fontSize: '14px', color: colorVars.textSecondary }}>
-          Contenido del modal para pruebas automatizadas.
-        </p>
-        <button
-          slot="footer"
-          type="button"
-          id="footer-cancel"
-          style={{ ...footerButtonBase, background: 'transparent', color: colorVars.textPrimary }}
-          onClick={() => setModalOpen(false)}
-        >
-          Cancelar
-        </button>
-        <button
-          slot="footer"
-          type="button"
-          id="footer-confirm"
-          style={{ ...footerButtonBase, background: '#e55b3c', color: '#fff', border: '1px solid #e55b3c' }}
-        >
-          Confirmar
-        </button>
-      </loom-modal>
-    </div>
+    <loom-box display="block" padding="xl2">
+      <loom-stack gap="md" align="center">
+        <LoomButtonAction
+          id="modal-trigger"
+          label="Abrir modal"
+          onClick={() => setModalOpen(true)}
+        />
+        <loom-modal ref={ref} title="Título de prueba" size="md">
+          <p className="loom-body-md" style={{ margin: 0, color: colorVars.textSecondary }}>
+            Contenido del modal para pruebas automatizadas.
+          </p>
+          <CancelBtn
+            slot="footer"
+            id="footer-cancel"
+            onClick={() => setModalOpen(false)}
+          />
+          <ConfirmBtn
+            slot="footer"
+            id="footer-confirm"
+          />
+        </loom-modal>
+      </loom-stack>
+    </loom-box>
   );
 }
 
@@ -351,8 +346,8 @@ al pulsar el botón de cierre y al presionar Escape.
     const shadow = modal.shadowRoot!;
 
     // Open the modal
-    const triggerBtn = canvasElement.querySelector<HTMLButtonElement>('#modal-trigger');
-    triggerBtn?.click();
+    const triggerBtn = canvasElement.querySelector<HTMLElementTagNameMap['loom-button']>('#modal-trigger');
+    triggerBtn?.shadowRoot?.querySelector('button')?.click();
     await new Promise((r) => requestAnimationFrame(r));
     await new Promise((r) => requestAnimationFrame(r));
 

@@ -11,7 +11,10 @@ import type { ProgressCircularSize, ProgressColor, ProgressThickness } from '../
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/tokens/progress/progress.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../../../package/ui/primitives/Progress/adapters/ProgressCircular.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface ProgressCircularStoryArgs {
@@ -88,24 +91,20 @@ type Story = StoryObj<ProgressCircularStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 12px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 12px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
+    <loom-inline gap="lg" align="center" wrap>
       {children}
-    </div>
+    </loom-inline>
   );
 }
 
@@ -113,7 +112,7 @@ function Row({ children }: { children: React.ReactNode }) {
 
 export const Default: Story = {
   render: ({ value, max, indeterminate, thickness, size, color, label, showValue }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-progress-circular
         value={value}
         max={max}
@@ -124,7 +123,7 @@ export const Default: Story = {
         label={label}
         show-value={showValue || undefined}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -138,7 +137,8 @@ export const Determinate: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       {[0, 25, 50, 75, 100].map((v) => (
         <Section key={v} title={`value = ${v}`}>
           <Row>
@@ -147,7 +147,8 @@ export const Determinate: Story = {
           </Row>
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -160,7 +161,8 @@ export const Indeterminate: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <Section title="indeterminate — todos los tamaños">
         <Row>
           {PROGRESS_CIRCULAR_SIZES.map((s) => (
@@ -175,7 +177,8 @@ export const Indeterminate: Story = {
           ))}
         </Row>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -189,7 +192,8 @@ export const Sizes: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       {PROGRESS_CIRCULAR_SIZES.map((s) => (
         <Section key={s} title={`size = ${s}`}>
           <Row>
@@ -199,36 +203,37 @@ export const Sizes: Story = {
           </Row>
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
 export const Thicknesses: Story = {
   name: 'Grosor',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         {PROGRESS_THICKNESSES.map((t) => (
           <ProgressCircular key={t} value={60} thickness={t} size="lg" />
         ))}
       </Row>
-    </div>
+    </loom-box>
   ),
 };
 
 export const Colors: Story = {
   name: 'Colores (tokens semánticos)',
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         {PROGRESS_COLORS.map((c) => (
-          <div key={c} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <loom-stack key={c} gap="sm" align="center">
             <ProgressCircular value={70} color={c} thickness="md" />
-            <span style={{ fontFamily: 'monospace', fontSize: '11px', color: colorVars.textSecondary }}>{c}</span>
-          </div>
+            <span className="loom-caption" style={{ color: colorVars.textSecondary }}>{c}</span>
+          </loom-stack>
         ))}
       </Row>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -242,13 +247,13 @@ export const WithLabel: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <Row>
         <ProgressCircular value={42} size="lg" showValue />
         <ProgressCircular value={75} size="lg" label="OK" />
         <ProgressCircular indeterminate size="lg" label="…" />
       </Row>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -286,7 +291,7 @@ Tests automáticos verifican shadow DOM, ARIA y geometría SVG (stroke-dasharray
     indeterminate: { control: 'boolean' },
   },
   render: (args) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-progress-circular
         value={args.value}
         max={args.max}
@@ -297,7 +302,7 @@ Tests automáticos verifican shadow DOM, ARIA y geometría SVG (stroke-dasharray
         label={args.label}
         show-value={args['show-value'] || undefined}
       />
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-progress-circular');

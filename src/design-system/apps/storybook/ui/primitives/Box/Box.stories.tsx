@@ -74,7 +74,7 @@ type Story = StoryObj<BoxStoryArgs>;
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const Canvas = ({ children, maxWidth = 520 }: { children: ReactNode; maxWidth?: number }) => (
-  <div style={{
+  <loom-box display="block" style={{
     width: '100%',
     maxWidth: `${maxWidth}px`,
     minWidth: 0,
@@ -82,37 +82,32 @@ const Canvas = ({ children, maxWidth = 520 }: { children: ReactNode; maxWidth?: 
     overflow: 'hidden',
   }}>
     {children}
-  </div>
+  </loom-box>
 );
 
 const DemoBlock = ({ children }: { children?: ReactNode }) => (
-  <div style={{
+  <loom-box display="block" padding="smMd" style={{
     background: colorVars.surfaceRaised,
     border: `1px solid ${colorVars.borderSubtle}`,
     borderRadius: '4px',
-    padding: '12px',
     minWidth: 0,
     boxSizing: 'border-box',
-    fontFamily: 'sans-serif',
-    fontSize: '13px',
     color: colorVars.textPrimary,
     overflowWrap: 'anywhere',
   }}>
-    {children ?? 'Contenido'}
-  </div>
+    <p className="loom-body-sm" style={{ margin: 0 }}>
+      {children ?? 'Contenido'}
+    </p>
+  </loom-box>
 );
 
 const StorySection = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div style={{ marginBottom: '32px' }}>
-    <h3 style={{
-      fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-      textTransform: 'uppercase', letterSpacing: '0.08em',
-      color: colorVars.textSecondary, margin: '0 0 12px',
-    }}>
+  <loom-box display="block" style={{ marginBottom: '32px' }}>
+    <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 12px' }}>
       {title}
-    </h3>
+    </p>
     {children}
-  </div>
+  </loom-box>
 );
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
@@ -226,7 +221,7 @@ export const WebComponent: Story = {
     }
 
     await expect(host).toBeInTheDocument();
-  await expect(host.getAttribute('display')).toBe('block');
+    await expect(host.getAttribute('display')).toBe('block');
     await expect(host.getAttribute('padding')).toBe('md');
     await expect(host.getAttribute('padding-x')).toBe('xl');
     await expect(host.getAttribute('padding-y')).toBe('sm');

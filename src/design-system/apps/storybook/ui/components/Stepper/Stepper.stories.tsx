@@ -5,7 +5,13 @@ import { expect } from 'storybook/test';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Stepper/adapters/Stepper.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
+import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
+
+import type { ButtonVariant } from '../../../../../package/ui/primitives/Button/Button.types.ts';
 
 const DEFAULT_STEPS = ['Configuración', 'Revisión', 'Confirmación', 'Finalización'];
 
@@ -64,16 +70,39 @@ type Story = StoryObj<StepperStoryArgs>;
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div style={{ marginBottom: '40px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 24px',
-      }}>
+    <loom-box display="block">
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 24px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
+  );
+}
+
+function StepperButton({
+  label,
+  onClick,
+  disabled = false,
+  variant = 'outline',
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  variant?: ButtonVariant;
+}) {
+  const buttonRef = useRef<HTMLElementTagNameMap['loom-button'] | null>(null);
+
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return;
+    button.addEventListener('loom-click', onClick);
+    return () => button.removeEventListener('loom-click', onClick);
+  }, [onClick]);
+
+  return (
+    <loom-button ref={buttonRef} variant={variant} size="sm" disabled={disabled}>
+      {label}
+    </loom-button>
   );
 }
 
@@ -94,32 +123,30 @@ function ControlledStepper() {
   }, []);
 
   return (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <loom-stepper
-        ref={stepperRef}
-        steps={JSON.stringify(DEFAULT_STEPS)}
-        current={String(current)}
-      />
-      <div style={{ fontFamily: 'sans-serif', fontSize: '13px', color: colorVars.textSecondary }}>
-        Paso activo: <strong style={{ color: colorVars.brandAccent }}>{current + 1} - {DEFAULT_STEPS[current]}</strong>
-      </div>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <button
-          onClick={() => setCurrent((value) => Math.max(0, value - 1))}
-          disabled={current === 0}
-          style={{ fontFamily: 'sans-serif', fontSize: '13px', padding: '6px 14px', cursor: current === 0 ? 'not-allowed' : 'pointer' }}
-        >
-          Anterior
-        </button>
-        <button
-          onClick={() => setCurrent((value) => Math.min(DEFAULT_STEPS.length - 1, value + 1))}
-          disabled={current === DEFAULT_STEPS.length - 1}
-          style={{ fontFamily: 'sans-serif', fontSize: '13px', padding: '6px 14px', cursor: current === DEFAULT_STEPS.length - 1 ? 'not-allowed' : 'pointer' }}
-        >
-          Siguiente
-        </button>
-      </div>
-    </div>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
+        <loom-stepper
+          ref={stepperRef}
+          steps={JSON.stringify(DEFAULT_STEPS)}
+          current={String(current)}
+        />
+        <p className="loom-body-sm" style={{ color: colorVars.textSecondary, margin: 0 }}>
+          Paso activo: <strong style={{ color: colorVars.brandAccent }}>{current + 1} - {DEFAULT_STEPS[current]}</strong>
+        </p>
+        <loom-inline gap="sm" align="center">
+          <StepperButton
+            label="Anterior"
+            onClick={() => setCurrent((value) => Math.max(0, value - 1))}
+            disabled={current === 0}
+          />
+          <StepperButton
+            label="Siguiente"
+            onClick={() => setCurrent((value) => Math.min(DEFAULT_STEPS.length - 1, value + 1))}
+            disabled={current === DEFAULT_STEPS.length - 1}
+          />
+        </loom-inline>
+      </loom-stack>
+    </loom-box>
   );
 }
 
@@ -127,9 +154,9 @@ function ControlledStepper() {
 
 export const Default: Story = {
   render: ({ steps, current }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-stepper steps={steps} current={String(current)} />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -143,13 +170,15 @@ export const AllStates: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-      {[0, 1, 2, 3].map((cur) => (
-        <Section key={cur} title={`current = ${cur}`}>
-          <loom-stepper steps={JSON.stringify(DEFAULT_STEPS)} current={String(cur)} />
-        </Section>
-      ))}
-    </div>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
+        {[0, 1, 2, 3].map((cur) => (
+          <Section key={cur} title={`current = ${cur}`}>
+            <loom-stepper steps={JSON.stringify(DEFAULT_STEPS)} current={String(cur)} />
+          </Section>
+        ))}
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -203,9 +232,9 @@ el shadow DOM, los steps internos, y el evento \`loom-stepper-change\`.
     current: { control: { type: 'number', min: 0, max: 3 } },
   },
   render: (args) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-stepper steps={args.steps} current={String(args.current)} />
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-stepper');

@@ -159,7 +159,7 @@ export const Vertical: Story = {
         </loom-inline>
       </Section>
       <Section title="Con label (start / center / end)">
-        <loom-inline gap="lg" align="stretch" style={{ height: '120px', fontFamily: 'sans-serif' }}>
+        <loom-inline gap="lg" align="stretch" style={{ height: '120px' }}>
           <loom-inline align="center"><p className="loom-body-md" style={{ margin: 0 }}>Start</p></loom-inline>
           <loom-divider orientation="vertical" label="or" label-position="start"></loom-divider>
           <loom-inline align="center"><p className="loom-body-md" style={{ margin: 0 }}>Center</p></loom-inline>

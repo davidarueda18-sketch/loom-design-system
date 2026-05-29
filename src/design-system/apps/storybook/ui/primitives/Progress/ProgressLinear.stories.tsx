@@ -12,7 +12,9 @@ import type { ProgressColor, ProgressShape, ProgressThickness } from '../../../.
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/tokens/progress/progress.tokens.css.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Progress/adapters/ProgressLinear.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface ProgressLinearStoryArgs {
@@ -90,16 +92,12 @@ type ProgressLinearWebComponentArgs = {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div style={{ marginBottom: '32px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 12px',
-      }}>
+    <loom-box display="block" style={{ marginBottom: '32px' }}>
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 12px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
@@ -107,7 +105,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 export const Default: Story = {
   render: ({ value, max, indeterminate, thickness, color, shape, label, showValue }) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-progress-linear
         value={value}
         max={max}
@@ -118,7 +116,7 @@ export const Default: Story = {
         label={label}
         show-value={showValue || undefined}
       />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -132,13 +130,15 @@ export const Determinate: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       {[0, 10, 20, 50, 80, 100].map((v) => (
         <Section key={v} title={`value = ${v}`}>
           <ProgressLinear value={v} />
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -151,14 +151,16 @@ export const Indeterminate: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <Section title="indeterminate (4 dp)">
         <ProgressLinear indeterminate thickness="sm" />
       </Section>
       <Section title="indeterminate (8 dp)">
         <ProgressLinear indeterminate thickness="md" />
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -172,13 +174,15 @@ export const Thicknesses: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       {PROGRESS_THICKNESSES.map((t) => (
         <Section key={t} title={`thickness = ${t}`}>
           <ProgressLinear value={60} thickness={t} />
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -192,7 +196,8 @@ export const Shapes: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <Section title="flat — value 60">
         <ProgressLinear value={60} shape="flat" thickness="md" />
       </Section>
@@ -205,7 +210,8 @@ export const Shapes: Story = {
       <Section title="wave — value 80 (8 dp)">
         <ProgressLinear value={80} shape="wave" thickness="md" />
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -219,13 +225,15 @@ export const Colors: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       {PROGRESS_COLORS.map((c) => (
         <Section key={c} title={c}>
           <ProgressLinear value={70} color={c} thickness="md" />
         </Section>
       ))}
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -239,7 +247,8 @@ export const WithLabel: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
       <Section title="solo label">
         <ProgressLinear value={42} label="Subiendo archivo" />
       </Section>
@@ -249,7 +258,8 @@ export const WithLabel: Story = {
       <Section title="solo showValue">
         <ProgressLinear value={42} showValue />
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -288,7 +298,7 @@ La story incluye \`play\` tests automáticos: presencia de shadow DOM, \`role="p
     indeterminate: { control: 'boolean' },
   },
   render: (args) => (
-    <div style={{ padding: '24px' }}>
+    <loom-box display="block" padding="lg">
       <loom-progress-linear
         value={args.value}
         max={args.max}
@@ -299,7 +309,7 @@ La story incluye \`play\` tests automáticos: presencia de shadow DOM, \`role="p
         label={args.label}
         show-value={args['show-value'] || undefined}
       />
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const host = canvasElement.querySelector('loom-progress-linear');
