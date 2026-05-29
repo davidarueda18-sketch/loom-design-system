@@ -4,6 +4,7 @@ import type { BoxProps } from '../Box.types.ts';
 
 export function Box<T extends ElementType = 'div'>({
   as: _as,
+  display,
   padding,
   paddingX,
   paddingY,
@@ -16,6 +17,7 @@ export function Box<T extends ElementType = 'div'>({
 
   return (
     <Tag
+      display={display}
       padding={padding}
       padding-x={paddingX}
       padding-y={paddingY}

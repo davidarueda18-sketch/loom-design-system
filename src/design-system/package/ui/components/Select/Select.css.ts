@@ -22,7 +22,7 @@ export const trigger = style({
   justifyContent: 'space-between',
   width: '100%',
   minHeight: '48px',
-  padding: `${spacingVars.sm} ${spacingVars.md}`,
+  padding: `${spacingVars.sm} ${spacingVars.smMd}`,
   background: colorVars.surfaceRaised,
   border: '1px solid',
   borderColor: colorVars.borderStrong,

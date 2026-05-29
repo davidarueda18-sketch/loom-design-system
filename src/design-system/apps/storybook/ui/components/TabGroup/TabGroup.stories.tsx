@@ -1,36 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/TabGroup/adapters/TabGroup.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
+import type {} from '../../../../../package/ui/components/TabGroup/TabGroup.types.ts';
+import type {} from '../../../../../package/ui/primitives/TabItem/TabItem.types.ts';
 import '../../../loom-web-components.d.ts';
-
-// ─── JSX namespaces for loom-tab-group and loom-tab-item ─────────────────────
-
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      'loom-tab-group': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElementTagNameMap['loom-tab-group']> & {
-          active?: string;
-        },
-        HTMLElementTagNameMap['loom-tab-group']
-      >;
-      'loom-tab-item': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElementTagNameMap['loom-tab-item']> & {
-          value?: string;
-          label?: string;
-          active?: boolean | '';
-          disabled?: boolean | '';
-        },
-        HTMLElementTagNameMap['loom-tab-item']
-      >;
-    }
-  }
-}
 
 // ─── Story arg interfaces ─────────────────────────────────────────────────────
 
@@ -82,23 +61,6 @@ document.querySelector('loom-tab-group')
 export default meta;
 type Story = StoryObj<TabGroupStoryArgs>;
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: '40px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 24px',
-      }}>
-        {title}
-      </h3>
-      {children}
-    </div>
-  );
-}
-
 function ControlledTabGroup() {
   const [active, setActive] = useState('overview');
   const groupRef = useRef<HTMLElementTagNameMap['loom-tab-group'] | null>(null);
@@ -120,20 +82,20 @@ function ControlledTabGroup() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <loom-stack gap="lg">
       <loom-tab-group ref={groupRef} active={active}>
         {tabs.map((t) => (
           <loom-tab-item key={t.value} value={t.value} label={t.label} />
         ))}
       </loom-tab-group>
-      <div style={{
+      <loom-box padding-y="md" style={{
         fontFamily: 'monospace', fontSize: '12px',
-        color: colorVars.textSecondary, paddingTop: '16px',
+        color: colorVars.textSecondary,
         borderTop: `1px solid ${colorVars.borderDefault}`,
       }}>
         Tab activo: <strong style={{ color: colorVars.textPrimary }}>{active}</strong>
-      </div>
-    </div>
+      </loom-box>
+    </loom-stack>
   );
 }
 
@@ -141,14 +103,14 @@ function ControlledTabGroup() {
 
 export const Default: Story = {
   render: ({ active }) => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
+    <loom-box padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
       <loom-tab-group active={active}>
         <loom-tab-item value="overview" label="Resumen" />
         <loom-tab-item value="details"  label="Detalles" />
         <loom-tab-item value="activity" label="Actividad" />
         <loom-tab-item value="reports"  label="Reportes" />
       </loom-tab-group>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -162,9 +124,9 @@ export const Controlled: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
+    <loom-box padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
       <ControlledTabGroup />
-    </div>
+    </loom-box>
   ),
 };
 
@@ -178,14 +140,14 @@ export const WithDisabled: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
+    <loom-box padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
       <loom-tab-group active="details">
         <loom-tab-item value="overview"  label="Resumen" />
         <loom-tab-item value="details"   label="Detalles" />
         <loom-tab-item value="analytics" label="Analytics" disabled="" />
         <loom-tab-item value="settings"  label="Configuración" disabled="" />
       </loom-tab-group>
-    </div>
+    </loom-box>
   ),
 };
 
@@ -205,13 +167,13 @@ al hacer clic y que tabs deshabilitadas no cambian el estado activo.
   },
   args: { active: 'b' },
   render: ({ active }) => (
-    <div style={{ padding: '24px', backgroundColor: colorVars.surfaceBase }}>
+    <loom-box padding="lg" style={{ backgroundColor: colorVars.surfaceBase }}>
       <loom-tab-group active={active}>
         <loom-tab-item value="a" label="Alpha" />
         <loom-tab-item value="b" label="Beta" />
         <loom-tab-item value="c" label="Gamma" disabled="" />
       </loom-tab-group>
-    </div>
+    </loom-box>
   ),
   play: async ({ canvasElement }) => {
     const group = canvasElement.querySelector('loom-tab-group');

@@ -3,11 +3,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { spacingVars } from '../../../../../package/tokens/spacing/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
+import { BOX_DISPLAYS } from '../../../../../package/ui/primitives/Box/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../loom-web-components.d.ts';
 
 interface BoxStoryArgs {
+  display?: string;
   padding?: string;
   paddingX?: string;
   paddingY?: string;
@@ -21,12 +23,17 @@ const boxImplementationCode = `import '@loom-sdc/design-system/elements';
 
 <loom-box padding-x="xl" padding-y="sm">
   Padding horizontal y vertical independientes
+</loom-box>
+
+<loom-box display="flex" padding="md">
+  Contenido con display flex
 </loom-box>`;
 
 const meta = {
   title: 'Primitives/Box',
   tags: ['autodocs'],
   argTypes: {
+    display:  { control: 'select', options: BOX_DISPLAYS },
     padding:  { control: 'select', options: Object.keys(spacingVars) },
     paddingX: { control: 'select', options: Object.keys(spacingVars) },
     paddingY: { control: 'select', options: Object.keys(spacingVars) },
@@ -36,6 +43,7 @@ const meta = {
       description: {
         component: `
 **Box** es el contenedor canónico para aplicar padding con tokens de spacing.
+También expone \`display\` para cubrir los casos de layout comunes sin estilos inline.
 
 \`\`\`html
 <script type="module" src="@loom-sdc/design-system/elements"></script>
@@ -46,6 +54,10 @@ const meta = {
 
 <loom-box padding-x="xl" padding-y="sm">
   Padding horizontal y vertical independientes
+</loom-box>
+
+<loom-box display="flex" padding="md">
+  Contenido con display flex
 </loom-box>
 \`\`\`
 
@@ -107,6 +119,7 @@ const StorySection = ({ title, children }: { title: string; children: ReactNode 
 
 export const Default: Story = {
   args: {
+    display: 'block',
     padding: 'lg',
     paddingX: 'xl3',
     paddingY: 'xl8',
@@ -118,7 +131,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <Canvas>
-      <loom-box padding={args.padding} style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
+      <loom-box display={args.display} padding={args.padding} style={{ border: `1px dashed ${colorVars.borderDefault}`, width: '100%' }}>
         <DemoBlock>Contenido con padding</DemoBlock>
       </loom-box>
     </Canvas>
@@ -182,18 +195,21 @@ export const Implementation: Story = {
 
 export const WebComponent: Story = {
   args: {
+    display: 'block',
     padding: 'md',
     paddingX: 'xl',
     paddingY: 'sm',
   },
   argTypes: {
+    display: { control: 'select', options: BOX_DISPLAYS },
     padding: { control: 'select', options: Object.keys(spacingVars) },
     paddingX: { control: 'select', options: Object.keys(spacingVars) },
     paddingY: { control: 'select', options: Object.keys(spacingVars) },
   },
-  render: ({ padding, paddingX, paddingY }) => (
+  render: ({ display, padding, paddingX, paddingY }) => (
     <Canvas>
       <loom-box
+        display={display}
         padding={padding}
         padding-x={paddingX}
         padding-y={paddingY}
@@ -210,6 +226,7 @@ export const WebComponent: Story = {
     }
 
     await expect(host).toBeInTheDocument();
+  await expect(host.getAttribute('display')).toBe('block');
     await expect(host.getAttribute('padding')).toBe('md');
     await expect(host.getAttribute('padding-x')).toBe('xl');
     await expect(host.getAttribute('padding-y')).toBe('sm');

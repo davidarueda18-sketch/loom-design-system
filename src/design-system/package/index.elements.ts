@@ -31,3 +31,4 @@ export { LoomToast } from './ui/components/Toast/adapters/Toast.element.ts';
 export { LoomTabItem } from './ui/primitives/TabItem/adapters/TabItem.element.ts';
 export { LoomTabGroup } from './ui/components/TabGroup/adapters/TabGroup.element.ts';
 export { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
+export { LoomCard } from './ui/components/Card/adapters/Card.element.ts';

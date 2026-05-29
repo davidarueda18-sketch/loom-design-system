@@ -10,6 +10,7 @@ declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'loom-box': LoomElementProps<HTMLElementTagNameMap['loom-box']> & {
+        display?: string;
         padding?: string;
         'padding-x'?: string;
         'padding-y'?: string;
@@ -158,6 +159,11 @@ declare module 'react' {
         open?: boolean | '';
         title?: string;
         size?: string;
+      };
+      'loom-card': LoomElementProps<HTMLElementTagNameMap['loom-card']> & {
+        variant?: string;
+        title?: string;
+        description?: string;
       };
     }
   }

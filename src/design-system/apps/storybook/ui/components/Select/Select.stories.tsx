@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
 
@@ -8,6 +8,9 @@ import type { SelectState } from '../../../../../package/ui/components/Select/in
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Select/adapters/Select.element.ts';
+import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
+import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 // ─── Story arg types ──────────────────────────────────────────────────────────
@@ -86,24 +89,22 @@ type Story = StoryObj<SelectStoryArgs>;
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div style={{ marginBottom: '40px' }}>
-      <h3 style={{
-        fontFamily: 'sans-serif', fontSize: '11px', fontWeight: 700,
-        textTransform: 'uppercase', letterSpacing: '0.08em',
-        color: colorVars.textSecondary, margin: '0 0 16px',
-      }}>
+    <loom-box display="block" padding-y="md">
+      <p className="loom-overline" style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}>
         {title}
-      </h3>
+      </p>
       {children}
-    </div>
+    </loom-box>
   );
 }
 
 function SelectWrapper({ children }: { children: ReactNode }) {
   return (
-    <div style={{ padding: '24px', maxWidth: '320px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {children}
-    </div>
+    <loom-box display="block" padding="lg" style={{ maxWidth: '320px' }}>
+      <loom-stack gap="lg">
+        {children}
+      </loom-stack>
+    </loom-box>
   );
 }
 
@@ -139,7 +140,8 @@ export const TriggerStates: Story = {
     },
   },
   render: () => (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '360px' }}>
+    <loom-box display="block" padding="lg" style={{ maxWidth: '360px' }}>
+      <loom-stack gap="xl">
       <Section title={SELECT_STATES.default}>
         <loom-select label="Default" placeholder="Selecciona una opción">
           <loom-select-option value="a" label="Opción A" />
@@ -165,7 +167,8 @@ export const TriggerStates: Story = {
           <loom-select-option value="c" label="Opción C" />
         </loom-select>
       </Section>
-    </div>
+      </loom-stack>
+    </loom-box>
   ),
 };
 
@@ -309,7 +312,7 @@ export const ControlledOpen: Story = {
     }, []);
 
     return (
-      <div style={{ padding: '24px', maxWidth: '320px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <SelectWrapper>
         <loom-select
           ref={ref}
           label="Rol"
@@ -323,17 +326,15 @@ export const ControlledOpen: Story = {
           <loom-select-option value="data" label="Data Scientist" />
         </loom-select>
 
-        <div style={{
-          fontFamily: 'sans-serif', fontSize: '13px',
-          color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-          paddingTop: '16px',
-        }}>
-          Seleccionado:{' '}
-          <strong style={{ color: colorVars.brandAccent }}>
-            {selected || '—'}
-          </strong>
-        </div>
-      </div>
+        <loom-box padding-y="md" style={{ borderTop: `1px solid ${colorVars.borderDefault}` }}>
+          <p className="loom-body-sm" style={{ color: colorVars.textSecondary, margin: 0 }}>
+            Seleccionado:{' '}
+            <strong style={{ color: colorVars.brandAccent }}>
+              {selected || '—'}
+            </strong>
+          </p>
+        </loom-box>
+      </SelectWrapper>
     );
   },
 };
@@ -349,17 +350,33 @@ export const FormIntegration: Story = {
   },
   render: () => {
     const [formData, setFormData] = useState<string>('');
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const submitRef = useRef<HTMLElementTagNameMap['loom-button'] | null>(null);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const data = new FormData(e.currentTarget);
+    const collectFormData = (form: HTMLFormElement): void => {
+      const data = new FormData(form);
       const entries = Object.fromEntries(data.entries());
       setFormData(JSON.stringify(entries, null, 2));
     };
 
+    const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+      event.preventDefault();
+      collectFormData(event.currentTarget);
+    };
+
+    useEffect(() => {
+      const button = submitRef.current;
+      const form = formRef.current;
+      if (!button || !form) return;
+      const handleClick = (): void => collectFormData(form);
+      button.addEventListener('loom-click', handleClick);
+      return () => button.removeEventListener('loom-click', handleClick);
+    }, []);
+
     return (
-      <div style={{ padding: '24px', maxWidth: '360px', fontFamily: 'sans-serif' }}>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <loom-box display="block" padding="lg" style={{ maxWidth: '360px' }}>
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <loom-stack gap="lg">
           <loom-select label="Departamento" placeholder="Selecciona" name="department">
             <loom-select-option value="eng" label="Ingeniería" />
             <loom-select-option value="design" label="Diseño" />
@@ -367,28 +384,20 @@ export const FormIntegration: Story = {
             <loom-select-option value="marketing" label="Marketing" />
           </loom-select>
 
-          <button
-            type="submit"
-            style={{
-              padding: '10px 20px', fontSize: '14px', cursor: 'pointer',
-              background: colorVars.brandAccent, color: colorVars.textInverse,
-              border: 'none', borderRadius: '6px',
-            }}
-          >
+          <loom-button ref={submitRef} variant="primary">
             Enviar formulario
-          </button>
+          </loom-button>
+          </loom-stack>
         </form>
 
         {formData && (
-          <pre style={{
-            marginTop: '20px', padding: '12px', fontSize: '12px',
-            background: colorVars.surfaceNeutral, borderRadius: '6px',
-            color: colorVars.textPrimary, overflow: 'auto',
-          }}>
-            {formData}
-          </pre>
+          <loom-box display="block" padding="sm" style={{ marginTop: '20px', background: colorVars.surfaceNeutral, borderRadius: '6px' }}>
+            <pre className="loom-caption" style={{ color: colorVars.textPrimary, margin: 0, overflow: 'auto' }}>
+              {formData}
+            </pre>
+          </loom-box>
         )}
-      </div>
+      </loom-box>
     );
   },
 };
@@ -415,7 +424,8 @@ evento \`loom-select-change\`, y valor en \`FormData\` via \`ElementInternals\`.
     errorMessage: '',
   },
   render: (args) => (
-    <form id="test-form" style={{ padding: '24px', maxWidth: '320px' }}>
+    <form id="test-form" style={{ maxWidth: '320px' }}>
+      <loom-box display="block" padding="lg">
       <loom-select
         label={args.label}
         placeholder={args.placeholder}
@@ -429,6 +439,7 @@ evento \`loom-select-change\`, y valor en \`FormData\` via \`ElementInternals\`.
         <loom-select-option value="business" label="Negocio" />
         <loom-select-option value="disabled-opt" label="No disponible" disabled="" />
       </loom-select>
+      </loom-box>
     </form>
   ),
   play: async ({ canvasElement }) => {

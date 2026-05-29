@@ -1,2 +1,3 @@
 export { Box } from './adapters/Box.react.tsx';
-export type { BoxProps } from './Box.types.ts';
+export { BOX_DISPLAYS } from './Box.types.ts';
+export type { BoxDisplay, BoxProps } from './Box.types.ts';

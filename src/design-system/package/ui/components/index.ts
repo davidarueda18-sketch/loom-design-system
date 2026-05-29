@@ -18,3 +18,6 @@ export type { TabGroupProps, TabGroupChangeEventDetail, LoomTabGroupElement } fr
 
 export { Modal, LoomModal, MODAL_SIZES } from './Modal/index.ts';
 export type { ModalProps, ModalSize, ModalCloseEventDetail } from './Modal/index.ts';
+
+export { Card, LoomCard, CARD_VARIANTS } from './Card/index.ts';
+export type { CardProps, CardVariant } from './Card/index.ts';

@@ -317,6 +317,16 @@ function WebComponentExample() {
   );
 }
 
+function waitForModalClose(modal: HTMLElementTagNameMap['loom-modal']): Promise<ModalCloseEventDetail> {
+  return new Promise((resolve) => {
+    modal.addEventListener(
+      'loom-modal-close',
+      (event) => resolve((event as CustomEvent<ModalCloseEventDetail>).detail),
+      { once: true },
+    );
+  });
+}
+
 export const WebComponent: StoryObj<ModalStoryArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-modal)',
@@ -360,31 +370,21 @@ al pulsar el botón de cierre y al presionar Escape.
     await expect(titleEl.textContent).toBe('Título de prueba');
 
     // Close button (×) dispatches loom-modal-close with reason 'close'
-    let closeDetail: ModalCloseEventDetail | null = null;
-    modal.addEventListener(
-      'loom-modal-close',
-      (e) => { closeDetail = (e as CustomEvent<ModalCloseEventDetail>).detail; },
-      { once: true },
-    );
+    const closeDetailPromise = waitForModalClose(modal as HTMLElementTagNameMap['loom-modal']);
     const closeBtnEl = shadow.querySelector<HTMLButtonElement>('[part="close-btn"]');
     closeBtnEl?.click();
-    await new Promise((r) => setTimeout(r, 400));
-    await expect(closeDetail?.reason).toBe('close');
+    const closeDetail = await closeDetailPromise;
+    await expect(closeDetail.reason).toBe('close');
 
     // Re-open for Escape key test
     modal.setAttribute('open', '');
     await new Promise((r) => requestAnimationFrame(r));
     await new Promise((r) => requestAnimationFrame(r));
 
-    let escDetail: ModalCloseEventDetail | null = null;
-    modal.addEventListener(
-      'loom-modal-close',
-      (e) => { escDetail = (e as CustomEvent<ModalCloseEventDetail>).detail; },
-      { once: true },
-    );
+    const escDetailPromise = waitForModalClose(modal as HTMLElementTagNameMap['loom-modal']);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, composed: true }));
-    await new Promise((r) => setTimeout(r, 400));
-    await expect(escDetail?.reason).toBe('escape');
+    const escDetail = await escDetailPromise;
+    await expect(escDetail.reason).toBe('escape');
 
     // Footer must be visible (has slotted children)
     const footerEl = shadow.querySelector('[part="footer"]') as HTMLElement;

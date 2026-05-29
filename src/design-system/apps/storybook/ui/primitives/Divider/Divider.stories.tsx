@@ -82,10 +82,10 @@ type Story = StoryObj<DividerStoryArgs>;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <loom-box padding-y="md" style={{ display: 'block' }}>
+    <loom-box display="block" padding-y="md">
       <p
         className="loom-overline"
-        style={{ color: colorVars.textSecondary, display: 'block', marginBottom: '16px', margin: '0 0 16px' }}
+        style={{ color: colorVars.textSecondary, margin: '0 0 16px' }}
       >
         {title}
       </p>

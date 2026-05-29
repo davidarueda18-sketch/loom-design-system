@@ -42,6 +42,7 @@ export const backdrop = style({
   alignItems: 'center',
   justifyContent: 'center',
   padding: spacingVars.lg,
+  overflow: 'hidden',
   boxSizing: 'border-box',
   animation: `${backdropIn} ${motionVars.durationSlow} ${motionVars.easingEaseOut} both`,
   '@media': {
@@ -67,8 +68,11 @@ export const dialog = style({
   flexDirection: 'column',
   containerType: 'inline-size',
   width: '100%',
-  maxHeight: 'calc(100vh - 48px)',
-  overflow: 'hidden',
+  maxHeight: `calc(100dvh - ${spacingVars.lg} - ${spacingVars.lg})`,
+  minHeight: 0,
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  overscrollBehavior: 'contain',
   boxSizing: 'border-box',
   backgroundColor: colorVars.surfaceRaised,
   border: `1px solid ${colorVars.borderDefault}`,
@@ -161,11 +165,13 @@ globalStyle(`${closeBtn} > svg`, {
 export const content = style({
   flex: 1,
   position: 'relative',
+  minHeight: 'clamp(7.5rem, 36cqw, 18rem)',
   overflowY: 'auto',
+  overscrollBehavior: 'contain',
+  scrollbarGutter: 'stable',
   backgroundColor: colorVars.surfaceSubtle,
   padding: spacingVars.lg,
   boxSizing: 'border-box',
-  minHeight: 'clamp(7.5rem, 36cqw, 18rem)',
 });
 
 export const emptyPlaceholder = style({
