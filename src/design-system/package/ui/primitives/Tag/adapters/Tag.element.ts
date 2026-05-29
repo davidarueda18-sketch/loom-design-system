@@ -135,9 +135,14 @@ class LoomTag extends HTMLElement {
     this._applyTo(this, this._prev, 'value', val, styles.value as Record<string, string>);
 
     if (this._iconEl) {
-      this._iconEl.hidden = !showIcon;
       if (showIcon) {
         this._iconEl.innerHTML = ICON_SVGS[val] ?? '';
+        if (!this._iconEl.isConnected) {
+          this.shadowRoot?.insertBefore(this._iconEl, this._labelEl);
+        }
+      } else {
+        this._iconEl.remove();
+        this._iconEl.innerHTML = '';
       }
     }
 

@@ -10,6 +10,7 @@ import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Fab/adapters/Fab.element.ts';
+import '../../../../../package/ui/primitives/Icon/adapters/Icon.element.ts';
 import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
@@ -103,9 +104,13 @@ Soporta dos modos de contenido:
 
 El FAB es cuadrado con border-radius proporcional al tamaño. El posicionamiento flotante (fixed/absolute) lo decide el consumidor; el componente solo aporta el z-index \`raised\`.
 
-\`\`\`html
+\`\`\`tsx
+import { PlusIcon } from '@heroicons/react/24/outline';
+
 <loom-fab label="Agregar" content="icon" size="md">
-  <svg aria-hidden="true"><!-- icon --></svg>
+  <loom-icon size="md">
+    <PlusIcon aria-hidden="true" />
+  </loom-icon>
 </loom-fab>
 \`\`\`
 
@@ -327,7 +332,7 @@ export const WebComponent: StoryObj<{
   parameters: {
     docs: {
       description: {
-        story: 'Custom element `<loom-fab>`. El ícono se inyecta via `<slot>` (usa `<loom-icon>` o cualquier SVG). La story valida Shadow DOM, el inner button con `part="button"`, y el `aria-label` en modo `icon`.',
+        story: 'Custom element `<loom-fab>`. El ícono se inyecta via `<slot>`; usa `<loom-icon>` para mantener tamaño, color y accesibilidad consistentes. La story valida Shadow DOM, el inner button con `part="button"`, y el `aria-label` en modo `icon`.',
       },
     },
   },

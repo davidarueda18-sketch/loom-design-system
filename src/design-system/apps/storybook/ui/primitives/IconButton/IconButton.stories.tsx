@@ -9,6 +9,7 @@ import { Icon } from '../../../../../package/ui/primitives/Icon/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Icon/adapters/Icon.element.ts';
 import '../../../../../package/ui/primitives/IconButton/adapters/IconButton.element.ts';
 import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
@@ -95,19 +96,25 @@ const meta = {
         component: `
 **IconButton** — botón circular de solo ícono. Soporta 4 variantes, 3 tamaños y 6 estados de interacción.
 
-El ícono se inyecta via slot (usa \`<Icon>\` o cualquier SVG). La prop \`aria-label\` es **obligatoria** — los botones de solo ícono siempre necesitan texto accesible alternativo.
+El ícono se inyecta via slot. En Web Components usa \`<loom-icon>\` para mantener tamaño, color y accesibilidad consistentes. La prop \`aria-label\` es **obligatoria** — los botones de solo ícono siempre necesitan texto accesible alternativo.
 
 Cuando se usa como toggle, el atributo \`selected\` activa \`aria-pressed\` en el botón interno. El componente emite \`loom-toggle\` con el estado deseado para que el consumidor lo gestione.
 
-\`\`\`html
-<!-- Botón simple -->
+\`\`\`tsx
+import { BookmarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+
+{/* Botón simple */}
 <loom-icon-button size="md" variant="filled" aria-label="Guardar">
-  <svg aria-hidden="true"><!-- ícono --></svg>
+  <loom-icon size="md">
+    <MagnifyingGlassIcon aria-hidden="true" />
+  </loom-icon>
 </loom-icon-button>
 
-<!-- Toggle button -->
+{/* Toggle button */}
 <loom-icon-button variant="filled" aria-label="Guardar en favoritos" selected>
-  <svg aria-hidden="true"><!-- ícono --></svg>
+  <loom-icon size="md">
+    <BookmarkIcon aria-hidden="true" />
+  </loom-icon>
 </loom-icon-button>
 \`\`\`
 
@@ -302,7 +309,7 @@ export const WebComponent: StoryObj<{
   parameters: {
     docs: {
       description: {
-        story: 'Custom element `<loom-icon-button>`. El ícono se inyecta via `<slot>`. La story valida Shadow DOM, `part="button"`, y `aria-label` en el botón interno.',
+        story: 'Custom element `<loom-icon-button>`. El ícono se inyecta via `<slot>`; usa `<loom-icon>` para mantener tamaño, color y accesibilidad consistentes. La story valida Shadow DOM, `part="button"`, y `aria-label` en el botón interno.',
       },
     },
   },

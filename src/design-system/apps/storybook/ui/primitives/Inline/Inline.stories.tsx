@@ -12,7 +12,8 @@ import '../../../../../package/ui/primitives/Inline/adapters/Inline.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
-const inlineImplementationCode = `import '@loom-sdc/design-system/elements';
+const inlineImplementationCode = `import '@loom-sdc/design-system/elements/inline';
+import '@loom-sdc/design-system/elements/button';
 
 <loom-inline gap="sm" align="center" justify="start" wrap>
   <loom-button variant="outline">Cancelar</loom-button>
@@ -42,7 +43,8 @@ const meta = {
 **Inline** es el primitive canónico para layout horizontal con gap tokenizado, alineación y wrapping opcional.
 
 \`\`\`html
-<script type="module" src="@loom-sdc/design-system/elements"></script>
+<script type="module" src="@loom-sdc/design-system/elements/inline"></script>
+<script type="module" src="@loom-sdc/design-system/elements/button"></script>
 
 <loom-inline gap="sm" align="center" justify="start" wrap>
   <loom-button variant="outline">Cancelar</loom-button>

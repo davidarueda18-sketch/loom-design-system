@@ -14,7 +14,6 @@ export const root = style({
     '&:disabled, &[aria-disabled="true"]': {
       color: colorVars.textDisabled,
       cursor: 'not-allowed',
-      pointerEvents: 'none',
       textDecoration: 'none',
     },
   },
@@ -39,6 +38,11 @@ export const underline = styleVariants({
     ':hover': {
       textDecoration: 'underline',
       textUnderlineOffset: '2px',
+    },
+    selectors: {
+      '&:disabled:hover, &[aria-disabled="true"]:hover': {
+        textDecoration: 'none',
+      },
     },
   },
   none: {

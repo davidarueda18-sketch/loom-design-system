@@ -219,15 +219,15 @@ CSS hooks: \`::part(icon)\`, \`::part(label)\`.
     // Verify value attribute applies a CSS class to the host
     await expect(host.classList.length).toBeGreaterThan(0);
 
-    // Test show-icon="false" hides the icon
+    // Test show-icon="false" removes the icon from layout
     host.setAttribute('show-icon', 'false');
     await new Promise((r) => requestAnimationFrame(r));
-    await expect((iconEl as HTMLElement).hidden).toBe(true);
+    await expect(shadow.querySelector('[part="icon"]')).toBeNull();
 
     // Restore
     host.setAttribute('show-icon', 'true');
     await new Promise((r) => requestAnimationFrame(r));
-    await expect((iconEl as HTMLElement).hidden).toBe(false);
+    await expect(shadow.querySelector('[part="icon"]')).toBeTruthy();
 
     // Test value change updates host class
     const classBefore = host.className;

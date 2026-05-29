@@ -4,6 +4,11 @@ import { colorVars, typographyVars } from '../../../tokens/index.ts';
 export const host = style({
   display: 'inline-flex',
   boxSizing: 'border-box',
+  selectors: {
+    '&[disabled]': {
+      cursor: 'not-allowed',
+    },
+  },
 });
 
 export const root = style({
@@ -12,17 +17,16 @@ export const root = style({
   justifyContent: 'center',
   gap: '8px',
   boxSizing: 'border-box',
+  border: '2px solid transparent',
   cursor: 'pointer',
-  transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+  transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease',
   textDecoration: 'none',
   ':focus-visible': {
-    outline: '2px solid',
-    outlineOffset: '2px',
+    outline: 'none',
   },
   selectors: {
     '&:disabled, &[aria-disabled="true"]': {
       cursor: 'not-allowed',
-      pointerEvents: 'none',
     },
   },
 });
@@ -31,14 +35,15 @@ export const variant = styleVariants({
   primary: {
     background: colorVars.brandPrimary,
     color: colorVars.textOnBrand,
-    border: 'none',
     ':hover': { background: colorVars.brandPrimaryHover },
     ':active': { background: colorVars.brandPrimaryPressed },
-    ':focus-visible': { outlineColor: colorVars.textOnBrand },
+    ':focus-visible': { boxShadow: `0 0 0 2px ${colorVars.textOnBrand}` },
     selectors: {
-      '&:disabled, &[aria-disabled="true"]': {
+      '&:disabled, &[aria-disabled="true"], &:disabled:hover, &[aria-disabled="true"]:hover, &:disabled:active, &[aria-disabled="true"]:active': {
         background: colorVars.surfaceSubtle,
         color: colorVars.textDisabled,
+        borderColor: 'transparent',
+        boxShadow: 'none',
       },
     },
   },
@@ -53,30 +58,37 @@ export const variant = styleVariants({
     ':active': {
       background: colorVars.brandAccentPressed,
       color: colorVars.brandAccent,
-      borderColor: 'transparent',
-    },
-    ':focus-visible': {
-      outline: 'none',
-      color: colorVars.brandAccent,
       borderColor: colorVars.brandAccent,
     },
+    ':focus-visible': {
+      color: colorVars.brandAccent,
+      borderColor: colorVars.brandAccent,
+      boxShadow: `0 0 0 2px ${colorVars.brandAccent}`,
+    },
     selectors: {
-      '&:disabled, &[aria-disabled="true"]': {
-        border: 'none',
+      '&:disabled, &[aria-disabled="true"], &:disabled:hover, &[aria-disabled="true"]:hover, &:disabled:active, &[aria-disabled="true"]:active': {
+        background: 'transparent',
+        borderColor: 'transparent',
         color: colorVars.textDisabled,
+        boxShadow: 'none',
       },
     },
   },
   text: {
     background: 'transparent',
     color: colorVars.brandAccent,
-    border: 'none',
     ':hover': { background: colorVars.brandAccentHover },
     ':active': { background: colorVars.brandAccentPressed, color: colorVars.brandAccent },
-    ':focus-visible': { outlineColor: colorVars.brandAccent, color: colorVars.brandAccent },
+    ':focus-visible': {
+      boxShadow: `0 0 0 2px ${colorVars.brandAccent}`,
+      color: colorVars.brandAccent,
+    },
     selectors: {
-      '&:disabled, &[aria-disabled="true"]': {
+      '&:disabled, &[aria-disabled="true"], &:disabled:hover, &[aria-disabled="true"]:hover, &:disabled:active, &[aria-disabled="true"]:active': {
+        background: 'transparent',
         color: colorVars.textDisabled,
+        borderColor: 'transparent',
+        boxShadow: 'none',
       },
     },
   },

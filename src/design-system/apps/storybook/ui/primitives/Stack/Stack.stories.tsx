@@ -10,7 +10,7 @@ import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
-const stackImplementationCode = `import '@loom-sdc/design-system/elements';
+const stackImplementationCode = `import '@loom-sdc/design-system/elements/stack';
 
 <loom-stack gap="md" align="stretch" justify="start">
   <section>Primero</section>
@@ -38,7 +38,7 @@ const meta = {
 **Stack** es el primitive canónico para layout vertical con gap tokenizado y control de alineación.
 
 \`\`\`html
-<script type="module" src="@loom-sdc/design-system/elements"></script>
+<script type="module" src="@loom-sdc/design-system/elements/stack"></script>
 
 <loom-stack gap="md" align="stretch" justify="start">
   <section>Primero</section>

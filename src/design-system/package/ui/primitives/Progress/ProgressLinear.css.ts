@@ -32,6 +32,7 @@ export const trackHost = style({
   position:  'relative',
   width:     '100%',
   height:    progressVars.linearHeight,
+  overflow:  'hidden',
 });
 
 // ─── Track background (centered vertically, height = thickness) ──────────────

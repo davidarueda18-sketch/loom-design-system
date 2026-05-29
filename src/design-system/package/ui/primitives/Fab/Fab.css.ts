@@ -11,6 +11,11 @@ import {
 export const host = style({
   display: 'inline-flex',
   boxSizing: 'border-box',
+  selectors: {
+    '&[disabled]': {
+      cursor: 'not-allowed',
+    },
+  },
 });
 
 export const root = style({
@@ -37,12 +42,11 @@ export const root = style({
     outlineColor: colorVars.brandAccent,
   },
   selectors: {
-    '&:disabled, &[aria-disabled="true"]': {
+    '&:disabled, &[aria-disabled="true"], &:disabled:hover, &[aria-disabled="true"]:hover, &:disabled:active, &[aria-disabled="true"]:active': {
       opacity: 0.45,
       background: colorVars.surfaceSubtle,
       color: colorVars.textDisabled,
       cursor: 'not-allowed',
-      pointerEvents: 'none',
     },
   },
 });

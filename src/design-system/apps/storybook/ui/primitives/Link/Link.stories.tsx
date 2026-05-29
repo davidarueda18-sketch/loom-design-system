@@ -45,7 +45,7 @@ const meta = {
 Uso recomendado:
 
 \`\`\`html
-<script type="module" src="@loom-sdc/design-system/elements"></script>
+<script type="module" src="@loom-sdc/design-system/elements/link"></script>
 <link rel="stylesheet" href="@loom-sdc/design-system/style.css" />
 
 <loom-link href="/docs" color="default" underline="always">

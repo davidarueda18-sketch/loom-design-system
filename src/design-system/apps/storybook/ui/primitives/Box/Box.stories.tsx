@@ -15,7 +15,7 @@ interface BoxStoryArgs {
   paddingY?: string;
 }
 
-const boxImplementationCode = `import '@loom-sdc/design-system/elements';
+const boxImplementationCode = `import '@loom-sdc/design-system/elements/box';
 
 <loom-box padding="md">
   Contenido con padding por token
@@ -46,7 +46,7 @@ const meta = {
 También expone \`display\` para cubrir los casos de layout comunes sin estilos inline.
 
 \`\`\`html
-<script type="module" src="@loom-sdc/design-system/elements"></script>
+<script type="module" src="@loom-sdc/design-system/elements/box"></script>
 
 <loom-box padding="md">
   Contenido con padding por token
@@ -174,7 +174,7 @@ export const Implementation: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Registra los custom elements una vez desde `@loom-sdc/design-system/elements` y usa atributos kebab-case para consumir los tokens.',
+        story: 'Registra el custom element desde `@loom-sdc/design-system/elements/box` y usa atributos kebab-case para consumir los tokens.',
       },
       source: { code: boxImplementationCode },
     },

@@ -9,7 +9,7 @@ import {
 
 export const root = style({
   display: 'inline-flex',
-  alignItems: 'center',
+  alignItems: 'flex-end',
   gap: spacingVars.sm,
   cursor: 'pointer',
   userSelect: 'none',

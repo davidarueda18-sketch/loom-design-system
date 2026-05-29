@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import type { ReactNode, CSSProperties } from 'react';
+import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Button, BUTTON_VARIANTS, BUTTON_SIZES } from '../../../../../package/ui/primitives/Button/index.ts';
@@ -53,7 +53,7 @@ type Story = StoryObj<ButtonStoryArgs>;
 // State overrides simulate pseudo-classes visually. Token refs keep them in sync
 // with the design system without duplicating hex values.
 
-type StateDemo = { label: string; style?: CSSProperties; disabled?: boolean };
+type StateDemo = { label: string; className?: string; disabled?: boolean };
 
 type ButtonWebComponentArgs = {
   variant?: string;
@@ -65,23 +65,23 @@ type ButtonWebComponentArgs = {
 const VARIANT_STATES: Record<ButtonVariant, StateDemo[]> = {
   primary: [
     { label: 'Default' },
-    { label: 'Hover',    style: { background: colorVars.brandPrimaryHover } },
-    { label: 'Pressed',  style: { background: colorVars.brandPrimaryPressed } },
-    { label: 'Focused',  style: { outline: `2px solid ${colorVars.textOnBrand}`, outlineOffset: '2px' } },
+    { label: 'Hover',    className: 'button-state-primary-hover' },
+    { label: 'Pressed',  className: 'button-state-primary-pressed' },
+    { label: 'Focused',  className: 'button-state-primary-focused' },
     { label: 'Disabled', disabled: true },
   ],
   outline: [
     { label: 'Default' },
-    { label: 'Hover',    style: { background: colorVars.brandAccentHover, borderColor: colorVars.brandAccent } },
-    { label: 'Focused',  style: { outline: 'none', color: colorVars.brandAccent, borderColor: colorVars.brandAccent } },
-    { label: 'Pressed',  style: { background: colorVars.brandAccentPressed, color: colorVars.brandAccent, borderColor: 'transparent' } },
+    { label: 'Hover',    className: 'button-state-outline-hover' },
+    { label: 'Focused',  className: 'button-state-outline-focused' },
+    { label: 'Pressed',  className: 'button-state-outline-pressed' },
     { label: 'Disabled', disabled: true },
   ],
   text: [
     { label: 'Default' },
-    { label: 'Hover',    style: { background: colorVars.brandAccentHover } },
-    { label: 'Pressed',  style: { background: colorVars.brandAccentPressed, color: colorVars.brandAccent } },
-    { label: 'Focused',  style: { outline: `2px solid ${colorVars.brandAccent}`, outlineOffset: '2px', color: colorVars.brandAccent } },
+    { label: 'Hover',    className: 'button-state-text-hover' },
+    { label: 'Pressed',  className: 'button-state-text-pressed' },
+    { label: 'Focused',  className: 'button-state-text-focused' },
     { label: 'Disabled', disabled: true },
   ],
 };
@@ -174,15 +174,66 @@ export const Sizes: Story = {
 
 export const States: Story = {
   name: 'Estados interactivos',
+  decorators: [
+    (Story) => (
+      <>
+        <style>{`
+          .button-state-primary-hover::part(button) {
+            background: ${colorVars.brandPrimaryHover};
+          }
+
+          .button-state-primary-pressed::part(button) {
+            background: ${colorVars.brandPrimaryPressed};
+          }
+
+          .button-state-primary-focused::part(button) {
+            box-shadow: 0 0 0 2px ${colorVars.textOnBrand};
+          }
+
+          .button-state-outline-hover::part(button) {
+            background: ${colorVars.brandAccentHover};
+            border-color: ${colorVars.brandAccent};
+          }
+
+          .button-state-outline-focused::part(button) {
+            color: ${colorVars.brandAccent};
+            border-color: ${colorVars.brandAccent};
+            box-shadow: 0 0 0 2px ${colorVars.brandAccent};
+          }
+
+          .button-state-outline-pressed::part(button) {
+            background: ${colorVars.brandAccentPressed};
+            color: ${colorVars.brandAccent};
+            border-color: ${colorVars.brandAccent};
+          }
+
+          .button-state-text-hover::part(button) {
+            background: ${colorVars.brandAccentHover};
+          }
+
+          .button-state-text-pressed::part(button) {
+            background: ${colorVars.brandAccentPressed};
+            color: ${colorVars.brandAccent};
+          }
+
+          .button-state-text-focused::part(button) {
+            color: ${colorVars.brandAccent};
+            box-shadow: 0 0 0 2px ${colorVars.brandAccent};
+          }
+        `}</style>
+        <Story />
+      </>
+    ),
+  ],
   render: () => (
     <loom-box display="block" padding="lg">
       {BUTTON_VARIANTS.map((variant) => (
         <StorySection key={variant} title={variant}>
           <loom-inline gap="lg" wrap>
-            {VARIANT_STATES[variant].map(({ label, style, disabled }) => (
+            {VARIANT_STATES[variant].map(({ label, className, disabled }) => (
               <loom-box key={label} display="block">
                 <StateLabel>{label}</StateLabel>
-                <Button variant={variant} size="md" disabled={disabled} style={style}>
+                <Button variant={variant} size="md" disabled={disabled} className={className}>
                   {label}
                 </Button>
               </loom-box>
