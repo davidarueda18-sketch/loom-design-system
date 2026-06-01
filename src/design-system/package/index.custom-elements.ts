@@ -25,6 +25,12 @@ import type { LoomTabGroupElement } from './ui/components/TabGroup/TabGroup.type
 import type { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
 import type { LoomMetricCard } from './ui/components/MetricCard/adapters/MetricCard.element.ts';
 import type { LoomFileDropzone } from './ui/components/FileDropzone/adapters/FileDropzone.element.ts';
+import type { LoomTable } from './ui/components/Table/adapters/Table.element.ts';
+import type { LoomTableRow } from './ui/components/Table/adapters/TableRow.element.ts';
+import type { LoomTableCell } from './ui/components/Table/adapters/TableCell.element.ts';
+import type { LoomTableHeaderCell } from './ui/components/Table/adapters/TableHeaderCell.element.ts';
+import type { LoomTableExpansion } from './ui/components/Table/adapters/TableExpansion.element.ts';
+import type { LoomPagination } from './ui/components/Pagination/adapters/Pagination.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -54,6 +60,12 @@ declare global {
     'loom-modal':         LoomModal;
     'loom-metric-card':   LoomMetricCard;
     'loom-file-dropzone': LoomFileDropzone;
+    'loom-table':              LoomTable;
+    'loom-table-row':          LoomTableRow;
+    'loom-table-cell':         LoomTableCell;
+    'loom-table-header-cell':  LoomTableHeaderCell;
+    'loom-table-expansion':    LoomTableExpansion;
+    'loom-pagination':         LoomPagination;
   }
 }
 

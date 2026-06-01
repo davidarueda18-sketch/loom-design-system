@@ -41,3 +41,47 @@ export type {
   FilesRejectedEventDetail,
   FileRemoveEventDetail,
 } from './FileDropzone/index.ts';
+
+export {
+  Table,
+  TableRow,
+  TableCell,
+  TableHeaderCell,
+  TableExpansion,
+  LoomTable,
+  LoomTableRow,
+  LoomTableCell,
+  LoomTableHeaderCell,
+  LoomTableExpansion,
+  TABLE_SELECTABLE_MODES,
+  TABLE_DENSITIES,
+  TABLE_LAYOUTS,
+  TABLE_CELL_ALIGNS,
+  TABLE_CELL_MOBILE_SPANS,
+  TABLE_SORT_DIRECTIONS,
+} from './Table/index.ts';
+export type {
+  TableProps,
+  TableRowProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableExpansionProps,
+  TableSelectableMode,
+  TableDensity,
+  TableLayout,
+  TableCellAlign,
+  TableCellMobileSpan,
+  TableSortDirection,
+  TableSelectionChangeEventDetail,
+  TableRowSelectEventDetail,
+  TableRowToggleEventDetail,
+  TableRowClickEventDetail,
+  TableSortChangeEventDetail,
+} from './Table/index.ts';
+
+export { Pagination, LoomPagination } from './Pagination/index.ts';
+export type {
+  PaginationProps,
+  PaginationChangeEventDetail,
+  PaginationSizeChangeEventDetail,
+} from './Pagination/index.ts';

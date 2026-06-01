@@ -48,3 +48,6 @@ export type { ProgressTokenKey } from './progress/index.ts';
 
 export { tagVars } from './tag/index.ts';
 export type { TagTokenKey } from './tag/index.ts';
+
+export { tableVars } from './table/index.ts';
+export type { TableTokenKey } from './table/index.ts';

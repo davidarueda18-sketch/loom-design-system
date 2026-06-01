@@ -179,6 +179,52 @@ declare module 'react' {
         description?: string;
         disabled?: boolean;
       };
+      'loom-table': LoomElementProps<HTMLElementTagNameMap['loom-table']> & {
+        columns?: string;
+        selectable?: string;
+        density?: string;
+        layout?: string;
+        expandable?: boolean | '';
+        'sticky-header'?: boolean | '';
+        'sticky-first-column'?: boolean | '';
+        loading?: boolean | '';
+      };
+      'loom-table-row': LoomElementProps<HTMLElementTagNameMap['loom-table-row']> & {
+        'row-id'?: string;
+        header?: boolean | '';
+        selected?: boolean | '';
+        expandable?: boolean | '';
+        expanded?: boolean | '';
+        interactive?: boolean | '';
+        disabled?: boolean | '';
+      };
+      'loom-table-cell': LoomElementProps<HTMLElementTagNameMap['loom-table-cell']> & {
+        align?: string;
+        numeric?: boolean | '';
+        truncate?: boolean | '';
+        'col-span'?: number | string;
+        'mobile-span'?: string;
+        'mobile-label'?: string;
+      };
+      'loom-table-header-cell': LoomElementProps<HTMLElementTagNameMap['loom-table-header-cell']> & {
+        align?: string;
+        numeric?: boolean | '';
+        sort?: string;
+        'column-id'?: string;
+        'mobile-span'?: string;
+      };
+      'loom-table-expansion': LoomElementProps<HTMLElementTagNameMap['loom-table-expansion']> & {
+        expanded?: boolean | '';
+      };
+      'loom-pagination': LoomElementProps<HTMLElementTagNameMap['loom-pagination']> & {
+        page?: number | string;
+        'page-size'?: number | string;
+        'total-items'?: number | string;
+        'page-size-options'?: string;
+        siblings?: number | string;
+        compact?: boolean | '';
+        disabled?: boolean | '';
+      };
     }
   }
 }
