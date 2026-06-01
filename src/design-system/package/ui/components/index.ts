@@ -24,3 +24,20 @@ export type { CardProps, CardVariant } from './Card/index.ts';
 
 export { MetricCard, LoomMetricCard } from './MetricCard/index.ts';
 export type { MetricCardProps } from './MetricCard/index.ts';
+
+export {
+  FileDropzone,
+  LoomFileDropzone,
+  FILE_DROPZONE_ITEM_STATES,
+  FILE_DROPZONE_REJECTION_REASONS,
+} from './FileDropzone/index.ts';
+export type {
+  FileDropzoneProps,
+  FileDropzoneItem,
+  FileDropzoneItemState,
+  FileDropzoneRejection,
+  FileDropzoneRejectionReason,
+  FilesSelectedEventDetail,
+  FilesRejectedEventDetail,
+  FileRemoveEventDetail,
+} from './FileDropzone/index.ts';

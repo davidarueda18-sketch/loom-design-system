@@ -33,3 +33,4 @@ export { LoomTabGroup } from './ui/components/TabGroup/adapters/TabGroup.element
 export { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
 export { LoomCard } from './ui/components/Card/adapters/Card.element.ts';
 export { LoomMetricCard } from './ui/components/MetricCard/adapters/MetricCard.element.ts';
+export { LoomFileDropzone } from './ui/components/FileDropzone/adapters/FileDropzone.element.ts';

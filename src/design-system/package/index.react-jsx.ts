@@ -170,6 +170,15 @@ declare module 'react' {
         metric?: string;
         description?: string;
       };
+      'loom-file-dropzone': LoomElementProps<HTMLElementTagNameMap['loom-file-dropzone']> & {
+        multiple?: boolean;
+        accept?: string;
+        'max-size'?: number | string;
+        'max-files'?: number | string;
+        label?: string;
+        description?: string;
+        disabled?: boolean;
+      };
     }
   }
 }
