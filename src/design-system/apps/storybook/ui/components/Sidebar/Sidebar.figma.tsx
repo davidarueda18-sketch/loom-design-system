@@ -22,17 +22,6 @@ const CHEVRON_ICON_SVG = (
   </svg>
 );
 
-const MENU_ICON_SVG = (
-  <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <g fill="none" fillRule="evenodd" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" transform="translate(3 3)">
-      <path d="m.5 12.5v-10c0-1.1045695.8954305-2 2-2h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2z" />
-      <path d="m2.5 12.5v-10c0-1.1045695.8954305-2 2-2h-2c-1 0-2 .8954305-2 2v10c0 1.1045695 1 2 2 2h2c-1.1045695 0-2-.8954305-2-2z" fill="currentColor" />
-      <path d="m7.5 10.5-3-3 3-3" />
-      <path d="m12.5 7.5h-8" />
-    </g>
-  </svg>
-);
-
 /* ── SidebarItem — leaf nav item (node 65:932, type=Item, Show icon=True) ─ */
 figma.connect(SidebarItem, `${FILE}?node-id=65-932`, {
   variant: { type: 'Item', 'Show icon': true },
@@ -139,9 +128,6 @@ figma.connect(Sidebar, `${FILE}?node-id=65-984`, {
       compact-logo-src="https://example.com/logo-compact.svg"
       logo-alt="Brand"
     >
-      <loom-icon-button slot="header" data-sidebar-toggle variant="ghost" size="sm" aria-label="Alternar navegación">
-        <loom-icon size="mini">{MENU_ICON_SVG}</loom-icon>
-      </loom-icon-button>
       <loom-sidebar-item item-id="dashboard" label="Dashboard" selected>
         <loom-icon slot="icon" size="mini">{ITEM_ICON_SVG}</loom-icon>
       </loom-sidebar-item>

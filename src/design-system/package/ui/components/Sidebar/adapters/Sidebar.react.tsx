@@ -14,6 +14,7 @@ export function Sidebar({
   logoSrc,
   compactLogoSrc,
   logoAlt,
+  toggleLabel,
   onToggle,
   onSelect,
   className,
@@ -45,6 +46,7 @@ export function Sidebar({
       {...(logoSrc ? { 'logo-src': logoSrc } : {})}
       {...(compactLogoSrc ? { 'compact-logo-src': compactLogoSrc } : {})}
       {...(logoAlt ? { 'logo-alt': logoAlt } : {})}
+      {...(toggleLabel ? { 'toggle-label': toggleLabel } : {})}
       className={className}
       {...(props as object)}
     >

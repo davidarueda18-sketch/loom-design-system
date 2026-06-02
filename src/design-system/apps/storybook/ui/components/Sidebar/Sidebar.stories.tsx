@@ -12,7 +12,6 @@ import '../../../../../package/ui/components/Sidebar/adapters/SidebarItem.elemen
 import '../../../../../package/ui/components/Sidebar/adapters/SidebarGroup.element.ts';
 import '../../../../../package/ui/components/Sidebar/adapters/SidebarSubitem.element.ts';
 import '../../../../../package/ui/primitives/Icon/adapters/Icon.element.ts';
-import '../../../../../package/ui/primitives/IconButton/adapters/IconButton.element.ts';
 
 interface SidebarStoryArgs {
   collapsed: boolean;
@@ -40,25 +39,6 @@ const SidebarIcon = ({ className, slot }: { className: string; slot?: string }) 
   </loom-icon>
 );
 
-const MenuIcon = () => (
-  <loom-icon size="mini">
-    <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <g fill="none" fillRule="evenodd" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" transform="translate(3 3)">
-        <path d="m.5 12.5v-10c0-1.1045695.8954305-2 2-2h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2z" />
-        <path d="m2.5 12.5v-10c0-1.1045695.8954305-2 2-2h-2c-1 0-2 .8954305-2 2v10c0 1.1045695 1 2 2 2h2c-1.1045695 0-2-.8954305-2-2z" fill="currentColor" />
-        <path d="m7.5 10.5-3-3 3-3" />
-        <path d="m12.5 7.5h-8" />
-      </g>
-    </svg>
-  </loom-icon>
-);
-
-const CollapseButton = () => (
-  <loom-icon-button slot="header" data-sidebar-toggle variant="ghost" size="sm" aria-label="Alternar navegación">
-    <MenuIcon />
-  </loom-icon-button>
-);
-
 const SampleNav = ({ collapsed }: { collapsed: boolean }) => (
   <loom-sidebar
     collapsed={collapsed ? '' : undefined}
@@ -68,8 +48,6 @@ const SampleNav = ({ collapsed }: { collapsed: boolean }) => (
     logo-alt="Kyndryl"
     data-testid="sidebar"
   >
-    <CollapseButton />
-
     <loom-sidebar-item item-id="dashboard" label="Dashboard" selected>
       <SidebarIcon slot="icon" className={ICONS.dashboard} />
     </loom-sidebar-item>
@@ -111,25 +89,17 @@ Familia composición-first de navegación lateral. \`loom-sidebar\` posee el anc
 la selección single, el roving por teclado y reparte el estado \`collapsed\` a los hijos. \`loom-sidebar-item\`,
 \`loom-sidebar-group\` (expansión decoplada vía \`expanded\`) y \`loom-sidebar-subitem\` son piezas composables.
 
+El toggle de colapso (con su ícono) viene integrado en \`loom-sidebar\`; el consumidor no lo define. Su
+etiqueta accesible se personaliza con el atributo \`toggle-label\`. Los íconos por item sí son slots.
+
 \`\`\`html
 <loom-sidebar
   label="Navegación principal"
   logo-src="/brand/kyndryl_red.png"
   compact-logo-src="/brand/kyndryl_k_red.png"
   logo-alt="Kyndryl"
+  toggle-label="Alternar navegación"
 >
-  <loom-icon-button slot="header" data-sidebar-toggle variant="ghost" size="sm" aria-label="Alternar navegación">
-    <loom-icon size="mini">
-      <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 3)">
-          <path d="m.5 12.5v-10c0-1.1045695.8954305-2 2-2h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2z"></path>
-          <path d="m2.5 12.5v-10c0-1.1045695.8954305-2 2-2h-2c-1 0-2 .8954305-2 2v10c0 1.1045695 1 2 2 2h2c-1.1045695 0-2-.8954305-2-2z" fill="currentColor"></path>
-          <path d="m7.5 10.5-3-3 3-3"></path>
-          <path d="m12.5 7.5h-8"></path>
-        </g>
-      </svg>
-    </loom-icon>
-  </loom-icon-button>
   <loom-sidebar-item item-id="dashboard" label="Dashboard" selected>
     <loom-icon slot="icon" size="mini"><i class="fi fi-rr-home" aria-hidden="true"></i></loom-icon>
   </loom-sidebar-item>
@@ -145,9 +115,9 @@ la selección single, el roving por teclado y reparte el estado \`collapsed\` a 
 \`\`\`
 
 Eventos: \`loom-sidebar-toggle\`, \`loom-sidebar-select\`, \`loom-sidebar-item-click\`,
-\`loom-sidebar-item-select\`, \`loom-sidebar-group-toggle\`. Parts: \`header\`, \`logo\`, \`divider\`, \`nav\`, \`footer\`,
+\`loom-sidebar-item-select\`, \`loom-sidebar-group-toggle\`. Parts: \`header\`, \`logo\`, \`toggle\`, \`divider\`, \`nav\`, \`footer\`,
 y en cada fila \`box\`, \`indicator\`, \`label\`, \`icon\`, \`chevron\`, \`options\`, \`connector\`.
-Un \`loom-icon-button[data-sidebar-toggle]\` dentro del header alterna el modo colapsado.
+El botón \`::part(toggle)\` integrado alterna el modo colapsado y emite \`loom-sidebar-toggle\`.
         `.trim(),
       },
     },
@@ -192,7 +162,7 @@ export const SelectionAndExpansion: Story = {
     const sidebar = within_.getByTestId('sidebar');
 
     const logo = sidebar.shadowRoot?.querySelector<HTMLImageElement>('[part="logo"]');
-    const toggle = sidebar.querySelector<HTMLElementTagNameMap['loom-icon-button']>('[data-sidebar-toggle]');
+    const toggle = sidebar.shadowRoot?.querySelector<HTMLButtonElement>('[part="toggle"]');
     if (!logo || !toggle) throw new Error('Sidebar logo or toggle not found');
 
     await waitFor(() => expect(logo).toHaveAttribute('src', expect.stringContaining('kyndryl_red')));
@@ -244,18 +214,6 @@ export const WebComponent: Story = {
   logo-alt="Kyndryl"
   data-testid="sidebar-wc"
 >
-  <loom-icon-button slot="header" data-sidebar-toggle variant="ghost" size="sm" aria-label="Alternar navegación">
-    <loom-icon size="mini">
-      <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 3)">
-          <path d="m.5 12.5v-10c0-1.1045695.8954305-2 2-2h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2z"></path>
-          <path d="m2.5 12.5v-10c0-1.1045695.8954305-2 2-2h-2c-1 0-2 .8954305-2 2v10c0 1.1045695 1 2 2 2h2c-1.1045695 0-2-.8954305-2-2z" fill="currentColor"></path>
-          <path d="m7.5 10.5-3-3 3-3"></path>
-          <path d="m12.5 7.5h-8"></path>
-        </g>
-      </svg>
-    </loom-icon>
-  </loom-icon-button>
   <loom-sidebar-item item-id="dashboard" label="Dashboard" selected>
     <loom-icon slot="icon" size="mini"><i class="fi fi-rr-home" aria-hidden="true"></i></loom-icon>
   </loom-sidebar-item>

@@ -1,5 +1,5 @@
-import { style } from '@vanilla-extract/css';
-import { fontFamilyVars, sidebarVars, spacingVars } from '../../../tokens/index.ts';
+import { style, globalStyle } from '@vanilla-extract/css';
+import { fontFamilyVars, iconSizeVars, sidebarVars, spacingVars } from '../../../tokens/index.ts';
 
 export const host = style({
   position: 'relative',
@@ -63,16 +63,30 @@ export const header = style({
   },
 });
 
-export const headerAction = style({
+/** Built-in collapse/expand toggle (ghost icon button rendered inside the header). */
+export const toggle = style({
   flex: '0 0 auto',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: `opacity ${sidebarVars.collapseDuration} ${sidebarVars.collapseEasing}, width ${sidebarVars.collapseDuration} ${sidebarVars.collapseEasing}`,
+  width: '32px',
+  height: '32px',
+  padding: 0,
+  border: 'none',
+  borderRadius: sidebarVars.rowRadius,
+  backgroundColor: 'transparent',
+  color: sidebarVars.textRest,
+  cursor: 'pointer',
+  transition: `opacity ${sidebarVars.collapseDuration} ${sidebarVars.collapseEasing}, width ${sidebarVars.collapseDuration} ${sidebarVars.collapseEasing}, background-color ${sidebarVars.collapseDuration} ${sidebarVars.collapseEasing}`,
   '@media': {
     '(prefers-reduced-motion: reduce)': { transition: 'none' },
   },
   selectors: {
+    '&:hover': { backgroundColor: sidebarVars.rowBgHover },
+    '&:focus-visible': {
+      outline: `2px solid ${sidebarVars.focusRing}`,
+      outlineOffset: '2px',
+    },
     [`:host(.${hostCollapsed}) &`]: {
       position: 'absolute',
       insetInlineStart: '50%',
@@ -88,6 +102,12 @@ export const headerAction = style({
       pointerEvents: 'auto',
     },
   },
+});
+
+globalStyle(`${toggle} svg`, {
+  width: iconSizeVars.mini,
+  height: iconSizeVars.mini,
+  display: 'block',
 });
 
 export const logo = style({

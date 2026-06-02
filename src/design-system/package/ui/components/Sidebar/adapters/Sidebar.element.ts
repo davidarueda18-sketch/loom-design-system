@@ -8,13 +8,26 @@ import type {
 
 const SELECTABLE_SELECTOR = 'loom-sidebar-item, loom-sidebar-group, loom-sidebar-subitem';
 
+const DEFAULT_TOGGLE_LABEL = 'Alternar navegación';
+
+/** Built-in collapse/expand affordance. Baked into the component so consumers never wire it. */
+const TOGGLE_ICON_SVG = `
+<svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 3)">
+    <path d="m.5 12.5v-10c0-1.1045695.8954305-2 2-2h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2z"></path>
+    <path d="m2.5 12.5v-10c0-1.1045695.8954305-2 2-2h-2c-1 0-2 .8954305-2 2v10c0 1.1045695 1 2 2 2h2c-1.1045695 0-2-.8954305-2-2z" fill="currentColor"></path>
+    <path d="m7.5 10.5-3-3 3-3"></path>
+    <path d="m12.5 7.5h-8"></path>
+  </g>
+</svg>`.trim();
+
 interface SidebarRow extends HTMLElement {
   interactive?: () => boolean;
   requestSync?: () => void;
 }
 
 class LoomSidebar extends HTMLElement {
-  static observedAttributes = ['collapsed', 'label', 'logo-src', 'compact-logo-src', 'logo-alt'] as const;
+  static observedAttributes = ['collapsed', 'label', 'logo-src', 'compact-logo-src', 'logo-alt', 'toggle-label'] as const;
 
   get collapsed(): boolean {
     return this.hasAttribute('collapsed');
@@ -55,13 +68,22 @@ class LoomSidebar extends HTMLElement {
     else this.removeAttribute('logo-alt');
   }
 
+  /** Accessible label for the built-in collapse/expand toggle. */
+  get toggleLabel(): string {
+    return this.getAttribute('toggle-label') || DEFAULT_TOGGLE_LABEL;
+  }
+  set toggleLabel(value: string) {
+    if (value) this.setAttribute('toggle-label', value);
+    else this.removeAttribute('toggle-label');
+  }
+
   private _containerEl: HTMLDivElement | null = null;
   private _headerEl: HTMLDivElement | null = null;
   private _logoEl: HTMLImageElement | null = null;
+  private _toggleEl: HTMLButtonElement | null = null;
   private _dividerEl: HTMLDivElement | null = null;
   private _navEl: HTMLDivElement | null = null;
   private _footerEl: HTMLDivElement | null = null;
-  private _headerSlot: HTMLSlotElement | null = null;
   private _footerSlot: HTMLSlotElement | null = null;
   private _activeIndex = 0;
 
@@ -75,8 +97,6 @@ class LoomSidebar extends HTMLElement {
     this.classList.add(styles.host);
     if (!this.hasAttribute('role')) this.setAttribute('role', 'navigation');
 
-    this.addEventListener('click', this._handleClick);
-    this.addEventListener('loom-click', this._handleToggleTrigger as EventListener);
     this.addEventListener('loom-sidebar-item-select', this._handleItemSelect as EventListener);
     this.addEventListener('loom-sidebar-group-toggle', this._handleGroupToggle);
     this.addEventListener('keydown', this._handleKeydown);
@@ -85,8 +105,6 @@ class LoomSidebar extends HTMLElement {
   }
 
   disconnectedCallback(): void {
-    this.removeEventListener('click', this._handleClick);
-    this.removeEventListener('loom-click', this._handleToggleTrigger as EventListener);
     this.removeEventListener('loom-sidebar-item-select', this._handleItemSelect as EventListener);
     this.removeEventListener('loom-sidebar-group-toggle', this._handleGroupToggle);
     this.removeEventListener('keydown', this._handleKeydown);
@@ -103,12 +121,17 @@ class LoomSidebar extends HTMLElement {
     this._logoEl.classList.add(styles.logo);
     this._logoEl.setAttribute('part', 'logo');
     this._logoEl.hidden = true;
-    this._headerSlot = document.createElement('slot');
-    this._headerSlot.name = 'header';
-    this._headerSlot.classList.add(styles.headerAction);
-    this._headerSlot.addEventListener('slotchange', this._handleSlotChange);
+
+    this._toggleEl = document.createElement('button');
+    this._toggleEl.type = 'button';
+    this._toggleEl.classList.add(styles.toggle);
+    this._toggleEl.setAttribute('part', 'toggle');
+    this._toggleEl.setAttribute('aria-label', this.toggleLabel);
+    this._toggleEl.innerHTML = TOGGLE_ICON_SVG;
+    this._toggleEl.addEventListener('click', this._handleToggleClick);
+
     this._headerEl.appendChild(this._logoEl);
-    this._headerEl.appendChild(this._headerSlot);
+    this._headerEl.appendChild(this._toggleEl);
 
     this._dividerEl = document.createElement('div');
     this._dividerEl.classList.add(styles.divider);
@@ -191,9 +214,8 @@ class LoomSidebar extends HTMLElement {
       this._logoEl.alt = this.logoAlt;
     }
 
-    const hasHeader = !!logoSrc || this._hasAssigned(this._headerSlot);
-    if (this._headerEl) this._headerEl.hidden = !hasHeader;
-    if (this._dividerEl) this._dividerEl.hidden = !hasHeader;
+    // The built-in toggle always renders, so the header (and its divider) are always present.
+    if (this._toggleEl) this._toggleEl.setAttribute('aria-label', this.toggleLabel);
     if (this._footerEl) this._footerEl.hidden = !this._hasAssigned(this._footerSlot);
 
     // Let children re-resolve the collapsed ancestor state.
@@ -256,15 +278,8 @@ class LoomSidebar extends HTMLElement {
     );
   }
 
-  private readonly _handleClick = (event: MouseEvent): void => {
-    this._handleToggleTrigger(event);
-  };
-
-  private readonly _handleToggleTrigger = (event: Event): void => {
-    const target = event.target as HTMLElement | null;
-    if (target && target.closest('[data-sidebar-toggle]')) {
-      this.toggle();
-    }
+  private readonly _handleToggleClick = (): void => {
+    this.toggle();
   };
 
   private readonly _handleKeydown = (event: KeyboardEvent): void => {

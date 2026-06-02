@@ -231,6 +231,7 @@ declare module 'react' {
         'logo-src'?: string;
         'compact-logo-src'?: string;
         'logo-alt'?: string;
+        'toggle-label'?: string;
       };
       'loom-sidebar-item': LoomElementProps<HTMLElementTagNameMap['loom-sidebar-item']> & {
         'item-id'?: string;

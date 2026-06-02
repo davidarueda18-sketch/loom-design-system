@@ -36,6 +36,7 @@ export interface SidebarOwnProps {
   logoSrc?: string;
   compactLogoSrc?: string;
   logoAlt?: string;
+  toggleLabel?: string;
   onToggle?: (detail: SidebarToggleEventDetail) => void;
   onSelect?: (detail: SidebarSelectEventDetail) => void;
   children?: ReactNode;
