@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -24,10 +24,10 @@ const meta = {
   tags: ['autodocs'],
   args: { children: 'Button' },
   argTypes: {
-    variant:  { control: 'select', options: BUTTON_VARIANTS },
-    size:     { control: 'select', options: BUTTON_SIZES },
-    disabled: { control: 'boolean' },
-    children: { control: 'text' },
+    variant:  { control: 'select', options: BUTTON_VARIANTS, description: 'Visual treatment for the action.' },
+    size:     { control: 'select', options: BUTTON_SIZES, description: 'Button density and label typography scale.' },
+    disabled: { control: 'boolean', description: 'Disables the inner native button.' },
+    children: { control: 'text', description: 'Default slot content rendered inside part="label".' },
   },
   parameters: {
     docs: {
@@ -38,6 +38,23 @@ const meta = {
 \`\`\`html
 <loom-button variant="primary" size="md">Guardar cambios</loom-button>
 \`\`\`
+
+Eventos públicos:
+
+\`\`\`js
+document.querySelector('loom-button')?.addEventListener('loom-click', (event) => {
+  console.log(event.type, event.detail);
+});
+\`\`\`
+
+| Surface | Name | Purpose |
+|---|---|---|
+| Slot | default | Button label/content |
+| Part | button | Inner native button |
+| Part | label | Label wrapper around the default slot |
+| Event | loom-click | Re-emitted click from the inner button |
+| Event | loom-focus | Re-emitted focus from the inner button |
+| Event | loom-blur | Re-emitted blur from the inner button |
 
 El wrapper React \`<Button />\` renderiza internamente \`<loom-button>\`.
         `.trim(),
@@ -111,6 +128,55 @@ const StateLabel = ({ children }: { children: string }) => (
   </p>
 );
 
+const ButtonEventLog = () => {
+  const [log, setLog] = useState<string[]>([]);
+  const buttonRef = useRef<HTMLElementTagNameMap['loom-button'] | null>(null);
+
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return undefined;
+
+    const addEntry = (eventName: string) => {
+      setLog((prev) => [`${eventName} @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
+    };
+    const handleClick = () => { addEntry('loom-click'); };
+    const handleFocus = () => { addEntry('loom-focus'); };
+    const handleBlur = () => { addEntry('loom-blur'); };
+
+    button.addEventListener('loom-click', handleClick);
+    button.addEventListener('loom-focus', handleFocus);
+    button.addEventListener('loom-blur', handleBlur);
+
+    return () => {
+      button.removeEventListener('loom-click', handleClick);
+      button.removeEventListener('loom-focus', handleFocus);
+      button.removeEventListener('loom-blur', handleBlur);
+    };
+  }, []);
+
+  return (
+    <loom-stack gap="md">
+      <loom-button
+        variant="primary"
+        size="md"
+        ref={buttonRef}
+      >
+        Trigger events
+      </loom-button>
+      <loom-box display="block" padding="smMd" style={{
+        minHeight: '80px',
+        border: `1px dashed ${colorVars.borderSubtle}`,
+        borderRadius: '8px',
+        color: colorVars.textSecondary,
+      }}>
+        {log.length === 0
+          ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
+          : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+      </loom-box>
+    </loom-stack>
+  );
+};
+
 const getLoomButton = (canvasElement: HTMLElement): HTMLElementTagNameMap['loom-button'] => {
   const host = canvasElement.querySelector('loom-button');
   if (!(host instanceof HTMLElement)) {
@@ -147,7 +213,7 @@ export const Variants: Story = {
       <StorySection title="Variantes">
         <Row>
           {BUTTON_VARIANTS.map((variant) => (
-            <Button key={variant} variant={variant}>{variant}</Button>
+            <loom-button key={variant} variant={variant}>{variant}</loom-button>
           ))}
         </Row>
       </StorySection>
@@ -163,7 +229,7 @@ export const Sizes: Story = {
         <StorySection key={variant} title={variant}>
           <Row>
             {BUTTON_SIZES.map((size) => (
-              <Button key={size} variant={variant} size={size}>{size}</Button>
+              <loom-button key={size} variant={variant} size={size}>{size}</loom-button>
             ))}
           </Row>
         </StorySection>
@@ -233,9 +299,9 @@ export const States: Story = {
             {VARIANT_STATES[variant].map(({ label, className, disabled }) => (
               <loom-box key={label} display="block">
                 <StateLabel>{label}</StateLabel>
-                <Button variant={variant} size="md" disabled={disabled} className={className}>
+                <loom-button variant={variant} size="md" disabled={disabled || undefined} className={className}>
                   {label}
-                </Button>
+                </loom-button>
               </loom-box>
             ))}
           </loom-inline>
@@ -253,9 +319,9 @@ export const AllCombinations: Story = {
         <StorySection key={variant} title={variant}>
           <Row>
             {BUTTON_SIZES.map((size) => (
-              <Button key={size} variant={variant} size={size}>{size}</Button>
+              <loom-button key={size} variant={variant} size={size}>{size}</loom-button>
             ))}
-            <Button variant={variant} size="md" disabled>disabled</Button>
+            <loom-button variant={variant} size="md" disabled>disabled</loom-button>
           </Row>
         </StorySection>
       ))}
@@ -263,14 +329,14 @@ export const AllCombinations: Story = {
   ),
 };
 
-export const Polymorphic: Story = {
-  name: 'Polimórfico (as)',
+export const ReactWrapper: Story = {
+  name: 'React wrapper',
   render: () => (
     <loom-box display="block" padding="lg">
-      <StorySection title='as="a" — renderiza como enlace'>
+      <StorySection title="React wrapper over the canonical custom element">
         <Row>
           {BUTTON_VARIANTS.map((variant) => (
-            <Button key={variant} as="a" href="#" variant={variant}>{variant}</Button>
+            <Button key={variant} variant={variant}>{variant}</Button>
           ))}
         </Row>
       </StorySection>
@@ -323,51 +389,11 @@ export const WebComponent: StoryObj<ButtonWebComponentArgs> = {
 };
 
 export const CustomEvents: Story = {
-  render: () => {
-    const [log, setLog] = useState<string[]>([]);
-
-    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-button'] | null) => {
-      if (!el) return;
-
-      const handleClick = () => {
-        setLog((prev) => [`loom-click @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
-      };
-      const handleFocus = () => {
-        setLog((prev) => [`loom-focus @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
-      };
-      const handleBlur = () => {
-        setLog((prev) => [`loom-blur @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
-      };
-
-      el.addEventListener('loom-click', handleClick);
-      el.addEventListener('loom-focus', handleFocus);
-      el.addEventListener('loom-blur', handleBlur);
-    }, []);
-
-    return (
-      <loom-box display="block" padding="lg">
-        <loom-stack gap="md">
-        <loom-button
-          variant="primary"
-          size="md"
-          ref={handleRef}
-        >
-          Trigger events
-        </loom-button>
-        <loom-box display="block" padding="smMd" style={{
-          minHeight: '80px',
-          border: `1px dashed ${colorVars.borderSubtle}`,
-          borderRadius: '8px',
-          color: colorVars.textSecondary,
-        }}>
-          {log.length === 0
-            ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
-            : log.map((entry, idx) => <p key={idx} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
-        </loom-box>
-        </loom-stack>
-      </loom-box>
-    );
-  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <ButtonEventLog />
+    </loom-box>
+  ),
   play: async ({ canvasElement }) => {
     const host = getLoomButton(canvasElement);
     await host.shadowRoot?.querySelector('button[part="button"]')?.dispatchEvent(

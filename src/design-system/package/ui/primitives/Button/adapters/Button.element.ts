@@ -112,6 +112,7 @@ class LoomButton extends HTMLElement {
 
   private _syncScheduled = false;
 
+  /** Schedules a batched render pass for visual attribute changes. */
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
@@ -121,7 +122,11 @@ class LoomButton extends HTMLElement {
     });
   }
 
-  connectedCallback() {
+  /**
+   * Creates the shadow DOM once, adopts Vanilla Extract stylesheets, wires the default
+   * slot into the label part, and bridges native button interactions to Loom events.
+   */
+  connectedCallback(): void {
     if (!this.shadowRoot) {
       const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true });
 
@@ -152,13 +157,17 @@ class LoomButton extends HTMLElement {
     this._sync();
   }
 
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     this._inner?.removeEventListener('click', this._handleClick);
     this._inner?.removeEventListener('focus', this._handleFocus);
     this._inner?.removeEventListener('blur', this._handleBlur);
   }
 
-  attributeChangedCallback(name: string) {
+  /**
+   * Reacts to public attribute changes. ARIA attributes are synchronized immediately;
+   * visual attributes are batched through requestAnimationFrame.
+   */
+  attributeChangedCallback(name: string): void {
     if (name.startsWith('aria-')) {
       this._syncA11y();
       return;
@@ -191,6 +200,7 @@ class LoomButton extends HTMLElement {
     this._syncA11y();
   }
 
+  /** Mirrors supported host ARIA labels onto the inner native button for assistive tech. */
   private _syncA11y(): void {
     if (!this._inner) return;
     ['aria-label', 'aria-labelledby', 'aria-describedby'].forEach((attr) => {

@@ -56,7 +56,7 @@ function getHostSheet(): CSSStyleSheet | null {
 }
 
 function getAdoptedStyleSheets(): CSSStyleSheet[] {
-  // Deduplicate in case VE merges all styles into one sheet
+  // Deduplicate because Vite/VE can merge component styles into a shared stylesheet.
   const seen = new Set<CSSStyleSheet>();
   const result: CSSStyleSheet[] = [];
   for (const sheet of [
@@ -74,10 +74,9 @@ function getAdoptedStyleSheets(): CSSStyleSheet[] {
 
 
 
-// ─── LoomSelect — Template C (form-associated, shadow) ───────────────────────
+// ─── LoomSelect ──────────────────────────────────────────────────────────────
 
 class LoomSelect extends HTMLElement {
-  // ─── Law 6: form association ─────────────────────────────────────────────
   static formAssociated = true;
   private readonly _internals: ElementInternals;
 
@@ -95,9 +94,9 @@ class LoomSelect extends HTMLElement {
   private _activeIndex = -1;
   private _uid = `select-${Math.random().toString(36).slice(2, 8)}`;
 
-  // constructor required for form-associated elements
   constructor() {
     super();
+    // ElementInternals makes the selected value participate in native FormData.
     this._internals = this.attachInternals();
   }
 
@@ -234,13 +233,11 @@ class LoomSelect extends HTMLElement {
       const sheets = getAdoptedStyleSheets();
       if (sheets.length > 0) shadow.adoptedStyleSheets = sheets;
 
-      // Label div
       this._labelEl = document.createElement('div');
       this._labelEl.setAttribute('part', 'label');
       this._labelEl.classList.add(styles.label);
       this._labelEl.hidden = true;
 
-      // Trigger button (combobox)
       this._triggerEl = document.createElement('button');
       this._triggerEl.type = 'button';
       this._triggerEl.setAttribute('part', 'trigger');
@@ -250,12 +247,10 @@ class LoomSelect extends HTMLElement {
       this._triggerEl.setAttribute('aria-haspopup', 'listbox');
       this._triggerEl.setAttribute('aria-controls', `${this._uid}-listbox`);
 
-      // Display value span
       this._valueEl = document.createElement('span');
       this._valueEl.setAttribute('part', 'value');
       this._valueEl.classList.add(styles.value, styles.valuePlaceholder);
 
-      // Chevron icon
       this._chevronEl = document.createElement('span');
       this._chevronEl.setAttribute('part', 'chevron');
       this._chevronEl.classList.add(styles.chevron);
@@ -265,7 +260,6 @@ class LoomSelect extends HTMLElement {
       this._triggerEl.appendChild(this._valueEl);
       this._triggerEl.appendChild(this._chevronEl);
 
-      // Dropdown panel (loom-select-menu as container)
       this._menuEl = document.createElement('loom-select-menu');
       this._menuEl.setAttribute('part', 'menu');
       this._menuEl.id = `${this._uid}-listbox`;
@@ -273,11 +267,9 @@ class LoomSelect extends HTMLElement {
       this._menuEl.classList.add(menuStyles.panel);
       this._menuEl.hidden = true;
 
-      // Slot for loom-select-option children
       this._slotEl = document.createElement('slot');
       this._menuEl.appendChild(this._slotEl);
 
-      // Error message div
       this._errorEl = document.createElement('div');
       this._errorEl.setAttribute('part', 'error');
       this._errorEl.classList.add(styles.errorMessage);
@@ -288,7 +280,6 @@ class LoomSelect extends HTMLElement {
       shadow.appendChild(this._menuEl);
       shadow.appendChild(this._errorEl);
 
-      // Wire listeners
       this._triggerEl.addEventListener('click', this._handleTriggerClick);
       this._triggerEl.addEventListener('keydown', this._handleTriggerKeydown);
       this._slotEl.addEventListener('slotchange', this._handleSlotChange);
@@ -316,7 +307,7 @@ class LoomSelect extends HTMLElement {
     this._scheduleSync();
   }
 
-  // ─── Form lifecycle (Law 6 / Template C) ─────────────────────────────────
+  // ─── Form lifecycle ──────────────────────────────────────────────────────
 
   formResetCallback(): void {
     this.value = '';
@@ -337,20 +328,21 @@ class LoomSelect extends HTMLElement {
   checkValidity(): boolean { return this._internals.checkValidity(); }
   reportValidity(): boolean { return this._internals.reportValidity(); }
 
-  // ─── Batching (Law 4) ─────────────────────────────────────────────────────
+  // ─── Batching ─────────────────────────────────────────────────────────────
 
   private _syncScheduled = false;
 
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
+    // Batch attribute/property churn before mutating classes and ARIA state.
     requestAnimationFrame(() => {
       this._syncScheduled = false;
       this._sync();
     });
   }
 
-  // ─── Prev-state tracking (Law 4) ─────────────────────────────────────────
+  // ─── Prev-state tracking ─────────────────────────────────────────────────
 
   private _prev: Record<string, string | null> = { triggerState: null };
 
@@ -368,12 +360,11 @@ class LoomSelect extends HTMLElement {
     this._prev[prop] = next;
   }
 
-  // ─── Sync (Laws 3, 4, 6) ─────────────────────────────────────────────────
+  // ─── Sync ─────────────────────────────────────────────────────────────────
 
   private _sync(): void {
     if (!this._triggerEl) return;
 
-    // Resolve visual state
     let state: SelectState;
     if (this.disabled) state = 'disabled';
     else if (this._open) state = 'open';
@@ -382,35 +373,28 @@ class LoomSelect extends HTMLElement {
 
     this._apply(this._triggerEl, 'triggerState', state, styles.triggerState as Record<string, string>);
 
-    // Label
     if (this._labelEl) {
       const lbl = this.label ?? '';
       this._labelEl.textContent = lbl;
       this._labelEl.hidden = !lbl;
     }
 
-    // Display value / placeholder
     this._updateDisplayValue();
 
-    // Chevron rotation
     if (this._open) this._chevronEl?.classList.add(styles.chevronOpen);
     else this._chevronEl?.classList.remove(styles.chevronOpen);
 
-    // Menu visibility
     if (this._menuEl) this._menuEl.hidden = !this._open;
 
-    // Trigger native disabled + aria-expanded
     this._triggerEl.disabled = this.disabled;
     this._triggerEl.setAttribute('aria-expanded', String(this._open));
 
-    // Error message
     if (this._errorEl) {
       const errText = this.errorMessage ?? '';
       this._errorEl.textContent = errText;
       this._errorEl.hidden = !(this.error && errText);
     }
 
-    // Form value
     this._internals.setFormValue(this.value || null);
     this._internals.setValidity({});
 
@@ -419,6 +403,7 @@ class LoomSelect extends HTMLElement {
 
   private _syncA11y(): void {
     if (!this._triggerEl) return;
+    // Public ARIA labels live on the host but assistive tech targets the combobox button.
     ['aria-label', 'aria-labelledby', 'aria-describedby'].forEach((attr) => {
       const val = this.getAttribute(attr);
       if (val) this._triggerEl!.setAttribute(attr, val);
@@ -443,6 +428,7 @@ class LoomSelect extends HTMLElement {
     const options = this._getAllOptions();
     const current = this.value;
     options.forEach((opt, i) => {
+      // Stable ids are required for aria-activedescendant during keyboard navigation.
       if (!opt.id) opt.id = `${this._uid}-opt-${i}`;
       if (current !== '' && opt.getAttribute('value') === current) {
         opt.setAttribute('selected', '');
@@ -471,7 +457,7 @@ class LoomSelect extends HTMLElement {
     this.setAttribute('open', '');
     this._activeIndex = -1;
 
-    // Pre-focus the currently selected option
+    // Pre-focus the selected option so keyboard users resume from the current value.
     const enabled = this._getEnabledOptions();
     const all = this._getAllOptions();
     const selectedOpt = all.find((opt) => opt.hasAttribute('selected'));

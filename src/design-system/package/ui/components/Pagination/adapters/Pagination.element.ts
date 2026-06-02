@@ -198,7 +198,6 @@ class LoomPagination extends HTMLElement {
     this._prevEl.toggleAttribute('disabled', this.disabled || current <= 1);
     this._nextEl.toggleAttribute('disabled', this.disabled || current >= this.totalPages);
 
-    // Page-size selector.
     const options = (this.getAttribute('page-size-options') ?? '')
       .split(',')
       .map((s) => Number(s.trim()))
@@ -216,7 +215,7 @@ class LoomPagination extends HTMLElement {
       this._sizeSelectEl.disabled = this.disabled;
     }
 
-    // Page buttons.
+    // Rebuilds page controls on each sync so handlers always close over current state.
     this._pagesEl.replaceChildren();
     const items = buildRange(current, this.totalPages, this.siblings);
     for (const item of items) {

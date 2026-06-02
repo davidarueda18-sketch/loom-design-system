@@ -25,6 +25,60 @@ interface ToggleWebComponentArgs {
   label?: string;
 }
 
+interface ToggleChangeDetail {
+  checked: boolean;
+}
+
+function ToggleEventLog() {
+  const [log, setLog] = React.useState<string[]>([]);
+  const toggleRef = React.useRef<HTMLElementTagNameMap['loom-toggle'] | null>(null);
+
+  React.useEffect(() => {
+    const toggle = toggleRef.current;
+    if (!toggle) return;
+
+    const onToggleChange = (event: Event) => {
+      const detail = (event as CustomEvent<ToggleChangeDetail>).detail;
+      setLog((prev) => [
+        `loom-toggle-change -> checked=${String(detail.checked)}`,
+        ...prev,
+      ].slice(0, 6));
+    };
+
+    toggle.addEventListener('loom-toggle-change', onToggleChange as EventListener);
+    return () => {
+      toggle.removeEventListener('loom-toggle-change', onToggleChange as EventListener);
+    };
+  }, []);
+
+  return (
+    <loom-stack gap="lg">
+      <loom-toggle ref={toggleRef} label="Haz clic para ver el evento" />
+      <loom-box
+        display="block"
+        padding-y="md"
+        style={{
+          minHeight: '80px',
+          color: colorVars.textSecondary,
+          borderTop: `1px solid ${colorVars.borderDefault}`,
+        }}
+      >
+        {log.length === 0
+          ? (
+            <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>
+              Sin eventos aun: haz clic en el toggle
+            </p>
+          )
+          : log.map((entry, i) => (
+            <p key={i} className="loom-caption" style={{ margin: 0 }}>
+              {entry}
+            </p>
+          ))}
+      </loom-box>
+    </loom-stack>
+  );
+}
+
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
@@ -36,9 +90,18 @@ const meta = {
     label:    'Activar notificaciones',
   },
   argTypes: {
-    checked:  { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    label:    { control: 'text' },
+    checked: {
+      control: 'boolean',
+      description: 'Marca el estado del switch. Presencia del atributo implica `true`.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Bloquea interaccion, foco del track y cambios de estado.',
+    },
+    label: {
+      control: 'text',
+      description: 'Texto visible junto al control.',
+    },
   },
   parameters: {
     docs: {
@@ -64,6 +127,23 @@ con formularios y evento personalizado \`loom-toggle-change\`.
 
 El wrapper React \`<Toggle />\` renderiza internamente \`<loom-toggle>\`.
 Usa \`::part(root)\`, \`::part(track)\`, \`::part(thumb)\` y \`::part(label)\` para override CSS externo.
+
+## Superficie pública
+
+| Tipo | Nombre | Descripción |
+| --- | --- | --- |
+| Atributo | \`checked\` | Estado booleano del switch. |
+| Atributo | \`disabled\` | Deshabilita interacción y foco. |
+| Atributo | \`label\` | Texto visible del control. |
+| Atributo | \`name\` | Nombre para envío en formularios. |
+| Atributo | \`value\` | Valor enviado cuando \`checked=true\` (default: \`on\`). |
+| Evento | \`loom-toggle-change\` | Se emite en cada cambio con \`{ checked: boolean }\`. |
+| CSS Part | \`root\` | Contenedor raíz. |
+| CSS Part | \`track\` | Pista/carril del toggle. |
+| CSS Part | \`thumb\` | Perilla móvil. |
+| CSS Part | \`label\` | Etiqueta de texto. |
+
+\`loom-toggle\` participa en formularios usando ElementInternals: solo envía valor cuando está activado.
         `.trim(),
       },
     },
@@ -150,36 +230,88 @@ export const Interactive: Story = {
       },
     },
   },
-  render: () => {
-    const [log, setLog] = React.useState<string[]>([]);
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <ToggleEventLog />
+    </loom-box>
+  ),
+};
 
-    const handleRef = React.useCallback((el: HTMLElementTagNameMap['loom-toggle'] | null) => {
-      if (!el) return;
-      el.addEventListener('loom-toggle-change', (e) => {
-        const { checked } = (e as CustomEvent).detail as { checked: boolean };
-        setLog((prev) =>
-          [`loom-toggle-change → checked=${checked}`, ...prev].slice(0, 6),
-        );
-      });
-    }, []);
+export const CustomEvents: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Escucha de forma nativa el evento \`loom-toggle-change\` para reaccionar a cambios en el estado.
 
-    return (
-      <loom-box display="block" padding="lg">
-        <loom-stack gap="lg">
-        <loom-toggle label="Haz clic para ver el evento" ref={handleRef} />
-        <loom-box display="block" padding-y="md" style={{
-          minHeight: '80px',
-          color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-        }}>
-          {log.length === 0
-            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — haz clic en el toggle</p>
-            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
-          }
-        </loom-box>
-        </loom-stack>
-      </loom-box>
-    );
+\`\`\`ts
+const toggle = document.querySelector('loom-toggle');
+toggle?.addEventListener('loom-toggle-change', (event) => {
+  const { checked } = (event as CustomEvent<{ checked: boolean }>).detail;
+  console.log('checked:', checked);
+});
+\`\`\`
+        `.trim(),
+      },
+    },
   },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <ToggleEventLog />
+    </loom-box>
+  ),
+};
+
+export const CSSParts: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Personalización visual desde fuera del Shadow DOM usando \`::part()\`.
+
+Partes expuestas:
+- \`root\`
+- \`track\`
+- \`thumb\`
+- \`label\`
+
+\`\`\`css
+loom-toggle::part(track) {
+  border-radius: 999px;
+}
+
+loom-toggle::part(thumb) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 20%, transparent);
+}
+\`\`\`
+        `.trim(),
+      },
+    },
+  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="lg">
+        <loom-toggle label="Default" />
+        <loom-toggle checked label="Checked" />
+        <style>
+          {`
+            loom-toggle::part(track) {
+              border-radius: 999px;
+              border: 1px solid ${colorVars.borderDefault};
+            }
+
+            loom-toggle::part(thumb) {
+              box-shadow: 0 0 0 2px color-mix(in srgb, ${colorVars.feedbackInfo} 20%, transparent);
+            }
+
+            loom-toggle::part(label) {
+              color: ${colorVars.textPrimary};
+            }
+          `}
+        </style>
+      </loom-stack>
+    </loom-box>
+  ),
 };
 
 export const WithLabel: Story = {
@@ -229,9 +361,18 @@ CSS hooks: \`::part(root)\`, \`::part(track)\`, \`::part(thumb)\`, \`::part(labe
     label:    'Activar función',
   },
   argTypes: {
-    checked:  { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    label:    { control: 'text' },
+    checked: {
+      control: 'boolean',
+      description: 'Atributo booleano canónico del custom element.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Deshabilita interacción en la implementación Web Component.',
+    },
+    label: {
+      control: 'text',
+      description: 'Texto de etiqueta mostrado por el host.',
+    },
   },
   render: (args) => (
     <loom-box display="block" padding="lg">

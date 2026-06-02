@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 import { CHECKBOX_STATES, CHECKBOX_SHAPES } from '../../../../../package/ui/primitives/Checkbox/index.ts';
-import type { CheckboxShape } from '../../../../../package/ui/primitives/Checkbox/index.ts';
+import type { CheckboxChangeEventDetail, CheckboxShape } from '../../../../../package/ui/primitives/Checkbox/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
@@ -40,11 +40,11 @@ const meta = {
     shape: 'square',
   },
   argTypes: {
-    checked:       { control: 'boolean' },
-    indeterminate: { control: 'boolean' },
-    disabled:      { control: 'boolean' },
-    label:         { control: 'text' },
-    shape:         { control: 'select', options: CHECKBOX_SHAPES },
+    checked:       { control: 'boolean', description: 'Sets the checked state.' },
+    indeterminate: { control: 'boolean', description: 'Sets the mixed state (`aria-checked="mixed"`).' },
+    disabled:      { control: 'boolean', description: 'Disables pointer and keyboard interaction.' },
+    label:         { control: 'text', description: 'Optional label text displayed beside the box.' },
+    shape:         { control: 'select', options: CHECKBOX_SHAPES, description: 'Visual shape of the checkbox box.' },
   },
   parameters: {
     docs: {
@@ -66,6 +66,34 @@ Control de selección binaria como Web Component. Soporta los estados **default*
 <!-- Deshabilitado -->
 <loom-checkbox disabled label="No disponible"></loom-checkbox>
 \`\`\`
+
+Escucha cambios de estado con \`loom-checkbox-change\`:
+
+\`\`\`js
+document.querySelector('loom-checkbox')?.addEventListener('loom-checkbox-change', (event) => {
+  console.log(event.detail); // { checked: boolean, indeterminate: boolean }
+});
+\`\`\`
+
+| Surface | Name | Purpose |
+|---|---|---|
+| Attribute | checked | Marks the checkbox as selected |
+| Attribute | indeterminate | Marks the checkbox as mixed |
+| Attribute | disabled | Disables interaction |
+| Attribute | label | Visible label text |
+| Attribute | shape | Box shape: square or circle |
+| Attribute | name | Form field name |
+| Attribute | value | Form field value when checked |
+| Attribute | aria-label | Accessible label |
+| Attribute | aria-labelledby | Accessible label source id |
+| Attribute | aria-describedby | Accessible description id |
+| Part | root | Wrapper row for box and label |
+| Part | box | Interactive visual checkbox box |
+| Part | icon | Check or mixed icon container |
+| Part | label | Text label element |
+| Event | loom-checkbox-change | Emitted after toggle with checked and indeterminate flags |
+
+No slot API is exposed; use the \`label\` attribute for text.
 
 El wrapper React \`<Checkbox />\` renderiza internamente \`<loom-checkbox>\`.
 Usa \`::part(box)\`, \`::part(icon)\` y \`::part(label)\` para override CSS externo.
@@ -95,6 +123,44 @@ function Column({ children }: { children: React.ReactNode }) {
   return (
     <loom-stack gap="md">
       {children}
+    </loom-stack>
+  );
+}
+
+function CheckboxEventLog() {
+  const [log, setLog] = React.useState<string[]>([]);
+  const ref = React.useRef<HTMLElementTagNameMap['loom-checkbox'] | null>(null);
+
+  React.useEffect(() => {
+    const checkbox = ref.current;
+    if (!checkbox) return undefined;
+
+    const handleChange = (event: Event): void => {
+      const { checked, indeterminate } = (event as CustomEvent<CheckboxChangeEventDetail>).detail;
+      setLog((prev) =>
+        [`loom-checkbox-change -> checked=${checked}, indeterminate=${indeterminate}`, ...prev].slice(0, 6),
+      );
+    };
+
+    checkbox.addEventListener('loom-checkbox-change', handleChange);
+    return () => checkbox.removeEventListener('loom-checkbox-change', handleChange);
+  }, []);
+
+  return (
+    <loom-stack gap="lg">
+      <loom-checkbox
+        label="Haz clic para ver el evento"
+        ref={ref}
+      />
+      <loom-box display="block" padding-y="md" style={{
+        minHeight: '80px',
+        color: colorVars.textSecondary,
+        borderTop: `1px solid ${colorVars.borderDefault}`,
+      }}>
+        {log.length === 0
+          ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aun - haz clic en el checkbox</p>
+          : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+      </loom-box>
     </loom-stack>
   );
 }
@@ -160,39 +226,11 @@ export const Interactive: Story = {
       },
     },
   },
-  render: () => {
-    const [log, setLog] = React.useState<string[]>([]);
-
-    const handleRef = React.useCallback((el: HTMLElementTagNameMap['loom-checkbox'] | null) => {
-      if (!el) return;
-      el.addEventListener('loom-checkbox-change', (e) => {
-        const { checked, indeterminate } = (e as CustomEvent).detail as { checked: boolean; indeterminate: boolean };
-        setLog((prev) =>
-          [`loom-checkbox-change → checked=${checked}, indeterminate=${indeterminate}`, ...prev].slice(0, 6),
-        );
-      });
-    }, []);
-
-    return (
-      <loom-box display="block" padding="lg">
-        <loom-stack gap="lg">
-        <loom-checkbox
-          label="Haz clic para ver el evento"
-          ref={handleRef}
-        />
-        <loom-box display="block" padding-y="md" style={{
-          minHeight: '80px',
-          color: colorVars.textSecondary, borderTop: `1px solid ${colorVars.borderDefault}`,
-        }}>
-          {log.length === 0
-            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — haz clic en el checkbox</p>
-            : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)
-          }
-        </loom-box>
-        </loom-stack>
-      </loom-box>
-    );
-  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <CheckboxEventLog />
+    </loom-box>
+  ),
 };
 
 export const WithLabel: Story = {

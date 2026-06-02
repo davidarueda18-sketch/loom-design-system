@@ -2,7 +2,7 @@ import * as styles from '../Checkbox.css.ts';
 import type { CheckboxState } from '../Checkbox.types.ts';
 import { ICON_CHECK, ICON_DASH } from '../../../../icons/index.ts';
 
-// ─── Law 8: module-level VE sheet cache ───────────────────────────────────────
+// ─── VE stylesheet adoption ─────────────────────────────────────────────────
 
 const _sheetCache: Record<string, CSSStyleSheet | null> = {};
 
@@ -33,10 +33,9 @@ function getVESheet(anchorClass: string): CSSStyleSheet | null {
 }
 
 
-// ─── LoomCheckbox — Template C (form-associated) ─────────────────────────────
+// ─── LoomCheckbox ───────────────────────────────────────────────────────────
 
 class LoomCheckbox extends HTMLElement {
-  // ─── Law 6: form association ─────────────────────────────────────────────
   static formAssociated = true;
   private readonly _internals: ElementInternals;
 
@@ -46,9 +45,9 @@ class LoomCheckbox extends HTMLElement {
   private _iconEl: HTMLDivElement | null = null;
   private _labelEl: HTMLSpanElement | null = null;
 
-  // constructor is REQUIRED for form-associated elements
   constructor() {
     super();
+    // ElementInternals keeps checkbox value in native form submission.
     this._internals = this.attachInternals();
   }
 
@@ -66,7 +65,7 @@ class LoomCheckbox extends HTMLElement {
     'aria-describedby',
   ] as const;
 
-  // ─── Getters / Setters — boolean attributes (Law 2) ──────────────────────
+  // ─── Getters / Setters ───────────────────────────────────────────────────
 
   get checked(): boolean {
     return this.hasAttribute('checked');
@@ -88,8 +87,6 @@ class LoomCheckbox extends HTMLElement {
   set disabled(val: boolean) {
     this.toggleAttribute('disabled', val);
   }
-
-  // ─── Getters / Setters — string attributes (Law 2) ───────────────────────
 
   get label(): string | null {
     return this.getAttribute('label');
@@ -122,7 +119,7 @@ class LoomCheckbox extends HTMLElement {
     else this.setAttribute('shape', val);
   }
 
-  // ─── Event handlers — private readonly arrows (Law 7) ────────────────────
+  // ─── Event handlers ──────────────────────────────────────────────────────
 
   private readonly _handleClick = (): void => {
     if (this.disabled) return;
@@ -141,10 +138,8 @@ class LoomCheckbox extends HTMLElement {
 
   connectedCallback(): void {
     if (!this.shadowRoot) {
-      // Law 6: delegatesFocus forwards host focus → first focusable element inside
       const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true });
 
-      // Law 8: adopt VE stylesheet into shadow root
       const sheets = [getVESheet(styles.box)].filter((s): s is CSSStyleSheet => s != null);
       if (sheets.length > 0) {
         shadow.adoptedStyleSheets = sheets;
@@ -155,24 +150,20 @@ class LoomCheckbox extends HTMLElement {
         );
       }
 
-      // Outer flex row (root)
       const rootEl = document.createElement('div');
       rootEl.setAttribute('part', 'root');
       rootEl.classList.add(styles.root);
       this._rootEl = rootEl;
 
-      // Visual box
       this._boxEl = document.createElement('div');
       this._boxEl.setAttribute('part', 'box');
       this._boxEl.classList.add(styles.box);
 
-      // Icon container (check / dash)
       this._iconEl = document.createElement('div');
       this._iconEl.setAttribute('part', 'icon');
       this._iconEl.classList.add(styles.iconWrapper);
       this._boxEl.appendChild(this._iconEl);
 
-      // Label text
       this._labelEl = document.createElement('span');
       this._labelEl.setAttribute('part', 'label');
       this._labelEl.classList.add(styles.label);
@@ -181,29 +172,25 @@ class LoomCheckbox extends HTMLElement {
       rootEl.appendChild(this._labelEl);
       shadow.appendChild(rootEl);
 
-      // Law 7: named references for cleanup in disconnectedCallback
       this._boxEl.addEventListener('click', this._handleClick);
       this._boxEl.addEventListener('keydown', this._handleKeydown);
     }
 
-    // role + form state on first connect
     this.setAttribute('role', 'checkbox');
     this._sync();
   }
 
-  // Law 7: remove listeners to prevent memory leaks
   disconnectedCallback(): void {
     this._boxEl?.removeEventListener('click', this._handleClick);
     this._boxEl?.removeEventListener('keydown', this._handleKeydown);
   }
 
-  // Law 4: aria-* must bypass RAF — a11y cannot wait for the next frame
   attributeChangedCallback(name: string): void {
     if (name.startsWith('aria-')) { this._syncA11y(); return; }
     this._scheduleSync();
   }
 
-  // ─── Form lifecycle callbacks (Law 6 / Template C) ───────────────────────
+  // ─── Form lifecycle callbacks ────────────────────────────────────────────
 
   formResetCallback(): void {
     this.checked = false;
@@ -226,24 +213,25 @@ class LoomCheckbox extends HTMLElement {
     return this._internals.reportValidity();
   }
 
-  // ─── Batching (Law 4) ─────────────────────────────────────────────────────
+  // ─── Batching ─────────────────────────────────────────────────────────────
 
   private _syncScheduled = false;
 
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
+    // Batch class/aria updates when multiple attributes flip in the same tick.
     requestAnimationFrame(() => {
       this._syncScheduled = false;
       this._sync();
     });
   }
 
-  // ─── Prev-state — one entry per token attribute (Law 4) ───────────────────
+  // ─── Prev-state tracking ─────────────────────────────────────────────────
 
   private _prev: Record<string, string | null> = { boxState: null, boxShape: null };
 
-  // ─── Sync (Laws 3, 4, 6) ─────────────────────────────────────────────────
+  // ─── Sync ─────────────────────────────────────────────────────────────────
 
   private _sync(): void {
     if (!this._rootEl || !this._boxEl || !this._iconEl || !this._labelEl) return;
@@ -253,47 +241,36 @@ class LoomCheckbox extends HTMLElement {
     const isIndeterminate = this.indeterminate;
     const labelText = this.label;
 
-    // Resolve visual state — Law 3: validate key in classMap
     let state: CheckboxState;
     if (isDisabled) state = 'disabled';
     else if (isIndeterminate) state = 'indeterminate';
     else if (isChecked) state = 'checked';
     else state = 'default';
 
-    // Apply Vanilla Extract state variant — idempotent via _apply (Law 4)
     this._apply(this._boxEl, 'boxState', state, styles.boxState as Record<string, string>);
 
-    // Shape variant — circle overrides default square border-radius
     this._apply(this._boxEl, 'boxShape', this.shape, styles.boxShape as Record<string, string>);
 
-    // Disabled cursor on root row so the entire hit area shows not-allowed
     if (isDisabled) this._rootEl.classList.add(styles.rootDisabled);
     else this._rootEl.classList.remove(styles.rootDisabled);
 
-    // Tab focus: disabled boxes are not focusable
     this._boxEl.setAttribute('tabindex', isDisabled ? '-1' : '0');
 
-    // Icon: check / dash / empty — diff to avoid unnecessary innerHTML writes
     const nextIcon = isIndeterminate ? ICON_DASH : isChecked ? ICON_CHECK : '';
     if (this._iconEl.innerHTML !== nextIcon) this._iconEl.innerHTML = nextIcon;
 
-    // Label
     this._labelEl.textContent = labelText ?? '';
     this._labelEl.hidden = labelText == null;
     if (isDisabled) this._labelEl.classList.add(styles.labelDisabled);
     else this._labelEl.classList.remove(styles.labelDisabled);
 
-    // Form value — sync into ElementInternals
     this._internals.setFormValue(isChecked ? this.value : null);
     this._internals.setValidity({});
 
-    // Accessibility
     this._syncA11y();
   }
 
-  // Law 6: forward aria-* from host to box synchronously
   private _syncA11y(): void {
-    // Host aria state
     const isChecked = this.checked;
     const isIndeterminate = this.indeterminate;
     const isDisabled = this.disabled;
@@ -302,7 +279,7 @@ class LoomCheckbox extends HTMLElement {
     if (isDisabled) this.setAttribute('aria-disabled', 'true');
     else this.removeAttribute('aria-disabled');
 
-    // Forward aria-label/labelledby/describedby to the box part
+    // Forward aria-* from the host to the focusable internal box element.
     if (!this._boxEl) return;
     ['aria-label', 'aria-labelledby', 'aria-describedby'].forEach((attr) => {
       const val = this.getAttribute(attr);
@@ -311,7 +288,6 @@ class LoomCheckbox extends HTMLElement {
     });
   }
 
-  // Law 4: idempotent class swap with early-return on no-change
   private _apply(
     target: Element,
     prop: string,

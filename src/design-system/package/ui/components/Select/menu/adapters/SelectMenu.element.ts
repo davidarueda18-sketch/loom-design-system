@@ -124,9 +124,6 @@ class LoomSelectOption extends HTMLElement {
       this._descriptionEl.classList.add(styles.optionDescription);
       this._descriptionEl.hidden = true;
 
-      // Note: Check element is created dynamically in _sync() only when selected
-      // to avoid phantom space reservation in unselected options.
-
       this._textContainerEl.appendChild(this._labelEl);
       this._textContainerEl.appendChild(this._descriptionEl);
       this._rowEl.appendChild(this._leadingIconEl);
@@ -156,6 +153,7 @@ class LoomSelectOption extends HTMLElement {
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
+    // Option state can change in bursts when the parent select updates selection/focus.
     requestAnimationFrame(() => {
       this._syncScheduled = false;
       this._sync();
@@ -192,28 +190,24 @@ class LoomSelectOption extends HTMLElement {
     const descText = this.description;
     const leadingIconName = this.leadingIcon;
 
-    // Row state
     const state = isDisabled ? 'disabled' : isSelected ? 'selected' : 'default';
     this._apply(this._rowEl, 'rowState', state, styles.optionRowState as Record<string, string>);
 
-    // Focused outline (keyboard navigation indicator)
+    // Parent select owns keyboard navigation and marks the active option with data-focused.
     if (isFocused) this._rowEl.classList.add(styles.optionRowFocused);
     else this._rowEl.classList.remove(styles.optionRowFocused);
 
-    // Label text
     if (this._labelEl) {
       this._labelEl.textContent = labelText;
       if (isSelected) this._labelEl.classList.add(styles.optionLabelSelected);
       else this._labelEl.classList.remove(styles.optionLabelSelected);
     }
 
-    // Description
     if (this._descriptionEl) {
       this._descriptionEl.textContent = descText ?? '';
       this._descriptionEl.hidden = !descText;
     }
 
-    // Leading icon
     if (this._leadingIconEl) {
       if (leadingIconName) {
         this._leadingIconEl.hidden = false;
@@ -231,7 +225,7 @@ class LoomSelectOption extends HTMLElement {
       }
     }
 
-    // Check mark — only render if selected (no phantom space for unselected)
+    // Render the check mark only when selected so unselected rows keep their natural spacing.
     if (isSelected) {
       if (!this._checkEl) {
         this._checkEl = document.createElement('span');
@@ -247,7 +241,6 @@ class LoomSelectOption extends HTMLElement {
       }
     }
 
-    // ARIA
     this.setAttribute('aria-selected', String(isSelected));
     if (isDisabled) this.setAttribute('aria-disabled', 'true');
     else this.removeAttribute('aria-disabled');
@@ -265,7 +258,7 @@ declare global {
 // ─── LoomSelectMenu ───────────────────────────────────────────────────────────
 
 class LoomSelectMenu extends HTMLElement {
-  // Minimal container — loom-select manages all behaviour and styling
+  // Minimal container: loom-select owns behaviour, listbox state, and styling.
 }
 
 customElements.define('loom-select-menu', LoomSelectMenu);

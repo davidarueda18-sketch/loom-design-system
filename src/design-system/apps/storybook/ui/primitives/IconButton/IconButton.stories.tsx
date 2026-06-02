@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -85,10 +85,24 @@ const meta = {
     selected: false,
   },
   argTypes: {
-    variant:  { control: 'select', options: ICON_BUTTON_VARIANTS },
-    size:     { control: 'select', options: ICON_BUTTON_SIZES },
-    disabled: { control: 'boolean' },
-    selected: { control: 'boolean' },
+    variant: {
+      control: 'select',
+      options: ICON_BUTTON_VARIANTS,
+      description: 'Apariencia visual del botón: filled, ghost, outline o brand.',
+    },
+    size: {
+      control: 'select',
+      options: ICON_BUTTON_SIZES,
+      description: 'Tamaño del botón y escala recomendada del icono.',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Deshabilita interacción y foco sobre el botón interno.',
+    },
+    selected: {
+      control: 'boolean',
+      description: 'Activa modo toggle y refleja estado mediante aria-pressed.',
+    },
   },
   parameters: {
     docs: {
@@ -119,6 +133,22 @@ import { BookmarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 \`\`\`
 
 El wrapper React \`<IconButton />\` renderiza internamente \`<loom-icon-button>\`.
+
+## Superficie pública
+
+| Tipo | Nombre | Descripción |
+| --- | --- | --- |
+| Atributo | \`variant\` | Variante visual del botón. |
+| Atributo | \`size\` | Tamaño del control. |
+| Atributo | \`disabled\` | Estado deshabilitado. |
+| Atributo | \`selected\` | Estado toggle para \`aria-pressed\`. |
+| Atributo | \`aria-label\` | Nombre accesible requerido para botón solo-ícono. |
+| Slot | \`default\` | Contenido del ícono (normalmente \`loom-icon\`). |
+| Evento | \`loom-click\` | Click normalizado emitido por el host. |
+| Evento | \`loom-toggle\` | Cambio toggle con \`detail.selected\`. |
+| Evento | \`loom-focus\` | Foco del botón interno. |
+| Evento | \`loom-blur\` | Blur del botón interno. |
+| CSS Part | \`button\` | Botón nativo interno estilizable con \`::part(button)\`. |
         `.trim(),
       },
     },
@@ -127,6 +157,99 @@ El wrapper React \`<IconButton />\` renderiza internamente \`<loom-icon-button>\
 
 export default meta;
 type Story = StoryObj<IconButtonStoryArgs>;
+
+interface IconButtonToggleDetail {
+  selected: boolean;
+}
+
+function IconButtonToggleDemo() {
+  const [saved, setSaved] = useState(false);
+  const buttonRef = useRef<HTMLElementTagNameMap['loom-icon-button'] | null>(null);
+
+  useEffect(() => {
+    const host = buttonRef.current;
+    if (!host) return;
+
+    const onToggle = (event: Event) => {
+      const detail = (event as CustomEvent<IconButtonToggleDetail>).detail;
+      setSaved(detail.selected);
+    };
+
+    host.addEventListener('loom-toggle', onToggle as EventListener);
+    return () => {
+      host.removeEventListener('loom-toggle', onToggle as EventListener);
+    };
+  }, []);
+
+  return (
+    <loom-inline gap="lg" align="center">
+      <loom-icon-button
+        variant="filled"
+        size="md"
+        aria-label={saved ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+        selected={saved || undefined}
+        ref={buttonRef}
+      >
+        <Icon size="md"><BookmarkIcon /></Icon>
+      </loom-icon-button>
+      <span className="loom-caption" style={{ color: colorVars.textSecondary }}>
+        selected: {String(saved)}
+      </span>
+    </loom-inline>
+  );
+}
+
+function IconButtonEventLog() {
+  const [log, setLog] = useState<string[]>([]);
+  const buttonRef = useRef<HTMLElementTagNameMap['loom-icon-button'] | null>(null);
+
+  useEffect(() => {
+    const host = buttonRef.current;
+    if (!host) return;
+
+    const onClick = () => setLog((prev) => [`loom-click @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
+    const onToggle = (event: Event) => {
+      const detail = (event as CustomEvent<IconButtonToggleDetail>).detail;
+      setLog((prev) => [`loom-toggle selected=${String(detail.selected)} @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
+    };
+    const onFocus = () => setLog((prev) => [`loom-focus @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
+    const onBlur = () => setLog((prev) => [`loom-blur @ ${new Date().toLocaleTimeString()}`, ...prev].slice(0, 8));
+
+    host.addEventListener('loom-click', onClick);
+    host.addEventListener('loom-toggle', onToggle as EventListener);
+    host.addEventListener('loom-focus', onFocus);
+    host.addEventListener('loom-blur', onBlur);
+
+    return () => {
+      host.removeEventListener('loom-click', onClick);
+      host.removeEventListener('loom-toggle', onToggle as EventListener);
+      host.removeEventListener('loom-focus', onFocus);
+      host.removeEventListener('loom-blur', onBlur);
+    };
+  }, []);
+
+  return (
+    <loom-stack gap="md">
+      <loom-icon-button variant="filled" size="md" aria-label="Trigger events" ref={buttonRef}>
+        <loom-icon size="md"><MagnifyingGlassIcon /></loom-icon>
+      </loom-icon-button>
+      <loom-box
+        display="block"
+        padding="smMd"
+        style={{
+          minHeight: '80px',
+          border: `1px dashed ${colorVars.borderSubtle}`,
+          borderRadius: '8px',
+          color: colorVars.textSecondary,
+        }}
+      >
+        {log.length === 0
+          ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún: interactúa con el botón</p>
+          : log.map((entry, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+      </loom-box>
+    </loom-stack>
+  );
+}
 
 // ─── Default ─────────────────────────────────────────────────────────────────
 export const Default: Story = {
@@ -263,33 +386,11 @@ export const Toggle: Story = {
       },
     },
   },
-  render: () => {
-    const [saved, setSaved] = useState(false);
-
-    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-icon-button'] | null) => {
-      if (!el) return;
-      el.addEventListener('loom-toggle', (e) => setSaved((e as CustomEvent<{ selected: boolean }>).detail.selected));
-    }, []);
-
-    return (
-      <loom-box display="block" padding="lg">
-        <loom-inline gap="lg" align="center">
-        <loom-icon-button
-          variant="filled"
-          size="md"
-          aria-label={saved ? 'Quitar de favoritos' : 'Guardar en favoritos'}
-          selected={saved || undefined}
-          ref={handleRef}
-        >
-          <Icon size="md"><BookmarkIcon /></Icon>
-        </loom-icon-button>
-        <span className="loom-caption" style={{ color: colorVars.textSecondary }}>
-          selected: {String(saved)}
-        </span>
-        </loom-inline>
-      </loom-box>
-    );
-  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <IconButtonToggleDemo />
+    </loom-box>
+  ),
 };
 
 // ─── Web Component (loom-icon-button) ────────────────────────────────────────
@@ -352,36 +453,11 @@ export const CustomEvents: Story = {
       },
     },
   },
-  render: () => {
-    const [log, setLog] = useState<string[]>([]);
-
-    const handleRef = useCallback((el: HTMLElementTagNameMap['loom-icon-button'] | null) => {
-      if (!el) return;
-      el.addEventListener('loom-click',  () => setLog(p => [`loom-click @ ${new Date().toLocaleTimeString()}`, ...p].slice(0, 8)));
-      el.addEventListener('loom-toggle', (e) => setLog(p => [`loom-toggle selected=${(e as CustomEvent).detail.selected} @ ${new Date().toLocaleTimeString()}`, ...p].slice(0, 8)));
-      el.addEventListener('loom-focus',  () => setLog(p => [`loom-focus @ ${new Date().toLocaleTimeString()}`, ...p].slice(0, 8)));
-      el.addEventListener('loom-blur',   () => setLog(p => [`loom-blur @ ${new Date().toLocaleTimeString()}`, ...p].slice(0, 8)));
-    }, []);
-
-    return (
-      <loom-box display="block" padding="lg">
-        <loom-stack gap="md">
-        <loom-icon-button variant="filled" size="md" aria-label="Trigger events" ref={handleRef}>
-          <loom-icon size="md"><MagnifyingGlassIcon /></loom-icon>
-        </loom-icon-button>
-        <loom-box display="block" padding="smMd" style={{
-          minHeight: '80px', border: `1px dashed ${colorVars.borderSubtle}`,
-          borderRadius: '8px', color: colorVars.textSecondary,
-        }}>
-          {log.length === 0
-            ? <p className="loom-caption" style={{ margin: 0, opacity: 0.5 }}>Sin eventos aún — interactúa con el botón</p>
-            : log.map((e, i) => <p key={i} className="loom-caption" style={{ margin: 0 }}>{e}</p>)
-          }
-        </loom-box>
-        </loom-stack>
-      </loom-box>
-    );
-  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <IconButtonEventLog />
+    </loom-box>
+  ),
   play: async ({ canvasElement }) => {
     const host = getLoomIconButton(canvasElement);
     host.shadowRoot?.querySelector('button[part="button"]')?.dispatchEvent(

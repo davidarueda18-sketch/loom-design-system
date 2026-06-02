@@ -61,6 +61,25 @@ document.querySelector('loom-modal')
     console.log('Cerrado con:', e.detail.reason); // 'close' | 'backdrop' | 'escape'
   });
 \`\`\`
+
+| Surface | Name | Purpose |
+|---|---|---|
+| Attribute | open | Shows the modal when present |
+| Attribute | title | Header title text |
+| Attribute | size | Dialog width preset: sm, md, lg, xl |
+| Attribute | aria-label | Accessible label for the close button |
+| Attribute | aria-describedby | Description id forwarded to the dialog |
+| Slot | default | Main body content |
+| Slot | footer | Footer actions; hidden when empty |
+| Part | backdrop | Fixed overlay behind the dialog |
+| Part | dialog | Dialog panel with role="dialog" |
+| Part | header | Header row containing title and close button |
+| Part | title | Header title element |
+| Part | close-btn | Native close button |
+| Part | content | Scrollable body container |
+| Part | empty-placeholder | Empty-state text when the default slot has no content |
+| Part | footer | Footer action container |
+| Event | loom-modal-close | Emitted after close animation with detail.reason |
         `.trim(),
       },
     },
@@ -179,6 +198,54 @@ function ControlledModal({
   );
 }
 
+function ModalEventLogExample({ title, size }: ModalStoryArgs) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [log, setLog] = useState<string[]>([]);
+  const ref = useRef<HTMLElementTagNameMap['loom-modal'] | null>(null);
+
+  useEffect(() => {
+    if (ref.current) ref.current.open = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
+    const modal = ref.current;
+    if (!modal) return undefined;
+
+    const handleClose = (event: Event): void => {
+      const { reason } = (event as CustomEvent<ModalCloseEventDetail>).detail;
+      setLog((prev) => [`loom-modal-close: ${reason}`, ...prev].slice(0, 6));
+      setIsOpen(false);
+    };
+
+    modal.addEventListener('loom-modal-close', handleClose);
+    return () => modal.removeEventListener('loom-modal-close', handleClose);
+  }, []);
+
+  return (
+    <loom-box display="block" padding="xl2">
+      <loom-stack gap="md" align="center">
+        <TriggerButton label="Abrir modal" onClick={() => setIsOpen(true)} />
+        <loom-modal ref={ref} title={title} size={size}>
+          <p className="loom-body-md" style={{ margin: 0, color: colorVars.textSecondary }}>
+            Cierra el modal desde el botón de cierre, el backdrop o la tecla Escape.
+          </p>
+        </loom-modal>
+        <loom-box display="block" padding="smMd" style={{
+          minHeight: '72px',
+          width: 'min(100%, 420px)',
+          border: `1px dashed ${colorVars.borderSubtle}`,
+          borderRadius: '8px',
+          color: colorVars.textSecondary,
+        }}>
+          {log.length === 0
+            ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
+            : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+        </loom-box>
+      </loom-stack>
+    </loom-box>
+  );
+}
+
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
@@ -276,6 +343,58 @@ export const EmptyContent: Story = {
     >
       {null}
     </ControlledModal>
+  ),
+};
+
+export const CustomEvents: Story = {
+  name: 'Eventos custom',
+  parameters: {
+    docs: {
+      description: {
+        story: '`loom-modal-close` se emite después de la animación de cierre y expone `detail.reason`. Los valores posibles son `close`, `backdrop` y `escape`.',
+      },
+    },
+  },
+  render: ({ title, size }) => <ModalEventLogExample title={title} size={size} />,
+};
+
+export const CSSParts: Story = {
+  name: 'CSS parts',
+  decorators: [
+    (Story) => (
+      <>
+        <style>{`
+          .modal-parts-demo loom-modal::part(dialog) {
+            border: 2px solid ${colorVars.brandAccent};
+          }
+
+          .modal-parts-demo loom-modal::part(header),
+          .modal-parts-demo loom-modal::part(footer) {
+            background: ${colorVars.surfaceSubtle};
+          }
+
+          .modal-parts-demo loom-modal::part(title) {
+            color: ${colorVars.brandAccent};
+          }
+        `}</style>
+        <loom-box display="block" className="modal-parts-demo">
+          <Story />
+        </loom-box>
+      </>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: 'El componente expone partes estables para overrides visuales puntuales sin depender de estructura interna privada.',
+      },
+    },
+  },
+  render: ({ size }) => (
+    <ControlledModal
+      title="Modal con ::part()"
+      size={size}
+    />
   ),
 };
 

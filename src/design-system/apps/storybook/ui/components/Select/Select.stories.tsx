@@ -4,7 +4,7 @@ import { expect, userEvent, within } from 'storybook/test';
 
 import { SELECT_STATES } from '../../../../../package/ui/components/Select/index.ts';
 import { SELECT_OPTION_STATES } from '../../../../../package/ui/components/Select/menu/index.ts';
-import type { SelectState } from '../../../../../package/ui/components/Select/index.ts';
+import type { SelectChangeEventDetail, SelectState } from '../../../../../package/ui/components/Select/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Select/adapters/Select.element.ts';
@@ -38,11 +38,11 @@ const meta = {
     state: 'default',
   },
   argTypes: {
-    label:        { control: 'text' },
-    placeholder:  { control: 'text' },
-    disabled:     { control: 'boolean' },
-    error:        { control: 'boolean' },
-    errorMessage: { control: 'text' },
+    label:        { control: 'text', description: 'Visible field label rendered above the trigger.' },
+    placeholder:  { control: 'text', description: 'Placeholder shown while no value is selected.' },
+    disabled:     { control: 'boolean', description: 'Disables trigger interaction and option selection.' },
+    error:        { control: 'boolean', description: 'Applies the error visual state.' },
+    errorMessage: { control: 'text', description: 'Error text shown when error is true.' },
     state: {
       control: 'select',
       options: Object.values(SELECT_STATES),
@@ -76,6 +76,32 @@ Integración con formularios nativos via \`ElementInternals\`:
 el \`value\` seleccionado aparece automáticamente en \`FormData\`.
 
 CSS hooks: \`::part(trigger)\`, \`::part(label)\`, \`::part(value)\`, \`::part(chevron)\`, \`::part(menu)\`, \`::part(error)\`.
+
+| Surface | Name | Purpose |
+|---|---|---|
+| Attribute | label | Field label above the trigger |
+| Attribute | placeholder | Empty-value text in the trigger |
+| Attribute | value | Selected option value and form value |
+| Attribute | name | Form field name used by FormData |
+| Attribute | disabled | Disables trigger and option selection |
+| Attribute | error | Applies error state styling |
+| Attribute | error-message | Error helper text below the trigger |
+| Attribute | open | Opens the listbox panel |
+| Attribute | aria-label | Accessible label forwarded to the trigger |
+| Attribute | aria-labelledby | Label id forwarded to the trigger |
+| Attribute | aria-describedby | Description id forwarded to the trigger |
+| Child | loom-select-option | Selectable option managed by the parent select |
+| Part | label | Visible field label |
+| Part | trigger | Combobox button |
+| Part | value | Selected value or placeholder text |
+| Part | chevron | Disclosure icon |
+| Part | menu | Listbox panel |
+| Part | error | Error message container |
+| Event | loom-select-change | Emitted after selection with detail.value and detail.label |
+| Event | loom-select-open | Emitted when the menu opens |
+| Event | loom-select-close | Emitted when the menu closes |
+
+\`loom-select-option\` surfaces: attributes \`value\`, \`label\`, \`disabled\`, \`description\`, \`leading-icon\`, \`selected\`; parts \`row\`, \`leading\`, \`text-container\`, \`label\`, \`description\`, \`check\`.
         `.trim(),
       },
     },
@@ -103,6 +129,62 @@ function SelectWrapper({ children }: { children: ReactNode }) {
     <loom-box display="block" padding="lg" style={{ maxWidth: '320px' }}>
       <loom-stack gap="lg">
         {children}
+      </loom-stack>
+    </loom-box>
+  );
+}
+
+function SelectEventLogExample() {
+  const [log, setLog] = useState<string[]>([]);
+  const ref = useRef<HTMLElementTagNameMap['loom-select'] | null>(null);
+
+  useEffect(() => {
+    const select = ref.current;
+    if (!select) return undefined;
+
+    const addEntry = (eventName: string, detail?: unknown): void => {
+      const suffix = detail === undefined ? '' : ` ${JSON.stringify(detail)}`;
+      setLog((prev) => [`${eventName}${suffix}`, ...prev].slice(0, 8));
+    };
+    const handleChange = (event: Event): void => {
+      addEntry('loom-select-change', (event as CustomEvent<SelectChangeEventDetail>).detail);
+    };
+    const handleOpen = (event: Event): void => {
+      addEntry('loom-select-open', (event as CustomEvent<{ open: boolean }>).detail);
+    };
+    const handleClose = (event: Event): void => {
+      addEntry('loom-select-close', (event as CustomEvent<{ open: boolean }>).detail);
+    };
+
+    select.addEventListener('loom-select-change', handleChange);
+    select.addEventListener('loom-select-open', handleOpen);
+    select.addEventListener('loom-select-close', handleClose);
+
+    return () => {
+      select.removeEventListener('loom-select-change', handleChange);
+      select.removeEventListener('loom-select-open', handleOpen);
+      select.removeEventListener('loom-select-close', handleClose);
+    };
+  }, []);
+
+  return (
+    <loom-box display="block" padding="lg" style={{ maxWidth: '360px' }}>
+      <loom-stack gap="md">
+        <loom-select ref={ref} label="País" placeholder="Selecciona" name="country">
+          <loom-select-option value="co" label="Colombia" />
+          <loom-select-option value="mx" label="México" />
+          <loom-select-option value="ar" label="Argentina" />
+        </loom-select>
+        <loom-box display="block" padding="smMd" style={{
+          minHeight: '88px',
+          border: `1px dashed ${colorVars.borderSubtle}`,
+          borderRadius: '8px',
+          color: colorVars.textSecondary,
+        }}>
+          {log.length === 0
+            ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
+            : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+        </loom-box>
       </loom-stack>
     </loom-box>
   );
@@ -337,6 +419,18 @@ export const ControlledOpen: Story = {
       </SelectWrapper>
     );
   },
+};
+
+export const CustomEvents: Story = {
+  name: 'Eventos custom',
+  parameters: {
+    docs: {
+      description: {
+        story: '`loom-select-change` entrega `detail.value` y `detail.label`; `loom-select-open` y `loom-select-close` notifican el estado del panel.',
+      },
+    },
+  },
+  render: () => <SelectEventLogExample />,
 };
 
 export const FormIntegration: Story = {

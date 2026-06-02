@@ -154,23 +154,18 @@ class LoomToast extends HTMLElement {
         console.warn('[loom-toast] VE stylesheet not found — shadow styles will be missing. Ensure the VE bundle is loaded before the adapter.');
       }
 
-      // ── Build DOM tree ──────────────────────────────────────────────────
-
       const inner = document.createElement('div');
       inner.classList.add(styles.inner);
 
-      // Header row
       this._headerEl = document.createElement('div');
       const headerEl = this._headerEl;
       headerEl.classList.add(styles.header);
 
-      // Icon wrap
       this._iconWrapEl = document.createElement('div');
       this._iconWrapEl.classList.add(styles.iconWrap, styles.iconWrapColored);
       this._iconWrapEl.setAttribute('part', 'icon');
       this._iconWrapEl.setAttribute('aria-hidden', 'true');
 
-      // Content
       const contentEl = document.createElement('div');
       contentEl.classList.add(styles.content);
       contentEl.setAttribute('part', 'content');
@@ -187,7 +182,6 @@ class LoomToast extends HTMLElement {
       contentEl.appendChild(this._titleEl);
       contentEl.appendChild(this._descriptionEl);
 
-      // Dismiss button
       this._dismissBtnEl = document.createElement('button');
       this._dismissBtnEl.classList.add(styles.dismissBtn);
       this._dismissBtnEl.setAttribute('part', 'dismiss');
@@ -198,7 +192,6 @@ class LoomToast extends HTMLElement {
       headerEl.appendChild(contentEl);
       headerEl.appendChild(this._dismissBtnEl);
 
-      // Action link
       this._actionLinkEl = document.createElement('loom-link');
       this._actionLinkEl.classList.add(styles.actionLink);
       this._actionLinkEl.setAttribute('part', 'action');
@@ -208,7 +201,6 @@ class LoomToast extends HTMLElement {
       inner.appendChild(headerEl);
       inner.appendChild(this._actionLinkEl);
 
-      // Progress bar track + bar
       const progressTrackEl = document.createElement('div');
       progressTrackEl.classList.add(styles.progressTrack);
       progressTrackEl.setAttribute('aria-hidden', 'true');
@@ -219,8 +211,6 @@ class LoomToast extends HTMLElement {
 
       shadow.appendChild(inner);
       shadow.appendChild(progressTrackEl);
-
-      // ── Event listeners ─────────────────────────────────────────────────
 
       this._dismissBtnEl.addEventListener('click', this._handleDismissClick);
       this._actionLinkEl.addEventListener('loom-click', this._handleActionClick);
@@ -249,6 +239,7 @@ class LoomToast extends HTMLElement {
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
+    // Batch visual updates from rapid attribute/property changes before touching classes.
     requestAnimationFrame(() => {
       this._syncScheduled = false;
       this._sync();
@@ -268,37 +259,31 @@ class LoomToast extends HTMLElement {
     const actionLbl   = this.actionLabel;
     const pos         = this.position;
 
-    // Type accent variable — set on host so it cascades into shadow DOM
+    // Type accent is set on the host so VE variables cascade into shadow DOM children.
     this._applyTo(this, this._prev, 'type', toastType, styles.rootTypeVariant as Record<string, string>);
 
-    // Icon content
     const expectedSvg = ICON_SVG[toastType];
     if (this._iconWrapEl.innerHTML.trim() !== expectedSvg.trim()) {
       this._iconWrapEl.innerHTML = expectedSvg;
     }
 
-    // Title
     this._titleEl.textContent = toastTitle;
 
-    // Description
     const hasDesc = desc != null && desc.length > 0;
     this._descriptionEl.hidden = !hasDesc;
     this._descriptionEl.textContent = hasDesc ? desc : '';
     this._headerEl!.classList.toggle(styles.headerCompact, !hasDesc);
 
-    // Dismiss button
     this._dismissBtnEl.hidden = !isDismissible;
     this._dismissBtnEl.setAttribute(
       'aria-label',
       this.getAttribute('aria-dismiss-label') ?? 'Cerrar notificación',
     );
 
-    // Action link
     const hasAction = actionLbl != null && actionLbl.length > 0;
     this._actionLinkEl.hidden = !hasAction;
     this._actionLinkEl.textContent = hasAction ? actionLbl : '';
 
-    // Fixed positioning
     if (pos != null) {
       this.classList.add(styles.positioned);
       this._applyTo(this, this._prev, 'position', pos, styles.positionVariant as Record<string, string>);
@@ -307,7 +292,7 @@ class LoomToast extends HTMLElement {
       this._applyTo(this, this._prev, 'position', null, styles.positionVariant as Record<string, string>);
     }
 
-    // ARIA role: error/warning → alert (assertive), rest → status (polite)
+    // Error and warning are urgent announcements; success/info remain polite status updates.
     const isUrgent = toastType === 'error' || toastType === 'warning';
     this.setAttribute('role', isUrgent ? 'alert' : 'status');
     this.setAttribute('aria-live', isUrgent ? 'assertive' : 'polite');
@@ -318,6 +303,7 @@ class LoomToast extends HTMLElement {
 
   private _syncA11y(): void {
     if (!this._titleEl) return;
+    // Public ARIA labels live on the host but the announced text node is inside shadow DOM.
     ['aria-label', 'aria-labelledby', 'aria-describedby'].forEach((attr) => {
       const val = this.getAttribute(attr);
       if (val) this._titleEl!.setAttribute(attr, val);
@@ -360,7 +346,7 @@ class LoomToast extends HTMLElement {
       this.dispatchEvent(event);
     };
 
-    // Listen for animation end; fallback timeout in case animation is skipped
+    // Dispatch after exit animation; fallback covers reduced motion or skipped animationend.
     this.addEventListener('animationend', onEnd, { once: true });
     setTimeout(onEnd, 400);
   }
@@ -382,7 +368,7 @@ class LoomToast extends HTMLElement {
       return;
     }
 
-    // Start visual animation once, then only pause/resume play state.
+    // Start visual animation once, then only pause/resume play state with the timer.
     if (this._progressBarEl) {
       this._progressBarEl.classList.remove(styles.progressBarAnimating);
       // Force reflow so restarting the same animation class always takes effect.

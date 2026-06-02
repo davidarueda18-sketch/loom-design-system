@@ -3,12 +3,18 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent } from 'storybook/test';
 
 import { TOAST_TYPES, TOAST_POSITIONS } from '../../../../../package/ui/components/Toast/index.ts';
-import type { ToastType, ToastPosition } from '../../../../../package/ui/components/Toast/index.ts';
+import type {
+  ToastActionEventDetail,
+  ToastDismissEventDetail,
+  ToastPosition,
+  ToastType,
+} from '../../../../../package/ui/components/Toast/index.ts';
 import type { LoomToast } from '../../../../../package/ui/components/Toast/adapters/Toast.element.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/components/Toast/adapters/Toast.element.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
+import '../../../../../package/ui/primitives/Button/adapters/Button.element.ts';
 import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
@@ -33,13 +39,13 @@ const meta = {
     duration: 0,
   },
   argTypes: {
-    type:        { control: 'select', options: TOAST_TYPES },
-    title:       { control: 'text' },
-    description: { control: 'text' },
-    dismissible: { control: 'boolean' },
-    'action-label': { control: 'text' },
+    type:        { control: 'select', options: TOAST_TYPES, description: 'Semantic variant controlling icon, accent, and live-region urgency.' },
+    title:       { control: 'text', description: 'Primary message rendered in part="title".' },
+    description: { control: 'text', description: 'Optional supporting text rendered in part="description".' },
+    dismissible: { control: 'boolean', description: 'Shows or hides the dismiss button.' },
+    'action-label': { control: 'text', description: 'Optional snackbar action label.' },
     duration:    { control: 'number', description: 'ms until auto-dismiss (0 = disabled)' },
-    position:    { control: 'select', options: ['', ...TOAST_POSITIONS] },
+    position:    { control: 'select', options: ['', ...TOAST_POSITIONS], description: 'Optional fixed viewport placement.' },
   },
   parameters: {
     docs: {
@@ -77,8 +83,26 @@ título, descripción opcional, botón de acción y auto-dismiss configurable.
 ></loom-toast>
 \`\`\`
 
-**Eventos**: \`loom-toast-dismiss\` · \`loom-toast-action\`
-**CSS parts**: \`::part(icon)\` · \`::part(title)\` · \`::part(description)\` · \`::part(dismiss)\` · \`::part(action)\`
+| Surface | Name | Purpose |
+|---|---|---|
+| Attribute | type | Semantic variant: success, info, warning, error |
+| Attribute | title | Primary message text |
+| Attribute | description | Optional supporting message |
+| Attribute | dismissible | Shows the close button unless set to false |
+| Attribute | action-label | Optional snackbar action label |
+| Attribute | duration | Auto-dismiss delay in milliseconds; 0 disables timer |
+| Attribute | position | Optional fixed viewport placement |
+| Attribute | aria-dismiss-label | Accessible label for the dismiss button |
+| Part | icon | Semantic icon container |
+| Part | content | Text content wrapper |
+| Part | title | Primary message element |
+| Part | description | Supporting message element |
+| Part | dismiss | Dismiss button |
+| Part | action | Action link |
+| Event | loom-toast-action | Emitted before action-triggered dismissal with detail.label |
+| Event | loom-toast-dismiss | Emitted after dismissal animation with detail.reason |
+
+Dismiss reasons: \`user\`, \`timeout\`, \`action\`.
         `.trim(),
       },
     },
@@ -144,6 +168,73 @@ function AutoDismissToast({
       duration={item.duration}
       dismissible
     />
+  );
+}
+
+function ToastEventLogExample() {
+  const [key, setKey] = useState(0);
+  const [log, setLog] = useState<string[]>([]);
+  const ref = useRef<LoomToast>(null);
+  const resetRef = useRef<HTMLElementTagNameMap['loom-button'] | null>(null);
+
+  useEffect(() => {
+    const toast = ref.current;
+    if (!toast) return undefined;
+
+    const addEntry = (eventName: string, detail: unknown): void => {
+      setLog((prev) => [`${eventName} ${JSON.stringify(detail)}`, ...prev].slice(0, 8));
+    };
+    const handleAction = (event: Event): void => {
+      addEntry('loom-toast-action', (event as CustomEvent<ToastActionEventDetail>).detail);
+    };
+    const handleDismiss = (event: Event): void => {
+      addEntry('loom-toast-dismiss', (event as CustomEvent<ToastDismissEventDetail>).detail);
+    };
+
+    toast.addEventListener('loom-toast-action', handleAction);
+    toast.addEventListener('loom-toast-dismiss', handleDismiss);
+
+    return () => {
+      toast.removeEventListener('loom-toast-action', handleAction);
+      toast.removeEventListener('loom-toast-dismiss', handleDismiss);
+    };
+  }, [key]);
+
+  useEffect(() => {
+    const button = resetRef.current;
+    if (!button) return undefined;
+    const handleReset = (): void => { setKey((prev) => prev + 1); };
+    button.addEventListener('loom-click', handleReset);
+    return () => button.removeEventListener('loom-click', handleReset);
+  }, []);
+
+  return (
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="md">
+        <loom-toast
+          key={key}
+          ref={ref}
+          type="info"
+          title="Archivo eliminado"
+          description="Usa la acción para restaurarlo o el cierre para descartarlo."
+          action-label="Deshacer"
+          dismissible
+        />
+        <loom-box display="block" padding="smMd" style={{
+          minHeight: '88px',
+          border: `1px dashed ${colorVars.borderSubtle}`,
+          borderRadius: '8px',
+          color: colorVars.textSecondary,
+        }}>
+          {log.length === 0
+            ? <p className="loom-caption" style={{ margin: 0 }}>No events yet</p>
+            : log.map((entry) => <p key={entry} className="loom-caption" style={{ margin: 0 }}>{entry}</p>)}
+        </loom-box>
+        <loom-button ref={resetRef} variant="outline" size="sm">
+          Reset toast
+        </loom-button>
+      </loom-stack>
+    </loom-box>
   );
 }
 
@@ -316,6 +407,18 @@ export const NoDismiss: Story = {
       </Section>
     </loom-box>
   ),
+};
+
+export const CustomEvents: Story = {
+  name: 'Eventos custom',
+  parameters: {
+    docs: {
+      description: {
+        story: '`loom-toast-action` emite el label de la acción; `loom-toast-dismiss` comunica si el cierre fue por usuario, timeout o acción.',
+      },
+    },
+  },
+  render: () => <ToastEventLogExample />,
 };
 
 export const WebComponent: Story = {

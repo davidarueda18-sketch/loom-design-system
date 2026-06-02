@@ -49,8 +49,6 @@ class LoomIconButton extends HTMLElement {
     'aria-describedby',
   ] as const;
 
-  // ─── Getters / Setters ────────────────────────────────────────────────────
-
   get variant(): IconButtonVariant {
     return (this.getAttribute('variant') as IconButtonVariant) ?? 'filled';
   }
@@ -66,8 +64,6 @@ class LoomIconButton extends HTMLElement {
 
   get selected(): boolean { return this.hasAttribute('selected'); }
   set selected(val: boolean) { this.toggleAttribute('selected', val); }
-
-  // ─── Event handlers ───────────────────────────────────────────────────────
 
   private readonly _handleClick = (e: MouseEvent): void => {
     e.stopPropagation();
@@ -92,8 +88,6 @@ class LoomIconButton extends HTMLElement {
       bubbles: true, composed: true, detail: {},
     }));
   };
-
-  // ─── Lifecycle ────────────────────────────────────────────────────────────
 
   connectedCallback() {
     if (!this.shadowRoot) {
@@ -128,8 +122,6 @@ class LoomIconButton extends HTMLElement {
     this._inner?.removeEventListener('blur', this._handleBlur);
   }
 
-  // ─── Batching ─────────────────────────────────────────────────────────────
-
   private _syncScheduled = false;
 
   private _scheduleSync(): void {
@@ -143,17 +135,14 @@ class LoomIconButton extends HTMLElement {
 
   attributeChangedCallback(name: string) {
     if (name.startsWith('aria-')) {
+      // Forward ARIA updates immediately to keep assistive metadata in sync.
       this._syncA11y();
       return;
     }
     this._scheduleSync();
   }
 
-  // ─── State tracking ───────────────────────────────────────────────────────
-
   private _prev: Record<string, string | null> = { variant: null, size: null };
-
-  // ─── Sync ─────────────────────────────────────────────────────────────────
 
   private _sync(): void {
     if (!this._inner) return;
@@ -166,7 +155,7 @@ class LoomIconButton extends HTMLElement {
 
     this._inner.disabled = this.hasAttribute('disabled');
 
-    // aria-pressed: opt-in toggle pattern — only set once selected is used
+    // Keeps button semantics neutral until selected is actually used as a toggle signal.
     const isSelected = this.hasAttribute('selected');
     if (isSelected) {
       this._wasEverSelected = true;
@@ -186,8 +175,6 @@ class LoomIconButton extends HTMLElement {
       else this._inner!.removeAttribute(attr);
     });
   }
-
-  // ─── Idempotent class swap ────────────────────────────────────────────────
 
   private _apply(
     target: Element,

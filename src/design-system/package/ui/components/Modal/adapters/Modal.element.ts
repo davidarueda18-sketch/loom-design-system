@@ -39,6 +39,7 @@ function getHostSheet(): CSSStyleSheet | null {
   if (_hostSheet) return _hostSheet;
   try {
     const sheet = new CSSStyleSheet();
+    // Keep the host layout-neutral while the fixed backdrop owns viewport placement.
     sheet.replaceSync(`:host { display: contents; } :host([hidden]) { display: none; }`);
     _hostSheet = sheet;
     return sheet;
@@ -235,6 +236,7 @@ class LoomModal extends HTMLElement {
   private _scheduleSync(): void {
     if (this._syncScheduled) return;
     this._syncScheduled = true;
+    // Batch visual sync work so rapid property/attribute updates do not churn classes.
     requestAnimationFrame(() => {
       this._syncScheduled = false;
       this._sync();
@@ -255,18 +257,15 @@ class LoomModal extends HTMLElement {
 
     const isOpen = this.hasAttribute('open');
 
-    // Backdrop visibility
     this._backdropEl.hidden = !isOpen;
 
-    // Size variant on dialog
     this._apply('size', this._dialogEl, this.size, styles.sizeVariant as Record<string, string>);
 
-    // Title text
     const titleText = this.title;
     this._titleEl.textContent = titleText;
     this._titleEl.hidden = !titleText;
 
-    // Focus management on open/close transitions
+    // Opening the modal owns document-level keyboard handling until it closes.
     if (isOpen && !this._listenersAttached) {
       this._triggerBeforeOpen = document.activeElement;
       this._attachDocumentListeners();
@@ -330,6 +329,7 @@ class LoomModal extends HTMLElement {
   // ─── Focus trap ───────────────────────────────────────────────────────────
 
   private _getFocusable(): HTMLElement[] {
+    // The trap spans the shadow close button and footer controls projected from light DOM.
     const shadowFocusable = this._closeBtnEl ? [this._closeBtnEl] : [];
 
     const slotted = this._footerSlotEl?.assignedElements() ?? [];
@@ -425,6 +425,7 @@ class LoomModal extends HTMLElement {
       );
     };
 
+    // Wait for the exit animation before removing `open` so consumers get the event after UI settles.
     this._backdropEl?.addEventListener('animationend', onEnd);
     setTimeout(onEnd, 350);
   }

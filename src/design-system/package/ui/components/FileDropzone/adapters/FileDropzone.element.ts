@@ -105,8 +105,6 @@ class LoomFileDropzone extends HTMLElement {
     'aria-describedby',
   ] as const;
 
-  // ─── Attribute reflectors ─────────────────────────────────────────────────
-
   get multiple(): boolean {
     return this.hasAttribute('multiple');
   }
@@ -167,8 +165,6 @@ class LoomFileDropzone extends HTMLElement {
     this.toggleAttribute('disabled', value);
   }
 
-  // ─── Internal state ───────────────────────────────────────────────────────
-
   private _items: FileDropzoneItem[] = [];
   private _dragCounter = 0;
 
@@ -176,15 +172,11 @@ class LoomFileDropzone extends HTMLElement {
     return this._items.slice();
   }
 
-  // ─── DOM refs ─────────────────────────────────────────────────────────────
-
   private _dropzoneEl: HTMLDivElement | null = null;
   private _labelEl: HTMLParagraphElement | null = null;
   private _descriptionEl: HTMLParagraphElement | null = null;
   private _filesEl: HTMLUListElement | null = null;
   private _inputEl: HTMLInputElement | null = null;
-
-  // ─── Event handlers (named for cleanup) ───────────────────────────────────
 
   private readonly _handleDropzoneClick = (event: MouseEvent): void => {
     if (this.disabled) return;
@@ -237,8 +229,6 @@ class LoomFileDropzone extends HTMLElement {
     target.value = '';
   };
 
-  // ─── Lifecycle ────────────────────────────────────────────────────────────
-
   connectedCallback(): void {
     if (!this.shadowRoot) {
       const shadow = this.attachShadow({ mode: 'open' });
@@ -250,7 +240,6 @@ class LoomFileDropzone extends HTMLElement {
         console.warn('[loom-file-dropzone] VE stylesheet not found — shadow styles will be missing. Ensure the VE bundle is loaded before the adapter.');
       }
 
-      // Hidden native file picker
       this._inputEl = document.createElement('input');
       this._inputEl.type = 'file';
       this._inputEl.classList.add(styles.fileInput);
@@ -259,7 +248,6 @@ class LoomFileDropzone extends HTMLElement {
       this._inputEl.tabIndex = -1;
       this._inputEl.addEventListener('change', this._handleInputChange);
 
-      // Dropzone (the dashed box)
       this._dropzoneEl = document.createElement('div');
       this._dropzoneEl.classList.add(styles.dropzone);
       this._dropzoneEl.setAttribute('part', 'dropzone');
@@ -296,7 +284,6 @@ class LoomFileDropzone extends HTMLElement {
       this._dropzoneEl.addEventListener('dragleave', this._handleDragLeave);
       this._dropzoneEl.addEventListener('drop', this._handleDrop);
 
-      // Files list
       this._filesEl = document.createElement('ul');
       this._filesEl.classList.add(styles.files);
       this._filesEl.setAttribute('part', 'files');
@@ -323,13 +310,12 @@ class LoomFileDropzone extends HTMLElement {
 
   attributeChangedCallback(name: string): void {
     if (name.startsWith('aria-')) {
+      // ARIA updates should bypass RAF so assistive metadata remains up-to-date.
       this._syncA11y();
       return;
     }
     this._scheduleSync();
   }
-
-  // ─── Batching (Law 4) ─────────────────────────────────────────────────────
 
   private _syncScheduled = false;
 
@@ -342,12 +328,9 @@ class LoomFileDropzone extends HTMLElement {
     });
   }
 
-  // ─── Sync ─────────────────────────────────────────────────────────────────
-
   private _sync(): void {
     if (!this._dropzoneEl || !this._labelEl || !this._descriptionEl || !this._inputEl) return;
 
-    // Native input mirrors host attributes
     if (this.multiple) this._inputEl.setAttribute('multiple', '');
     else this._inputEl.removeAttribute('multiple');
 
@@ -356,13 +339,11 @@ class LoomFileDropzone extends HTMLElement {
 
     this._inputEl.disabled = this.disabled;
 
-    // Dropzone interactive state
     const isDisabled = this.disabled;
     this._dropzoneEl.classList.toggle(styles.dropzoneDisabled, isDisabled);
     this._dropzoneEl.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     this._dropzoneEl.tabIndex = isDisabled ? -1 : 0;
 
-    // Label / description
     const labelText = this.label;
     this._labelEl.textContent = labelText;
     this._labelEl.hidden = labelText.length === 0;
@@ -395,6 +376,7 @@ class LoomFileDropzone extends HTMLElement {
     if (explicitLabel) {
       this._dropzoneEl.setAttribute('aria-label', explicitLabel);
     } else if (!labelledBy) {
+      // Fallback keeps the control announced even when no explicit ARIA wiring is provided.
       const labelText = this.label || 'File upload';
       const descriptionText = this.description;
       const fallback = descriptionText
@@ -406,14 +388,10 @@ class LoomFileDropzone extends HTMLElement {
     }
   }
 
-  // ─── Internal: open picker ────────────────────────────────────────────────
-
   private _openPicker(): void {
     if (!this._inputEl) return;
     this._inputEl.click();
   }
-
-  // ─── Internal: ingest files ───────────────────────────────────────────────
 
   private _ingestFiles(list: FileList): void {
     const incoming = Array.from(list);
@@ -486,8 +464,6 @@ class LoomFileDropzone extends HTMLElement {
       detail,
     }));
   }
-
-  // ─── Internal: render files list ──────────────────────────────────────────
 
   private _renderFiles(): void {
     if (!this._filesEl) return;
@@ -594,8 +570,6 @@ class LoomFileDropzone extends HTMLElement {
       detail,
     }));
   }
-
-  // ─── Public imperative API ────────────────────────────────────────────────
 
   updateProgress(id: string, progress: number, remainingSeconds?: number): void {
     const item = this._items.find((it) => it.id === id);

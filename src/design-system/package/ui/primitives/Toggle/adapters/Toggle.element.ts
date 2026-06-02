@@ -1,7 +1,5 @@
 import * as styles from '../Toggle.css.ts';
 
-// ─── Law 8: module-level VE sheet cache ───────────────────────────────────────
-
 const _sheetCache: Record<string, CSSStyleSheet | null> = {};
 
 function cloneAsConstructedSheet(source: CSSStyleSheet): CSSStyleSheet | null {
@@ -33,11 +31,9 @@ function getVESheet(anchorClass: string): CSSStyleSheet | null {
 // ─── LoomToggle — form-associated custom element ──────────────────────────────
 
 class LoomToggle extends HTMLElement {
-  // ─── Law 6: form association ─────────────────────────────────────────────
   static formAssociated = true;
   private readonly _internals: ElementInternals;
 
-  // ─── Shadow DOM elements ─────────────────────────────────────────────────
   private _rootEl: HTMLDivElement | null = null;
   private _trackEl: HTMLDivElement | null = null;
   private _thumbEl: HTMLDivElement | null = null;
@@ -48,7 +44,6 @@ class LoomToggle extends HTMLElement {
     this._internals = this.attachInternals();
   }
 
-  // ─── Observed attributes ─────────────────────────────────────────────────
   static observedAttributes = [
     'checked',
     'disabled',
@@ -59,8 +54,6 @@ class LoomToggle extends HTMLElement {
     'aria-labelledby',
     'aria-describedby',
   ] as const;
-
-  // ─── Boolean getters/setters ──────────────────────────────────────────────
 
   get checked(): boolean {
     return this.hasAttribute('checked');
@@ -75,8 +68,6 @@ class LoomToggle extends HTMLElement {
   set disabled(val: boolean) {
     this.toggleAttribute('disabled', val);
   }
-
-  // ─── String getters/setters ───────────────────────────────────────────────
 
   get label(): string | null {
     return this.getAttribute('label');
@@ -101,8 +92,6 @@ class LoomToggle extends HTMLElement {
     this.setAttribute('value', val);
   }
 
-  // ─── Event handlers ───────────────────────────────────────────────────────
-
   private readonly _handleClick = (): void => {
     if (this.disabled) return;
     this._toggle();
@@ -116,13 +105,11 @@ class LoomToggle extends HTMLElement {
     }
   };
 
-  // ─── Lifecycle ────────────────────────────────────────────────────────────
-
   connectedCallback(): void {
     if (!this.shadowRoot) {
       const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true });
 
-      // Law 8: adopt VE stylesheet
+      // Reuses compiled VE rules from document stylesheets to keep styles in sync.
       const sheets = [getVESheet(styles.track)].filter((s): s is CSSStyleSheet => s != null);
       if (sheets.length > 0) {
         shadow.adoptedStyleSheets = sheets;
@@ -133,24 +120,20 @@ class LoomToggle extends HTMLElement {
         );
       }
 
-      // Root flex row
       const rootEl = document.createElement('div');
       rootEl.setAttribute('part', 'root');
       rootEl.classList.add(styles.root);
       this._rootEl = rootEl;
 
-      // Track (pill) — receives focus, click, keydown
       this._trackEl = document.createElement('div');
       this._trackEl.setAttribute('part', 'track');
       this._trackEl.classList.add(styles.track);
 
-      // Thumb (circle) — purely visual, no interaction
       this._thumbEl = document.createElement('div');
       this._thumbEl.setAttribute('part', 'thumb');
       this._thumbEl.classList.add(styles.thumb);
       this._trackEl.appendChild(this._thumbEl);
 
-      // Label
       this._labelEl = document.createElement('span');
       this._labelEl.setAttribute('part', 'label');
       this._labelEl.classList.add(styles.label);
@@ -172,13 +155,11 @@ class LoomToggle extends HTMLElement {
     this._trackEl?.removeEventListener('keydown', this._handleKeydown);
   }
 
-  // Law 4: aria-* bypass RAF
   attributeChangedCallback(name: string): void {
+    // ARIA forwarding should be immediate to keep assistive tech state coherent.
     if (name.startsWith('aria-')) { this._syncA11y(); return; }
     this._scheduleSync();
   }
-
-  // ─── Form lifecycle ───────────────────────────────────────────────────────
 
   formResetCallback(): void {
     this.checked = false;
@@ -200,8 +181,6 @@ class LoomToggle extends HTMLElement {
     return this._internals.reportValidity();
   }
 
-  // ─── Batching ─────────────────────────────────────────────────────────────
-
   private _syncScheduled = false;
 
   private _scheduleSync(): void {
@@ -213,14 +192,10 @@ class LoomToggle extends HTMLElement {
     });
   }
 
-  // ─── Prev-state ───────────────────────────────────────────────────────────
-
   private _prev: Record<string, string | null> = {
     trackState: null,
     thumbState: null,
   };
-
-  // ─── Sync ─────────────────────────────────────────────────────────────────
 
   private _sync(): void {
     if (!this._rootEl || !this._trackEl || !this._thumbEl || !this._labelEl) return;
@@ -229,24 +204,20 @@ class LoomToggle extends HTMLElement {
     const isChecked = this.checked;
     const labelText = this.label;
 
-    // Track state
     const trackKey = isDisabled ? 'disabled' : isChecked ? 'on' : 'off';
     this._apply(this._trackEl, 'trackState', trackKey, styles.trackState as Record<string, string>);
 
-    // Thumb state (4 variants: off, on, disabledOff, disabledOn)
+    // Thumb classes are split by disabled+checked to avoid dynamic CSS logic.
     const thumbKey = isDisabled
       ? isChecked ? 'disabledOn' : 'disabledOff'
       : isChecked ? 'on' : 'off';
     this._apply(this._thumbEl, 'thumbState', thumbKey, styles.thumbState as Record<string, string>);
 
-    // Root cursor
     if (isDisabled) this._rootEl.classList.add(styles.rootDisabled);
     else this._rootEl.classList.remove(styles.rootDisabled);
 
-    // Focus: disabled tracks are not focusable
     this._trackEl.setAttribute('tabindex', isDisabled ? '-1' : '0');
 
-    // Label
     this._labelEl.textContent = labelText ?? '';
     this._labelEl.hidden = labelText == null;
 
@@ -260,7 +231,7 @@ class LoomToggle extends HTMLElement {
       this._labelEl.classList.remove(styles.labelOn, styles.labelDisabled);
     }
 
-    // Form value
+    // Keeps form participation aligned with native checkbox semantics.
     this._internals.setFormValue(isChecked ? this.value : null);
     this._internals.setValidity({});
 
@@ -283,8 +254,6 @@ class LoomToggle extends HTMLElement {
     });
   }
 
-  // ─── Idempotent class swap ────────────────────────────────────────────────
-
   private _apply(
     target: Element,
     prop: string,
@@ -298,8 +267,6 @@ class LoomToggle extends HTMLElement {
     if (next) target.classList.add(...next.split(/\s+/).filter(Boolean));
     this._prev[prop] = next;
   }
-
-  // ─── Internal toggle ──────────────────────────────────────────────────────
 
   private _toggle(): void {
     this.checked = !this.checked;
