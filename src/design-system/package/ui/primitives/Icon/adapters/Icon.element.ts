@@ -56,6 +56,16 @@ function getSlottedSvgSheet(): CSSStyleSheet | null {
         fill: currentColor;
         stroke: currentColor;
       }
+      ::slotted(i) {
+        width: 100% !important;
+        height: 100% !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: inherit;
+        line-height: 1;
+        color: currentColor;
+      }
     `);
     _slottedSheet = sheet;
     return sheet;

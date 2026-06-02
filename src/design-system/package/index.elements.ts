@@ -40,3 +40,7 @@ export { LoomTableCell } from './ui/components/Table/adapters/TableCell.element.
 export { LoomTableHeaderCell } from './ui/components/Table/adapters/TableHeaderCell.element.ts';
 export { LoomTableExpansion } from './ui/components/Table/adapters/TableExpansion.element.ts';
 export { LoomPagination } from './ui/components/Pagination/adapters/Pagination.element.ts';
+export { LoomSidebar } from './ui/components/Sidebar/adapters/Sidebar.element.ts';
+export { LoomSidebarItem } from './ui/components/Sidebar/adapters/SidebarItem.element.ts';
+export { LoomSidebarGroup } from './ui/components/Sidebar/adapters/SidebarGroup.element.ts';
+export { LoomSidebarSubitem } from './ui/components/Sidebar/adapters/SidebarSubitem.element.ts';

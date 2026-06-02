@@ -85,3 +85,25 @@ export type {
   PaginationChangeEventDetail,
   PaginationSizeChangeEventDetail,
 } from './Pagination/index.ts';
+
+export {
+  Sidebar,
+  SidebarItem,
+  SidebarGroup,
+  SidebarSubitem,
+  LoomSidebar,
+  LoomSidebarItem,
+  LoomSidebarGroup,
+  LoomSidebarSubitem,
+} from './Sidebar/index.ts';
+export type {
+  SidebarProps,
+  SidebarItemProps,
+  SidebarSubitemProps,
+  SidebarGroupProps,
+  SidebarToggleEventDetail,
+  SidebarSelectEventDetail,
+  SidebarItemClickEventDetail,
+  SidebarItemSelectEventDetail,
+  SidebarGroupToggleEventDetail,
+} from './Sidebar/index.ts';

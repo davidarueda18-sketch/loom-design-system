@@ -19,7 +19,19 @@ globalStyle(`${root} > svg`, {
   stroke: 'currentColor',
 });
 
+globalStyle(`${root} > i`, {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+  fontSize: 'inherit',
+  lineHeight: 1,
+  color: 'currentColor',
+});
+
 export const size = styleVariants(iconSizeVars, (val) => ({
   width: val,
   height: val,
+  fontSize: val,
 }));

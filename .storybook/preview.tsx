@@ -2,6 +2,7 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
 import { darkDocsTheme, lightDocsTheme } from './docs-theme';
+import '../src/design-system/package/fonts/fonts.css';
 
 // Shared object — mutated by the decorator to switch theme without re-creating the ref.
 const docsParams = { theme: darkDocsTheme, story: { inline: true } };

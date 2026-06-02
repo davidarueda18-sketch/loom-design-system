@@ -31,6 +31,10 @@ import type { LoomTableCell } from './ui/components/Table/adapters/TableCell.ele
 import type { LoomTableHeaderCell } from './ui/components/Table/adapters/TableHeaderCell.element.ts';
 import type { LoomTableExpansion } from './ui/components/Table/adapters/TableExpansion.element.ts';
 import type { LoomPagination } from './ui/components/Pagination/adapters/Pagination.element.ts';
+import type { LoomSidebar } from './ui/components/Sidebar/adapters/Sidebar.element.ts';
+import type { LoomSidebarItem } from './ui/components/Sidebar/adapters/SidebarItem.element.ts';
+import type { LoomSidebarGroup } from './ui/components/Sidebar/adapters/SidebarGroup.element.ts';
+import type { LoomSidebarSubitem } from './ui/components/Sidebar/adapters/SidebarSubitem.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -66,6 +70,10 @@ declare global {
     'loom-table-header-cell':  LoomTableHeaderCell;
     'loom-table-expansion':    LoomTableExpansion;
     'loom-pagination':         LoomPagination;
+    'loom-sidebar':            LoomSidebar;
+    'loom-sidebar-item':       LoomSidebarItem;
+    'loom-sidebar-group':      LoomSidebarGroup;
+    'loom-sidebar-subitem':    LoomSidebarSubitem;
   }
 }
 

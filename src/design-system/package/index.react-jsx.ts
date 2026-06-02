@@ -225,6 +225,35 @@ declare module 'react' {
         compact?: boolean | '';
         disabled?: boolean | '';
       };
+      'loom-sidebar': LoomElementProps<HTMLElementTagNameMap['loom-sidebar']> & {
+        collapsed?: boolean | '';
+        label?: string;
+        'logo-src'?: string;
+        'compact-logo-src'?: string;
+        'logo-alt'?: string;
+      };
+      'loom-sidebar-item': LoomElementProps<HTMLElementTagNameMap['loom-sidebar-item']> & {
+        'item-id'?: string;
+        label?: string;
+        'show-icon'?: string;
+        selected?: boolean | '';
+        disabled?: boolean | '';
+        href?: string;
+      };
+      'loom-sidebar-group': LoomElementProps<HTMLElementTagNameMap['loom-sidebar-group']> & {
+        'group-id'?: string;
+        label?: string;
+        'show-icon'?: string;
+        selected?: boolean | '';
+        expanded?: boolean | '';
+        disabled?: boolean | '';
+      };
+      'loom-sidebar-subitem': LoomElementProps<HTMLElementTagNameMap['loom-sidebar-subitem']> & {
+        'item-id'?: string;
+        label?: string;
+        selected?: boolean | '';
+        disabled?: boolean | '';
+      };
     }
   }
 }

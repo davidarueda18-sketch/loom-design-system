@@ -51,3 +51,6 @@ export type { TagTokenKey } from './tag/index.ts';
 
 export { tableVars } from './table/index.ts';
 export type { TableTokenKey } from './table/index.ts';
+
+export { sidebarVars } from './sidebar/index.ts';
+export type { SidebarTokenKey } from './sidebar/index.ts';
