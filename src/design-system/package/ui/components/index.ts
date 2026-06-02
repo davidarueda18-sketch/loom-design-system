@@ -107,3 +107,6 @@ export type {
   SidebarItemSelectEventDetail,
   SidebarGroupToggleEventDetail,
 } from './Sidebar/index.ts';
+
+export { Navbar, LoomNavbar } from './Navbar/index.ts';
+export type { NavbarProps } from './Navbar/index.ts';

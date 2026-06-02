@@ -44,3 +44,4 @@ export { LoomSidebar } from './ui/components/Sidebar/adapters/Sidebar.element.ts
 export { LoomSidebarItem } from './ui/components/Sidebar/adapters/SidebarItem.element.ts';
 export { LoomSidebarGroup } from './ui/components/Sidebar/adapters/SidebarGroup.element.ts';
 export { LoomSidebarSubitem } from './ui/components/Sidebar/adapters/SidebarSubitem.element.ts';
+export { LoomNavbar } from './ui/components/Navbar/adapters/Navbar.element.ts';

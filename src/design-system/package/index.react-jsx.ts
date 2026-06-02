@@ -255,6 +255,10 @@ declare module 'react' {
         selected?: boolean | '';
         disabled?: boolean | '';
       };
+      'loom-navbar': LoomElementProps<HTMLElementTagNameMap['loom-navbar']> & {
+        application?: string;
+        section?: string;
+      };
     }
   }
 }
