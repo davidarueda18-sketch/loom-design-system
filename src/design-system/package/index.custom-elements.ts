@@ -36,6 +36,7 @@ import type { LoomSidebarItem } from './ui/components/Sidebar/adapters/SidebarIt
 import type { LoomSidebarGroup } from './ui/components/Sidebar/adapters/SidebarGroup.element.ts';
 import type { LoomSidebarSubitem } from './ui/components/Sidebar/adapters/SidebarSubitem.element.ts';
 import type { LoomNavbar } from './ui/components/Navbar/adapters/Navbar.element.ts';
+import type { LoomAppLayout } from './ui/patterns/AppLayout/adapters/AppLayout.element.ts';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -76,6 +77,7 @@ declare global {
     'loom-sidebar-group':      LoomSidebarGroup;
     'loom-sidebar-subitem':    LoomSidebarSubitem;
     'loom-navbar':             LoomNavbar;
+    'loom-app-layout':         LoomAppLayout;
   }
 }
 

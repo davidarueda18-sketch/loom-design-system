@@ -17,6 +17,25 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: 'unit',
+          include: [
+            'src/design-system/package/ui/**/*.test.ts',
+            'src/design-system/package/ui/**/*.test.tsx',
+            'src/design-system/package/ui/**/*.spec.ts',
+            'src/design-system/package/ui/**/*.spec.tsx',
+          ],
+          setupFiles: [path.join(dirname, 'src/design-system/package/test/unit-test.setup.ts')],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: 'storybook',
           include: [
             'src/design-system/apps/storybook/**/*.stories.test.tsx',

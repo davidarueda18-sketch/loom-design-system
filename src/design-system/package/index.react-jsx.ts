@@ -259,6 +259,11 @@ declare module 'react' {
         application?: string;
         section?: string;
       };
+      'loom-app-layout': LoomElementProps<HTMLElementTagNameMap['loom-app-layout']> & {
+        responsive?: boolean | '';
+        'mobile-breakpoint'?: string;
+        'menu-button'?: string;
+      };
     }
   }
 }
