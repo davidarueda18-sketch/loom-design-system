@@ -84,6 +84,20 @@ const MetricCardStoryStyles = () => (
       color: ${colorVars.brandAccent};
       text-decoration: underline;
     }
+
+    .description-width-showcase {
+      align-items: stretch;
+      max-width: 720px;
+    }
+
+    .description-width-custom-property {
+      --loom-metric-card-description-max-width: 112px;
+    }
+
+    .description-width-part-demo loom-metric-card::part(description) {
+      max-width: 144px;
+      color: ${colorVars.textSecondary};
+    }
   `}</style>
 );
 
@@ -97,6 +111,23 @@ const Footer = ({ footerText, ctaLabel, ctaHref }: Pick<MetricCardStoryArgs, 'fo
     <loom-link className="metric-action" slot="action" href={ctaHref} underline="always">{ctaLabel}</loom-link>
   </>
 );
+
+const getMetricCard = (canvasElement: HTMLElement, testId: string): HTMLElementTagNameMap['loom-metric-card'] => {
+  const canvas = within(canvasElement);
+  const card = canvas.getByTestId(testId);
+  if (!(card instanceof HTMLElement)) {
+    throw new Error(`Expected ${testId} to resolve to a loom-metric-card host.`);
+  }
+  return card as HTMLElementTagNameMap['loom-metric-card'];
+};
+
+const getMetricCardDescription = (card: HTMLElementTagNameMap['loom-metric-card']): HTMLParagraphElement => {
+  const description = card.shadowRoot?.querySelector<HTMLParagraphElement>('[part="description"]');
+  if (!description) {
+    throw new Error('Expected loom-metric-card to expose part="description".');
+  }
+  return description;
+};
 
 const meta = {
   title: 'Components/MetricCard',
@@ -125,21 +156,40 @@ const meta = {
       description: {
         component: `
 Shell composable para KPIs de dashboard. El componente aporta superficie, header, footer y slots;
-el consumidor define el contenido interno según su caso.
+el consumidor define el contenido interno según su caso. La descripción estructurada ya no aplica
+un ancho fijo interno: por defecto ocupa el track disponible del body y conserva el control externo
+por CSS custom property o \`::part(description)\`.
 
 \`\`\`html
-<loom-metric-card title="Crad Title">
-  <loom-tag slot="tag" value="positive" label="99%" show-icon="true"></loom-tag>
+<loom-metric-card
+  title="Card Title"
   metric="46%"
   description="Vulnerabilidades se encuentran retenidas por su impacto"
-
+>
+  <loom-tag slot="tag" value="positive" label="99%" show-icon="true"></loom-tag>
   <p slot="footer">Additional description</p>
   <loom-link slot="action" href="#">Call To Action</loom-link>
 </loom-metric-card>
 \`\`\`
 
+Para limitar el ancho sin romper el default fluido, define \`--loom-metric-card-description-max-width\` en el host:
+
+\`\`\`css
+loom-metric-card.compact-description {
+  --loom-metric-card-description-max-width: 8rem;
+}
+\`\`\`
+
+También puedes estilizar directamente la parte pública:
+
+\`\`\`css
+loom-metric-card::part(description) {
+  max-width: 10rem;
+}
+\`\`\`
+
 Slots: \`title\`, \`tag\`, default body, \`footer\`, \`action\`.
-Parts: \`header\`, \`title\`, \`tag\`, \`body\`, \`footer\`, \`footer-content\`, \`action\`.
+Parts: \`header\`, \`title\`, \`tag\`, \`body\`, \`content\`, \`metric\`, \`description\`, \`custom-body\`, \`footer\`, \`footer-content\`, \`action\`.
         `.trim(),
       },
     },
@@ -232,6 +282,72 @@ export const CustomTitleSlot: Story = {
       </loom-metric-card>
     </>
   ),
+};
+
+export const DescriptionWidth: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'La descripción usa el ancho disponible por defecto. La custom property pública limita el ancho de forma no-breaking y `::part(description)` mantiene el canal de estilado externo.',
+      },
+    },
+  },
+  render: () => (
+    <>
+      <MetricCardStoryStyles />
+      <loom-inline className="description-width-showcase" gap="smMd" align="stretch" wrap>
+        <loom-metric-card
+          data-testid="metric-card-description-fluid"
+          title="Default fluid"
+          metric="46%"
+          description="Descripción larga que debe ocupar el espacio disponible del body sin un max-width fijo heredado."
+        >
+          <TrendTag label="99%" />
+          <Footer footerText="Additional description" ctaLabel="Call To Action" ctaHref="#" />
+        </loom-metric-card>
+
+        <loom-metric-card
+          className="description-width-custom-property"
+          data-testid="metric-card-description-custom-property"
+          title="Custom property"
+          metric="46%"
+          description="Descripción larga limitada por una variable CSS pública definida en el host."
+        >
+          <TrendTag label="99%" />
+          <Footer footerText="Additional description" ctaLabel="Call To Action" ctaHref="#" />
+        </loom-metric-card>
+
+        <loom-stack className="description-width-part-demo" gap="sm">
+          <loom-metric-card
+            data-testid="metric-card-description-part"
+            title="Part override"
+            metric="46%"
+            description="Descripción larga limitada desde el selector público ::part(description)."
+          >
+            <TrendTag label="99%" />
+            <Footer footerText="Additional description" ctaLabel="Call To Action" ctaHref="#" />
+          </loom-metric-card>
+        </loom-stack>
+      </loom-inline>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const fluidCard = getMetricCard(canvasElement, 'metric-card-description-fluid');
+    const customPropertyCard = getMetricCard(canvasElement, 'metric-card-description-custom-property');
+    const partCard = getMetricCard(canvasElement, 'metric-card-description-part');
+
+    const fluidDescription = getMetricCardDescription(fluidCard);
+    const customPropertyDescription = getMetricCardDescription(customPropertyCard);
+    const partDescription = getMetricCardDescription(partCard);
+
+    await expect(getComputedStyle(fluidDescription).maxWidth).toBe('none');
+    await expect(fluidDescription.getBoundingClientRect().width).toBeGreaterThan(132);
+    await expect(getComputedStyle(customPropertyDescription).maxWidth).toBe('112px');
+    await expect(customPropertyDescription.getBoundingClientRect().width).toBeLessThanOrEqual(112);
+    await expect(getComputedStyle(partDescription).maxWidth).toBe('144px');
+    await expect(partDescription.getBoundingClientRect().width).toBeLessThanOrEqual(144);
+  },
 };
 
 export const WebComponent: Story = {

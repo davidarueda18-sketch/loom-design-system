@@ -2,7 +2,7 @@ import { composeStories } from '@storybook/react';
 import { describe, expect, test } from 'vitest';
 import * as metricCardStories from './MetricCard.stories';
 
-const { Default, Recipes, CustomTitleSlot, WebComponent } = composeStories(metricCardStories);
+const { Default, Recipes, CustomTitleSlot, DescriptionWidth, WebComponent } = composeStories(metricCardStories);
 
 describe('Components/MetricCard stories', () => {
   test('Default', async () => {
@@ -17,6 +17,10 @@ describe('Components/MetricCard stories', () => {
 
   test('CustomTitleSlot', async () => {
     await CustomTitleSlot.run();
+  });
+
+  test('DescriptionWidth', async () => {
+    await DescriptionWidth.run();
   });
 
   test('WebComponent', async () => {

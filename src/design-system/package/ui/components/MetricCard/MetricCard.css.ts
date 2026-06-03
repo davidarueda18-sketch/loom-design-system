@@ -73,6 +73,8 @@ export const body = style({
   display: 'flex',
   flexDirection: 'column',
   flex: '1 1 auto',
+  width: '100%',
+  minWidth: 0,
   minHeight: '62px',
   justifyContent: 'center',
 });
@@ -82,6 +84,8 @@ export const structuredBody = style({
   gridTemplateColumns: 'auto minmax(0, 1fr)',
   alignItems: 'center',
   columnGap: spacingVars.smMd,
+  width: '100%',
+  minWidth: 0,
   minHeight: '64px',
   selectors: {
     '&[hidden]': {
@@ -106,7 +110,9 @@ export const metric = style({
 
 export const description = style({
   margin: 0,
-  maxWidth: '132px',
+  width: '100%',
+  minWidth: 0,
+  maxWidth: 'var(--loom-metric-card-description-max-width, none)',
   fontSize: typographyVars.caption.fontSize,
   fontWeight: typographyVars.caption.fontWeight,
   lineHeight: typographyVars.caption.lineHeight,

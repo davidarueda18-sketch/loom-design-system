@@ -125,6 +125,7 @@ export const files = style({
   display: 'flex',
   flexDirection: 'column',
   gap: spacingVars.sm,
+  textAlign: 'start',
   selectors: {
     '&[hidden]': {
       display: 'none',
