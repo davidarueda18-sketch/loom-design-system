@@ -26,6 +26,7 @@ interface FileDropzoneStoryArgs {
   label: string;
   description: string;
   multiple: boolean;
+  autoComplete: boolean;
   accept: string;
   maxSize: number;
   maxFiles: number;
@@ -96,6 +97,7 @@ const meta = {
     label: 'Descripción o archivo',
     description: 'Descripción de formato o de valor',
     multiple: false,
+    autoComplete: false,
     accept: '',
     maxSize: 0,
     maxFiles: 0,
@@ -105,6 +107,10 @@ const meta = {
     label: { control: 'text', description: 'Texto principal dentro del dropzone.' },
     description: { control: 'text', description: 'Texto secundario (formato / tamaño esperado).' },
     multiple: { control: 'boolean', description: 'Permite cargar varios archivos a la vez.' },
+    autoComplete: {
+      control: 'boolean',
+      description: 'Marca los archivos seleccionados como completos inmediatamente (modo picker).',
+    },
     accept: { control: 'text', description: 'Filtro nativo `accept` (CSV de MIME / extensiones).' },
     maxSize: {
       control: { type: 'number', min: 0, step: 1024 },
@@ -132,6 +138,17 @@ controla el progreso vía métodos imperativos (\`updateProgress\`, \`completeFi
   multiple
   accept="image/*,.pdf"
   max-size="5242880"
+></loom-file-dropzone>
+\`\`\`
+
+Para usarlo como picker puro, añade \`auto-complete\`; los items emitidos por
+\`loom-files-selected\` salen con \`state: 'complete'\` y \`progress: 100\`.
+
+\`\`\`html
+<loom-file-dropzone
+  label="Selecciona un archivo"
+  description="El procesamiento ocurre en un paso posterior"
+  auto-complete
 ></loom-file-dropzone>
 \`\`\`
 
@@ -175,7 +192,7 @@ export const Default: Story = {
       },
     },
   },
-  render: ({ label, description, multiple, accept, maxSize, maxFiles, disabled }) => (
+  render: ({ label, description, multiple, autoComplete, accept, maxSize, maxFiles, disabled }) => (
     <>
       <FileDropzoneStoryStyles />
       <loom-box className="file-dropzone-frame">
@@ -183,6 +200,7 @@ export const Default: Story = {
           label={label}
           description={description}
           multiple={multiple || undefined}
+          auto-complete={autoComplete || undefined}
           accept={accept || undefined}
           max-size={maxSize > 0 ? maxSize : undefined}
           max-files={maxFiles > 0 ? maxFiles : undefined}
@@ -191,6 +209,50 @@ export const Default: Story = {
       </loom-box>
     </>
   ),
+};
+
+export const PickerAutoComplete: Story = {
+  name: 'Picker (auto-complete)',
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Modo selector puro. `auto-complete` crea los items como `complete` con `progress: 100`, sin llamar a `completeFile()` tras `loom-files-selected`.',
+      },
+    },
+  },
+  render: () => {
+    const ref = useRef<HTMLElementTagNameMap['loom-file-dropzone'] | null>(null);
+    useEffect(() => {
+      const host = ref.current;
+      if (!host) return;
+      const file = createSyntheticFile('contrato-firmado.pdf', 443 * 1024);
+      injectFile(host, file);
+    }, []);
+    return (
+      <>
+        <FileDropzoneStoryStyles />
+        <loom-box className="file-dropzone-frame">
+          <loom-file-dropzone
+            ref={ref}
+            data-testid="dropzone-picker-auto-complete"
+            label="Selecciona un archivo"
+            description="El procesamiento ocurre en el siguiente paso"
+            auto-complete
+          />
+        </loom-box>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const host = canvas.getByTestId(
+      'dropzone-picker-auto-complete',
+    ) as HTMLElementTagNameMap['loom-file-dropzone'];
+    await expect(host).toBeInTheDocument();
+    await expect(host.files[0]).toMatchObject({ state: 'complete', progress: 100 });
+  },
 };
 
 export const Uploading: Story = {

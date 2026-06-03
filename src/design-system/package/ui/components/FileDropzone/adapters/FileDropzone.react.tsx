@@ -4,6 +4,7 @@ import type { FileDropzoneProps } from '../FileDropzone.types.ts';
 
 export function FileDropzone({
   multiple,
+  autoComplete,
   accept,
   maxSize,
   maxFiles,
@@ -18,6 +19,7 @@ export function FileDropzone({
   return (
     <FileDropzoneElement
       multiple={multiple || undefined}
+      auto-complete={autoComplete || undefined}
       accept={accept}
       max-size={maxSize && maxSize > 0 ? maxSize : undefined}
       max-files={maxFiles && maxFiles > 0 ? maxFiles : undefined}

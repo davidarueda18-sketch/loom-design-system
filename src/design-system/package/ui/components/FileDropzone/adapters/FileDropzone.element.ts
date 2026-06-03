@@ -94,6 +94,7 @@ function matchesAccept(file: File, accept: string): boolean {
 class LoomFileDropzone extends HTMLElement {
   static observedAttributes = [
     'multiple',
+    'auto-complete',
     'accept',
     'max-size',
     'max-files',
@@ -110,6 +111,13 @@ class LoomFileDropzone extends HTMLElement {
   }
   set multiple(value: boolean) {
     this.toggleAttribute('multiple', value);
+  }
+
+  get autoComplete(): boolean {
+    return this.hasAttribute('auto-complete');
+  }
+  set autoComplete(value: boolean) {
+    this.toggleAttribute('auto-complete', value);
   }
 
   get accept(): string {
@@ -403,6 +411,9 @@ class LoomFileDropzone extends HTMLElement {
       ? Math.max(0, cap - this._items.length)
       : Number.POSITIVE_INFINITY;
     let acceptedCount = 0;
+    const initial: Pick<FileDropzoneItem, 'state' | 'progress'> = this.autoComplete
+      ? { state: 'complete', progress: 100 }
+      : { state: 'uploading', progress: 0 };
 
     for (const file of incoming) {
       if (this.maxSize > 0 && file.size > this.maxSize) {
@@ -432,8 +443,7 @@ class LoomFileDropzone extends HTMLElement {
       accepted.push({
         id: generateId(),
         file,
-        state: 'uploading',
-        progress: 0,
+        ...initial,
       });
       acceptedCount += 1;
     }

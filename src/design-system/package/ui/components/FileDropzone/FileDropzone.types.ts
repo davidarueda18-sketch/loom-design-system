@@ -60,6 +60,8 @@ export interface FileRemoveEventDetail {
 export interface FileDropzoneOwnProps {
   /** Allow selection / drop of multiple files. */
   multiple?: boolean;
+  /** Mark newly selected files as complete immediately for picker-only flows. */
+  autoComplete?: boolean;
   /** Comma-separated MIME types and/or file extensions, e.g. `"image/*,.pdf"`. */
   accept?: string;
   /** Max file size in bytes. `0` (default) disables the check. */

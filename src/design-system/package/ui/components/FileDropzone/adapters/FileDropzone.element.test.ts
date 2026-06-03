@@ -13,6 +13,15 @@ function toFileList(files: File[]): FileList {
   return dt.files;
 }
 
+function selectFiles(dropzone: HTMLElementTagNameMap['loom-file-dropzone'], files: File[]): void {
+  const input = dropzone.shadowRoot?.querySelector('[part="file-input"]') as HTMLInputElement;
+  Object.defineProperty(input, 'files', {
+    configurable: true,
+    value: toFileList(files),
+  });
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
 describe('LoomFileDropzone', () => {
   test('renders dropzone button semantics and fallback aria label', async () => {
     const dropzone = document.createElement('loom-file-dropzone');
@@ -38,16 +47,10 @@ describe('LoomFileDropzone', () => {
       selected.push((event as CustomEvent<{ items: Array<{ id: string }> }>).detail);
     });
 
-    const input = dropzone.shadowRoot?.querySelector('[part="file-input"]') as HTMLInputElement;
     const fileA = new File(['hello'], 'hello.txt', { type: 'text/plain' });
     const fileB = new File(['world'], 'world.txt', { type: 'text/plain' });
 
-    Object.defineProperty(input, 'files', {
-      configurable: true,
-      value: toFileList([fileA, fileB]),
-    });
-
-    input.dispatchEvent(new Event('change', { bubbles: true }));
+    selectFiles(dropzone, [fileA, fileB]);
     await waitForFrame();
 
     const filesList = dropzone.shadowRoot?.querySelector('[part="files"]') as HTMLUListElement;
@@ -55,6 +58,60 @@ describe('LoomFileDropzone', () => {
     expect(filesList.querySelectorAll('[part="file"]').length).toBe(2);
     expect(selected).toHaveLength(1);
     expect(selected[0]?.items.length).toBe(2);
+    expect(dropzone.files[0]?.state).toBe('uploading');
+    expect(dropzone.files[0]?.progress).toBe(0);
+    expect(selected[0]?.items[0]).toMatchObject({ state: 'uploading', progress: 0 });
+  });
+
+  test('auto-complete ingests accepted files as complete and renders complete state', async () => {
+    const dropzone = document.createElement('loom-file-dropzone');
+    dropzone.setAttribute('auto-complete', '');
+    document.body.appendChild(dropzone);
+    await waitForFrame();
+
+    const selected: Array<{ items: Array<{ state: string; progress: number }> }> = [];
+    dropzone.addEventListener('loom-files-selected', (event) => {
+      selected.push((event as CustomEvent<{ items: Array<{ state: string; progress: number }> }>).detail);
+    });
+
+    const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+
+    selectFiles(dropzone, [file]);
+    await waitForFrame();
+
+    expect(dropzone.autoComplete).toBe(true);
+    expect(dropzone.files[0]).toMatchObject({ state: 'complete', progress: 100 });
+    expect(selected[0]?.items[0]).toMatchObject({ state: 'complete', progress: 100 });
+
+    const row = dropzone.shadowRoot?.querySelector('[part="file"]') as HTMLLIElement;
+    const progress = dropzone.shadowRoot?.querySelector('[part="file-progress"]') as HTMLElement;
+    const meta = row.querySelector('[class*="fileMetaPrimary"]');
+    expect(row.dataset.state).toBe('complete');
+    expect(progress.getAttribute('value')).toBe('100');
+    expect(progress.getAttribute('color')).toBe('feedbackSuccess');
+    expect(meta?.textContent).toBe('100%');
+  });
+
+  test('defaults accepted files to uploading state without auto-complete', async () => {
+    const dropzone = document.createElement('loom-file-dropzone');
+    document.body.appendChild(dropzone);
+    await waitForFrame();
+
+    const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+
+    selectFiles(dropzone, [file]);
+    await waitForFrame();
+
+    expect(dropzone.autoComplete).toBe(false);
+    expect(dropzone.files[0]).toMatchObject({ state: 'uploading', progress: 0 });
+
+    const row = dropzone.shadowRoot?.querySelector('[part="file"]') as HTMLLIElement;
+    const progress = dropzone.shadowRoot?.querySelector('[part="file-progress"]') as HTMLElement;
+    const meta = row.querySelector('[class*="fileMetaPrimary"]');
+    expect(row.dataset.state).toBe('uploading');
+    expect(progress.getAttribute('value')).toBe('0');
+    expect(progress.getAttribute('color')).toBe('brandAccent');
+    expect(meta?.textContent).toBe('0%');
   });
 
   test('rejects files by type and size', async () => {
@@ -69,19 +126,67 @@ describe('LoomFileDropzone', () => {
       rejected.push((event as CustomEvent<{ rejections: Array<{ reason: string }> }>).detail);
     });
 
-    const input = dropzone.shadowRoot?.querySelector('[part="file-input"]') as HTMLInputElement;
     const txt = new File(['abcde'], 'sample.txt', { type: 'text/plain' });
 
-    Object.defineProperty(input, 'files', {
-      configurable: true,
-      value: toFileList([txt]),
-    });
-
-    input.dispatchEvent(new Event('change', { bubbles: true }));
+    selectFiles(dropzone, [txt]);
     await waitForFrame();
 
     expect(rejected).toHaveLength(1);
     expect(rejected[0]?.rejections[0]?.reason).toBe('size');
+  });
+
+  test.each([false, true])('preserves size, type, and count rejections when autoComplete is %s', async (autoComplete) => {
+    const sizeDropzone = document.createElement('loom-file-dropzone');
+    sizeDropzone.autoComplete = autoComplete;
+    sizeDropzone.maxSize = 3;
+    document.body.appendChild(sizeDropzone);
+    await waitForFrame();
+
+    const sizeRejected: Array<{ rejections: Array<{ reason: string }> }> = [];
+    sizeDropzone.addEventListener('loom-files-rejected', (event) => {
+      sizeRejected.push((event as CustomEvent<{ rejections: Array<{ reason: string }> }>).detail);
+    });
+
+    selectFiles(sizeDropzone, [new File(['abcd'], 'large.txt', { type: 'text/plain' })]);
+    await waitForFrame();
+    expect(sizeRejected[0]?.rejections[0]?.reason).toBe('size');
+    expect(sizeDropzone.files).toHaveLength(0);
+
+    const typeDropzone = document.createElement('loom-file-dropzone');
+    typeDropzone.autoComplete = autoComplete;
+    typeDropzone.accept = '.pdf';
+    document.body.appendChild(typeDropzone);
+    await waitForFrame();
+
+    const typeRejected: Array<{ rejections: Array<{ reason: string }> }> = [];
+    typeDropzone.addEventListener('loom-files-rejected', (event) => {
+      typeRejected.push((event as CustomEvent<{ rejections: Array<{ reason: string }> }>).detail);
+    });
+
+    selectFiles(typeDropzone, [new File(['hello'], 'sample.txt', { type: 'text/plain' })]);
+    await waitForFrame();
+    expect(typeRejected[0]?.rejections[0]?.reason).toBe('type');
+    expect(typeDropzone.files).toHaveLength(0);
+
+    const countDropzone = document.createElement('loom-file-dropzone');
+    countDropzone.autoComplete = autoComplete;
+    countDropzone.multiple = true;
+    countDropzone.maxFiles = 1;
+    document.body.appendChild(countDropzone);
+    await waitForFrame();
+
+    const countRejected: Array<{ rejections: Array<{ reason: string }> }> = [];
+    countDropzone.addEventListener('loom-files-rejected', (event) => {
+      countRejected.push((event as CustomEvent<{ rejections: Array<{ reason: string }> }>).detail);
+    });
+
+    selectFiles(countDropzone, [
+      new File(['a'], 'first.txt', { type: 'text/plain' }),
+      new File(['b'], 'second.txt', { type: 'text/plain' }),
+    ]);
+    await waitForFrame();
+    expect(countRejected[0]?.rejections[0]?.reason).toBe('count');
+    expect(countDropzone.files).toHaveLength(1);
   });
 
   test('supports imperative progress lifecycle', async () => {
@@ -89,15 +194,9 @@ describe('LoomFileDropzone', () => {
     document.body.appendChild(dropzone);
     await waitForFrame();
 
-    const input = dropzone.shadowRoot?.querySelector('[part="file-input"]') as HTMLInputElement;
     const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
 
-    Object.defineProperty(input, 'files', {
-      configurable: true,
-      value: toFileList([file]),
-    });
-
-    input.dispatchEvent(new Event('change', { bubbles: true }));
+    selectFiles(dropzone, [file]);
     await waitForFrame();
 
     const firstItem = dropzone.files[0];
