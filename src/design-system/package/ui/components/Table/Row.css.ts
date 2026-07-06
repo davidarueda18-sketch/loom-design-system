@@ -90,3 +90,40 @@ export const autoStack = style({
     'loom-table (max-width: 640px)': cardStyle,
   },
 });
+
+/** Tree accent border — color driven by CSS custom property set inline. */
+export const treeAccent = style({
+  borderInlineStart: `${tableVars.treeAccentWidth} solid var(--loom-row-accent-color, transparent)`,
+});
+
+/** Pairs card layout (2-column grid for cells). */
+const pairsCardStyle = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gridColumn: 'auto',
+  border: `1px solid ${tableVars.borderColor}`,
+  borderRadius: radiusVars.md,
+  padding: spacingVars.sm,
+  marginBottom: spacingVars.sm,
+  backgroundColor: tableVars.rowBg,
+} as const;
+
+export const forcedPairs = style(pairsCardStyle);
+
+export const autoPairs = style({
+  '@container': {
+    'loom-table (max-width: 640px)': pairsCardStyle,
+  },
+});
+
+/** Zebra alternate background (applied by the table on odd data rows). */
+export const altRow = style({
+  backgroundColor: tableVars.rowBgAlt,
+});
+
+/** Hover on non-interactive rows (when table has `hoverable`). */
+export const hoverable = style({
+  selectors: {
+    '&:hover': { backgroundColor: tableVars.rowBgHover },
+  },
+});

@@ -17,6 +17,9 @@ export function TableRow({
   expanded,
   interactive,
   disabled,
+  level,
+  accent,
+  mobileLayout,
   onRowSelect,
   onRowToggle,
   onRowClick,
@@ -55,6 +58,9 @@ export function TableRow({
       {...(expanded ? { expanded: '' } : {})}
       {...(interactive ? { interactive: '' } : {})}
       {...(disabled ? { disabled: '' } : {})}
+      {...(level !== undefined && level > 0 ? { level: String(level) } : {})}
+      accent={accent}
+      mobile-layout={mobileLayout}
       className={className}
       {...(props as object)}
     >

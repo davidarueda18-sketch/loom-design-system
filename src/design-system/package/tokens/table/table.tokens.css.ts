@@ -8,6 +8,7 @@ export const tableVars = createThemeContract({
   surface:              null,
   headerBg:             null,
   rowBg:                null,
+  rowBgAlt:             null,
   rowBgHover:           null,
   rowBgSelected:        null,
   rowBgDisabled:        null,
@@ -25,6 +26,12 @@ export const tableVars = createThemeContract({
   stickyShadow:         null,
   expandDuration:       null,
   expandEasing:         null,
+  // Tree / accordion
+  treeIndentStep:       null,
+  treeAccentInfo:       null,
+  treeAccentWarning:    null,
+  treeAccentNeutral:    null,
+  treeAccentWidth:      null,
 });
 
 // Single :root theme: color values reference `colorVars`, which already swap
@@ -33,6 +40,7 @@ createGlobalTheme(':root', tableVars, {
   surface:              colorVars.surfaceRaised,
   headerBg:             colorVars.surfaceSubtle,
   rowBg:                colorVars.surfaceRaised,
+  rowBgAlt:             colorVars.surfaceSubtle,
   rowBgHover:           colorVars.surfaceSubtle,
   rowBgSelected:        colorVars.brandAccentSubtle,
   rowBgDisabled:        colorVars.surfaceSubtle,
@@ -50,4 +58,10 @@ createGlobalTheme(':root', tableVars, {
   stickyShadow:         '2px 0 4px rgba(0, 0, 0, 0.12)',
   expandDuration:       motionVars.durationBase,
   expandEasing:         motionVars.easingEaseInOut,
+  // Tree / accordion
+  treeIndentStep:       spacingVars.lg,
+  treeAccentInfo:       colorVars.feedbackInfo,
+  treeAccentWarning:    colorVars.feedbackWarning,
+  treeAccentNeutral:    colorVars.borderDefault,
+  treeAccentWidth:      '4px',
 });

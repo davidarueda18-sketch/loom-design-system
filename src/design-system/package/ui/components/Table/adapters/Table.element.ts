@@ -1,4 +1,5 @@
 import * as styles from '../Table.css.ts';
+import * as rowStyles from '../Row.css.ts';
 import { collectAdoptedStyleSheets } from './adopted-styles.ts';
 import type { LoomTableRow } from './TableRow.element.ts';
 import type {
@@ -18,10 +19,13 @@ class LoomTable extends HTMLElement {
     'selectable',
     'density',
     'layout',
+    'mobile-layout',
     'expandable',
     'sticky-header',
     'sticky-first-column',
     'loading',
+    'striped',
+    'hoverable',
   ] as const;
 
   get columns(): string {
@@ -70,6 +74,27 @@ class LoomTable extends HTMLElement {
   }
   set loading(value: boolean) {
     this.toggleAttribute('loading', value);
+  }
+
+  get striped(): boolean {
+    return this.hasAttribute('striped');
+  }
+  set striped(value: boolean) {
+    this.toggleAttribute('striped', value);
+  }
+
+  get hoverable(): boolean {
+    return this.hasAttribute('hoverable');
+  }
+  set hoverable(value: boolean) {
+    this.toggleAttribute('hoverable', value);
+  }
+
+  get mobileLayout(): string {
+    return this.getAttribute('mobile-layout') ?? 'stacked';
+  }
+  set mobileLayout(value: string) {
+    this.setAttribute('mobile-layout', value);
   }
 
   private _scrollEl: HTMLDivElement | null = null;
@@ -217,6 +242,9 @@ class LoomTable extends HTMLElement {
     // Let cells/rows re-resolve density & layout from this ancestor.
     this._refreshChildren();
 
+    // Striped: alternate background on root-level data rows (level=0 or no level attr).
+    this._applyStriped();
+
     this._updateSelectionState(false);
     this._updateRoving();
   }
@@ -229,6 +257,19 @@ class LoomTable extends HTMLElement {
           (cell as unknown as { requestSync: () => void }).requestSync();
         }
       });
+  }
+
+  private _applyStriped(): void {
+    const dataRows = this._dataRows();
+    const rootRows = dataRows.filter((r) => !r.hasAttribute('level') || r.getAttribute('level') === '0');
+    if (this.striped) {
+      rootRows.forEach((row, i) => row.classList.toggle(rowStyles.altRow, i % 2 === 1));
+      // Remove altRow from child (level > 0) rows to keep them unaffected.
+      dataRows.filter((r) => r.hasAttribute('level') && r.getAttribute('level') !== '0')
+        .forEach((r) => r.classList.remove(rowStyles.altRow));
+    } else {
+      dataRows.forEach((row) => row.classList.remove(rowStyles.altRow));
+    }
   }
 
   private _updateRoving(): void {

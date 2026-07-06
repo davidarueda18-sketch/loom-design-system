@@ -181,15 +181,28 @@ declare module 'react' {
         description?: string;
         disabled?: boolean;
       };
+      'loom-avatar': LoomElementProps<HTMLElementTagNameMap['loom-avatar']> & {
+        name?: string;
+        email?: string;
+        'photo-url'?: string;
+        size?: string;
+      };
+      'loom-avatar-group': LoomElementProps<HTMLElementTagNameMap['loom-avatar-group']> & {
+        max?: number | string;
+        size?: string;
+      };
       'loom-table': LoomElementProps<HTMLElementTagNameMap['loom-table']> & {
         columns?: string;
         selectable?: string;
         density?: string;
         layout?: string;
+        'mobile-layout'?: string;
         expandable?: boolean | '';
         'sticky-header'?: boolean | '';
         'sticky-first-column'?: boolean | '';
         loading?: boolean | '';
+        striped?: boolean | '';
+        hoverable?: boolean | '';
       };
       'loom-table-row': LoomElementProps<HTMLElementTagNameMap['loom-table-row']> & {
         'row-id'?: string;
@@ -199,6 +212,9 @@ declare module 'react' {
         expanded?: boolean | '';
         interactive?: boolean | '';
         disabled?: boolean | '';
+        level?: number | string;
+        accent?: string;
+        'mobile-layout'?: string;
       };
       'loom-table-cell': LoomElementProps<HTMLElementTagNameMap['loom-table-cell']> & {
         align?: string;
@@ -207,6 +223,23 @@ declare module 'react' {
         'col-span'?: number | string;
         'mobile-span'?: string;
         'mobile-label'?: string;
+        'mobile-order'?: number | string;
+        'mobile-align'?: string;
+        variant?: string;
+        label?: string;
+        description?: string;
+        'show-description'?: string;
+        'badge-label'?: string;
+        'badge-state'?: string;
+        'cell-key'?: string;
+        'description-key'?: string;
+        'show-progress'?: boolean | '';
+        'progress-value'?: number | string;
+        'start-date'?: string;
+        'target-date'?: string;
+        'start-label'?: string;
+        'target-label'?: string;
+        'leader-label'?: string;
       };
       'loom-table-header-cell': LoomElementProps<HTMLElementTagNameMap['loom-table-header-cell']> & {
         align?: string;

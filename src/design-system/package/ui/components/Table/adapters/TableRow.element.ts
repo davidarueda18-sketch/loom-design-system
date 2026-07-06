@@ -4,10 +4,20 @@ import type {
   TableRowClickEventDetail,
   TableRowSelectEventDetail,
   TableRowToggleEventDetail,
+  TableRowAccent,
+  TableMobileLayout,
 } from '../Table.types.ts';
 
 const INTERACTIVE_ZONE_SELECTOR =
   '[data-row-interactive-zone],loom-checkbox,loom-radio,button,a,loom-button,loom-icon-button,loom-link,loom-fab,input,select,textarea';
+
+const ACCENTS: readonly TableRowAccent[] = ['none', 'info', 'warning', 'neutral'];
+const ACCENT_COLORS: Record<TableRowAccent, string> = {
+  none:    'transparent',
+  info:    'var(--loom-table-tree-accent-info)',
+  warning: 'var(--loom-table-tree-accent-warning)',
+  neutral: 'var(--loom-table-tree-accent-neutral)',
+};
 
 let _expansionIdCounter = 0;
 
@@ -20,6 +30,9 @@ class LoomTableRow extends HTMLElement {
     'expanded',
     'interactive',
     'disabled',
+    'level',
+    'accent',
+    'mobile-layout',
   ] as const;
 
   get rowId(): string {
@@ -71,6 +84,27 @@ class LoomTableRow extends HTMLElement {
   set disabled(value: boolean) {
     this.toggleAttribute('disabled', value);
   }
+
+  get level(): number {
+    const n = Number(this.getAttribute('level'));
+    return Number.isFinite(n) && n >= 0 ? n : 0;
+  }
+  set level(value: number) {
+    if (value > 0) this.setAttribute('level', String(value));
+    else this.removeAttribute('level');
+  }
+
+  get accent(): TableRowAccent {
+    const v = this.getAttribute('accent');
+    return v && (ACCENTS as readonly string[]).includes(v) ? (v as TableRowAccent) : 'none';
+  }
+  set accent(value: TableRowAccent) { this.setAttribute('accent', value); }
+
+  get mobileLayout(): TableMobileLayout {
+    const v = this.getAttribute('mobile-layout');
+    return v === 'pairs' ? 'pairs' : 'stacked';
+  }
+  set mobileLayout(value: TableMobileLayout) { this.setAttribute('mobile-layout', value); }
 
   private _selectionWrapEl: HTMLDivElement | null = null;
   private _checkboxEl: HTMLElement | null = null;
@@ -165,6 +199,14 @@ class LoomTableRow extends HTMLElement {
     return this.closest('loom-table')?.getAttribute('layout') ?? 'auto';
   }
 
+  private _mobileLayout(): string {
+    return (
+      this.getAttribute('mobile-layout') ??
+      this.closest('loom-table')?.getAttribute('mobile-layout') ??
+      'stacked'
+    );
+  }
+
   /** Adopts the nested `loom-table-expansion`, wiring ids and aria for the toggle. */
   private _resolveExpansion(): HTMLElement | null {
     const expansion = this.querySelector(':scope > loom-table-expansion');
@@ -209,8 +251,38 @@ class LoomTableRow extends HTMLElement {
 
     // Responsive: forced stacked vs auto (container-query) card layout.
     const layout = this._layout();
-    this.classList.toggle(styles.forcedStack, layout === 'stacked' && !this.header);
-    this.classList.toggle(styles.autoStack, layout === 'auto' && !this.header);
+    const mobileLayout = this._mobileLayout();
+    const isPairs = mobileLayout === 'pairs';
+
+    this.classList.toggle(styles.forcedStack, layout === 'stacked' && !this.header && !isPairs);
+    this.classList.toggle(styles.forcedPairs, layout === 'stacked' && !this.header && isPairs);
+    this.classList.toggle(styles.autoStack, layout === 'auto' && !this.header && !isPairs);
+    this.classList.toggle(styles.autoPairs, layout === 'auto' && !this.header && isPairs);
+
+    // Tree: level indentation + accent border.
+    if (!this.header) {
+      const lvl = this.level;
+      // Expose indent as a CSS custom property so cells can opt-in via
+      // style="padding-inline-start: var(--loom-tree-row-indent, 0)".
+      // Note: padding-inline-start on a subgrid row does NOT indent its cells
+      // (cells follow parent grid tracks), so we use a cascading CSS var instead.
+      if (lvl > 0) {
+        this.style.setProperty('--loom-tree-row-indent', `calc(${lvl} * var(--loom-table-tree-indent-step, 24px))`);
+      } else {
+        this.style.removeProperty('--loom-tree-row-indent');
+      }
+      const accent = this.accent;
+      this.classList.toggle(styles.treeAccent, accent !== 'none');
+      if (accent !== 'none') {
+        this.style.setProperty('--loom-row-accent-color', ACCENT_COLORS[accent]);
+      } else {
+        this.style.removeProperty('--loom-row-accent-color');
+      }
+
+      // hoverable class — delegated from table `hoverable` attribute
+      const isHoverable = this.closest('loom-table')?.hasAttribute('hoverable') ?? false;
+      this.classList.toggle(styles.hoverable, isHoverable && !this.interactive);
+    }
 
     // Roving tabindex baseline (Table manages focus movement).
     if (this.interactive && !this.disabled) {

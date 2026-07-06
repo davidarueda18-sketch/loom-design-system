@@ -22,6 +22,15 @@ export type TableCellMobileSpan = (typeof TABLE_CELL_MOBILE_SPANS)[number];
 export const TABLE_SORT_DIRECTIONS = ['none', 'asc', 'desc'] as const;
 export type TableSortDirection = (typeof TABLE_SORT_DIRECTIONS)[number];
 
+export const TABLE_CELL_VARIANTS = ['content', 'default', 'key-value', 'state', 'progress', 'team'] as const;
+export type TableCellVariant = (typeof TABLE_CELL_VARIANTS)[number];
+
+export const TABLE_MOBILE_LAYOUTS = ['stacked', 'pairs'] as const;
+export type TableMobileLayout = (typeof TABLE_MOBILE_LAYOUTS)[number];
+
+export const TABLE_ROW_ACCENTS = ['none', 'info', 'warning', 'neutral'] as const;
+export type TableRowAccent = (typeof TABLE_ROW_ACCENTS)[number];
+
 /* ------------------------------------------------------------------ *
  * Event detail shapes
  * ------------------------------------------------------------------ */
@@ -60,10 +69,13 @@ export interface TableOwnProps {
   selectable?: TableSelectableMode;
   density?: TableDensity;
   layout?: TableLayout;
+  mobileLayout?: TableMobileLayout;
   expandable?: boolean;
   stickyHeader?: boolean;
   stickyFirstColumn?: boolean;
   loading?: boolean;
+  striped?: boolean;
+  hoverable?: boolean;
   onSelectionChange?: (detail: TableSelectionChangeEventDetail) => void;
   onRowToggle?: (detail: TableRowToggleEventDetail) => void;
   onRowClick?: (detail: TableRowClickEventDetail) => void;
@@ -81,6 +93,9 @@ export interface TableRowOwnProps {
   expanded?: boolean;
   interactive?: boolean;
   disabled?: boolean;
+  level?: number;
+  accent?: TableRowAccent;
+  mobileLayout?: TableMobileLayout;
   onRowSelect?: (detail: TableRowSelectEventDetail) => void;
   onRowToggle?: (detail: TableRowToggleEventDetail) => void;
   onRowClick?: (detail: TableRowClickEventDetail) => void;
@@ -96,6 +111,24 @@ export interface TableCellOwnProps {
   colSpan?: number;
   mobileSpan?: TableCellMobileSpan;
   mobileLabel?: string;
+  mobileOrder?: number;
+  mobileAlign?: TableCellAlign;
+  // typed variant
+  variant?: TableCellVariant;
+  label?: string;
+  description?: string;
+  showDescription?: boolean;
+  badgeLabel?: string;
+  badgeState?: string;
+  cellKey?: string;
+  descriptionKey?: string;
+  showProgress?: boolean;
+  progressValue?: number;
+  startDate?: string;
+  targetDate?: string;
+  startLabel?: string;
+  targetLabel?: string;
+  leaderLabel?: string;
   children?: ReactNode;
 }
 export type TableCellProps = TableCellOwnProps &

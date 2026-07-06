@@ -15,10 +15,13 @@ export function Table({
   selectable,
   density,
   layout,
+  mobileLayout,
   expandable,
   stickyHeader,
   stickyFirstColumn,
   loading,
+  striped,
+  hoverable,
   onSelectionChange,
   onRowToggle,
   onRowClick,
@@ -59,10 +62,13 @@ export function Table({
       selectable={selectable}
       density={density}
       layout={layout}
+      mobile-layout={mobileLayout}
       {...(expandable ? { expandable: '' } : {})}
       {...(stickyHeader ? { 'sticky-header': '' } : {})}
       {...(stickyFirstColumn ? { 'sticky-first-column': '' } : {})}
       {...(loading ? { loading: '' } : {})}
+      {...(striped ? { striped: '' } : {})}
+      {...(hoverable ? { hoverable: '' } : {})}
       className={className}
       {...(props as object)}
     >

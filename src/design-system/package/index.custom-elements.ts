@@ -25,6 +25,8 @@ import type { LoomTabGroupElement } from './ui/components/TabGroup/TabGroup.type
 import type { LoomModal } from './ui/components/Modal/adapters/Modal.element.ts';
 import type { LoomMetricCard } from './ui/components/MetricCard/adapters/MetricCard.element.ts';
 import type { LoomFileDropzone } from './ui/components/FileDropzone/adapters/FileDropzone.element.ts';
+import type { LoomAvatar } from './ui/primitives/Avatar/adapters/Avatar.element.ts';
+import type { LoomAvatarGroup } from './ui/primitives/Avatar/adapters/AvatarGroup.element.ts';
 import type { LoomTable } from './ui/components/Table/adapters/Table.element.ts';
 import type { LoomTableRow } from './ui/components/Table/adapters/TableRow.element.ts';
 import type { LoomTableCell } from './ui/components/Table/adapters/TableCell.element.ts';
@@ -66,6 +68,8 @@ declare global {
     'loom-modal':         LoomModal;
     'loom-metric-card':   LoomMetricCard;
     'loom-file-dropzone': LoomFileDropzone;
+    'loom-avatar':       LoomAvatar;
+    'loom-avatar-group': LoomAvatarGroup;
     'loom-table':              LoomTable;
     'loom-table-row':          LoomTableRow;
     'loom-table-cell':         LoomTableCell;

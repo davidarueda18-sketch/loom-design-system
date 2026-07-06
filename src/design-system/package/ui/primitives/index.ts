@@ -45,3 +45,6 @@ export type { ToggleProps, ToggleState, ToggleChangeEventDetail } from './Toggle
 
 export { TabItem, LoomTabItem, TAB_ITEM_STATES } from './TabItem/index.ts';
 export type { TabItemProps, TabItemState, TabItemSelectEventDetail, LoomTabItemElement } from './TabItem/index.ts';
+
+export { Avatar, AvatarGroup, getAvatarColor, getInitials, AVATAR_SIZES } from './Avatar/index.ts';
+export type { AvatarProps, AvatarGroupProps, AvatarSize } from './Avatar/index.ts';
