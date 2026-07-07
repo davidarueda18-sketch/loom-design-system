@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
-export const AVATAR_SIZES = ['sm', 'md', 'lg'] as const;
+export const AVATAR_SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 export type AvatarSize = (typeof AVATAR_SIZES)[number];
 
 export interface AvatarOwnProps {

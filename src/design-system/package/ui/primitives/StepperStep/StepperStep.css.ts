@@ -20,8 +20,6 @@ export const root = style({
 });
 
 export const circle = style({
-  width: '40px',
-  height: '40px',
   borderRadius: radiusVars.full,
   border: '1px solid',
   display: 'flex',
@@ -29,6 +27,12 @@ export const circle = style({
   justifyContent: 'center',
   flexShrink: 0,
   boxSizing: 'border-box',
+});
+
+export const circleSize = styleVariants({
+  sm: { width: '32px', height: '32px' },
+  md: { width: '40px', height: '40px' },
+  lg: { width: '48px', height: '48px' },
 });
 
 export const circleState = styleVariants({
@@ -47,11 +51,16 @@ export const circleState = styleVariants({
 });
 
 export const number = style({
-  fontSize: fontSizeVars.xl,
   textAlign: 'center',
   lineHeight: 'normal',
   fontStyle: 'normal',
   fontWeight: 400,
+});
+
+export const numberSize = styleVariants({
+  sm: { fontSize: fontSizeVars.lg },
+  md: { fontSize: fontSizeVars.xl },
+  lg: { fontSize: fontSizeVars.xl2 },
 });
 
 export const numberState = styleVariants({
@@ -62,17 +71,22 @@ export const numberState = styleVariants({
 
 export const label = style({
   display: 'inline-block',
-  fontSize: fontSizeVars.base,
   textAlign: 'center',
   minWidth: 'min-content',
   maxWidth: '96px',
-  lineHeight: '1.6',
+  lineHeight: '1.4',
   whiteSpace: 'normal',
   overflowWrap: 'normal',
   wordBreak: 'normal',
   hyphens: 'none',
   fontStyle: 'normal',
   fontWeight: 400,
+});
+
+export const labelSize = styleVariants({
+  sm: { fontSize: fontSizeVars.sm },
+  md: { fontSize: fontSizeVars.base },
+  lg: { fontSize: fontSizeVars.lg },
 });
 
 export const labelState = styleVariants({

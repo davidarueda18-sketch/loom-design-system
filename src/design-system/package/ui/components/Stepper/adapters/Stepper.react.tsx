@@ -2,7 +2,7 @@ import './Stepper.element.ts';
 import { useEffect, useRef, type ElementType } from 'react';
 import type { StepperProps, StepperChangeEventDetail } from '../Stepper.types.ts';
 
-export function Stepper({ steps, current = 0, onStepperChange, className, ...props }: StepperProps) {
+export function Stepper({ steps, current = 0, size = 'md', onStepperChange, className, ...props }: StepperProps) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export function Stepper({ steps, current = 0, onStepperChange, className, ...pro
       ref={ref}
       steps={JSON.stringify(steps)}
       current={String(current)}
+      size={size}
       className={className}
       {...(props as object)}
     />

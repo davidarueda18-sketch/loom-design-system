@@ -11,6 +11,7 @@ export function Checkbox({
   disabled = false,
   label,
   shape,
+  size,
   onChange,
   className,
   ...props
@@ -36,6 +37,7 @@ export function Checkbox({
       {...(disabled ? { disabled: '' } : {})}
       label={label}
       shape={shape}
+      size={size}
       className={className}
       {...(props as object)}
     />

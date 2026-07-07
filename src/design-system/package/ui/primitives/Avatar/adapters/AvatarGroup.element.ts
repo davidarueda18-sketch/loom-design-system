@@ -4,9 +4,9 @@ import { collectAdoptedStyleSheets } from './adopted-styles.ts';
 import type { AvatarSize } from '../Avatar.types.ts';
 import './Avatar.element.ts';
 
-const SIZES: readonly AvatarSize[] = ['sm', 'md', 'lg'];
-const SIZE_PX: Record<AvatarSize, string> = { sm: '24px', md: '32px', lg: '40px' };
-const FONT_SIZE: Record<AvatarSize, string> = { sm: '10px', md: '11px', lg: '12px' };
+const SIZES: readonly AvatarSize[] = ['xs', 'sm', 'md', 'lg'];
+const SIZE_PX: Record<AvatarSize, string> = { xs: '24px', sm: '28px', md: '32px', lg: '40px' };
+const FONT_SIZE: Record<AvatarSize, string> = { xs: '10px', sm: '10px', md: '11px', lg: '12px' };
 
 class LoomAvatarGroup extends HTMLElement {
   static observedAttributes = ['max', 'size'] as const;

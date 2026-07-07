@@ -12,12 +12,15 @@ import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 import type { ButtonVariant } from '../../../../../package/ui/primitives/Button/Button.types.ts';
+import { STEPPER_SIZES } from '../../../../../package/ui/components/Stepper/index.ts';
+import type { StepperSize } from '../../../../../package/ui/components/Stepper/index.ts';
 
 const DEFAULT_STEPS = ['Configuración', 'Revisión', 'Confirmación', 'Finalización'];
 
 interface StepperStoryArgs {
   steps: string;
   current: number;
+  size: StepperSize;
 }
 
 const meta = {
@@ -26,10 +29,12 @@ const meta = {
   args: {
     steps: JSON.stringify(DEFAULT_STEPS),
     current: 0,
+    size: 'md',
   },
   argTypes: {
     steps: { control: 'text', description: 'JSON string[] con los labels de cada paso' },
     current: { control: { type: 'number', min: 0, max: 3 }, description: 'Índice del paso activo (base 0)' },
+    size: { control: 'inline-radio', options: STEPPER_SIZES, description: 'Tamaño del círculo de cada paso: sm (32px), md (40px, default) o lg (48px).' },
   },
   parameters: {
     docs: {
@@ -37,6 +42,7 @@ const meta = {
         component: `
 Componente compuesto que renderiza N pasos con conectores horizontales entre ellos.
 El estado se controla completamente desde fuera mediante el atributo \`current\`.
+El atributo \`size\` se propaga a cada \`loom-stepper-step\` y ajusta el conector para mantenerlo centrado en el círculo.
 
 \`\`\`html
 <loom-stepper
@@ -153,9 +159,31 @@ function ControlledStepper() {
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: ({ steps, current }) => (
+  render: ({ steps, current, size }) => (
     <loom-box display="block" padding="lg">
-      <loom-stepper steps={steps} current={String(current)} />
+      <loom-stepper steps={steps} current={String(current)} size={size} />
+    </loom-box>
+  ),
+};
+
+export const Sizes: Story = {
+  name: 'Tamaños (size)',
+  parameters: {
+    docs: {
+      description: {
+        story: 'El atributo `size` se propaga a cada paso y reescala el conector para que siga alineado al centro del círculo: sm (32px), md (40px, por defecto), lg (48px).',
+      },
+    },
+  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <loom-stack gap="xl">
+        {STEPPER_SIZES.map((sz) => (
+          <Section key={sz} title={`size = ${sz}`}>
+            <loom-stepper steps={JSON.stringify(DEFAULT_STEPS)} current="1" size={sz} />
+          </Section>
+        ))}
+      </loom-stack>
     </loom-box>
   ),
 };

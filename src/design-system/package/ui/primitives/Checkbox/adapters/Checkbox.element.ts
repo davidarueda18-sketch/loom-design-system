@@ -1,5 +1,6 @@
 import * as styles from '../Checkbox.css.ts';
-import type { CheckboxState } from '../Checkbox.types.ts';
+import type { CheckboxSize, CheckboxState } from '../Checkbox.types.ts';
+import { CHECKBOX_SIZES } from '../Checkbox.types.ts';
 import { ICON_CHECK, ICON_DASH } from '../../../../icons/index.ts';
 
 // ─── VE stylesheet adoption ─────────────────────────────────────────────────
@@ -60,6 +61,7 @@ class LoomCheckbox extends HTMLElement {
     'name',
     'value',
     'shape',
+    'size',
     'aria-label',
     'aria-labelledby',
     'aria-describedby',
@@ -117,6 +119,14 @@ class LoomCheckbox extends HTMLElement {
   set shape(val: string | null) {
     if (val == null) this.removeAttribute('shape');
     else this.setAttribute('shape', val);
+  }
+
+  get size(): CheckboxSize {
+    const v = this.getAttribute('size');
+    return v && (CHECKBOX_SIZES as readonly string[]).includes(v) ? (v as CheckboxSize) : 'sm';
+  }
+  set size(val: CheckboxSize) {
+    this.setAttribute('size', val);
   }
 
   // ─── Event handlers ──────────────────────────────────────────────────────
@@ -229,7 +239,7 @@ class LoomCheckbox extends HTMLElement {
 
   // ─── Prev-state tracking ─────────────────────────────────────────────────
 
-  private _prev: Record<string, string | null> = { boxState: null, boxShape: null };
+  private _prev: Record<string, string | null> = { boxState: null, boxShape: null, boxSize: null, iconSize: null };
 
   // ─── Sync ─────────────────────────────────────────────────────────────────
 
@@ -250,6 +260,9 @@ class LoomCheckbox extends HTMLElement {
     this._apply(this._boxEl, 'boxState', state, styles.boxState as Record<string, string>);
 
     this._apply(this._boxEl, 'boxShape', this.shape, styles.boxShape as Record<string, string>);
+
+    this._apply(this._boxEl, 'boxSize', this.size, styles.boxSize as Record<string, string>);
+    this._apply(this._iconEl, 'iconSize', this.size, styles.iconSize as Record<string, string>);
 
     if (isDisabled) this._rootEl.classList.add(styles.rootDisabled);
     else this._rootEl.classList.remove(styles.rootDisabled);

@@ -2,8 +2,8 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
-import { StepperStep, STEPPER_STEP_STATES } from '../../../../../package/ui/primitives/StepperStep/index.ts';
-import type { StepperStepState } from '../../../../../package/ui/primitives/StepperStep/index.ts';
+import { StepperStep, STEPPER_STEP_STATES, STEPPER_STEP_SIZES } from '../../../../../package/ui/primitives/StepperStep/index.ts';
+import type { StepperStepState, StepperStepSize } from '../../../../../package/ui/primitives/StepperStep/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
@@ -16,6 +16,7 @@ interface StepperStepStoryArgs {
   step?: string;
   label?: string;
   state?: StepperStepState;
+  size?: StepperStepSize;
 }
 
 const meta = {
@@ -25,9 +26,11 @@ const meta = {
     step: '1',
     label: 'Descripción del paso',
     state: 'default',
+    size: 'md',
   },
   argTypes: {
     state: { control: 'select', options: STEPPER_STEP_STATES },
+    size:  { control: 'inline-radio', options: STEPPER_STEP_SIZES, description: 'Tamaño del círculo: sm (32px), md (40px, default) o lg (48px).' },
     step: { control: 'text' },
     label: { control: 'text' },
   },
@@ -37,6 +40,7 @@ const meta = {
         component: `
 Indicador de paso individual como Web Component. Muestra un círculo numerado con un label descriptivo.
 Soporta tres estados: \`default\` (gris), \`active\` (cyan con anillo), \`completed\` (cyan sólido con checkmark).
+Tres tamaños de círculo: \`sm\` (32px), \`md\` (40px, por defecto) y \`lg\` (48px).
 
 \`\`\`html
 <loom-stepper-step step="1" label="Configuración" state="active"></loom-stepper-step>
@@ -78,12 +82,13 @@ function Row({ children }: { children: React.ReactNode }) {
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: ({ step, label, state }) => (
+  render: ({ step, label, state, size }) => (
     <loom-box display="block" padding="lg">
       <loom-stepper-step
         step={step}
         label={label}
         state={state}
+        size={size}
       />
     </loom-box>
   ),
@@ -120,6 +125,26 @@ export const States: Story = {
   ),
 };
 
+export const Sizes: Story = {
+  name: 'Tamaños (size)',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Tres tamaños de círculo: sm (32px), md (40px, por defecto) y lg (48px). El número escala proporcionalmente.',
+      },
+    },
+  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <Row>
+        {STEPPER_STEP_SIZES.map((sz) => (
+          <StepperStep key={sz} step="1" label={sz} state="active" size={sz} />
+        ))}
+      </Row>
+    </loom-box>
+  ),
+};
+
 export const WebComponent: StoryObj<StepperStepStoryArgs> = {
   tags: ['test'],
   name: 'Web Component (loom-stepper-step)',
@@ -137,16 +162,18 @@ La story incluye pruebas automáticas que validan el shadow DOM y el cambio de e
     step: '1',
     label: 'Descripción del paso',
     state: 'default',
+    size: 'md',
   },
   argTypes: {
     state: { control: 'select', options: STEPPER_STEP_STATES },
+    size:  { control: 'inline-radio', options: STEPPER_STEP_SIZES },
     step: { control: 'text' },
     label: { control: 'text' },
   },
   render: (args) => (
     <loom-box display="block" padding="lg">
       <loom-inline gap="lg" align="start">
-      <loom-stepper-step step={args.step} label={args.label} state={args.state} />
+      <loom-stepper-step step={args.step} label={args.label} state={args.state} size={args.size} />
       </loom-inline>
     </loom-box>
   ),

@@ -86,16 +86,20 @@ declare module 'react' {
       };
       'loom-badge': LoomElementProps<HTMLElementTagNameMap['loom-badge']> & {
         state?: string;
+        variant?: string;
         label?: string;
+        'show-label'?: string;
       };
       'loom-stepper-step': LoomElementProps<HTMLElementTagNameMap['loom-stepper-step']> & {
         step?: string;
         label?: string;
         state?: string;
+        size?: string;
       };
       'loom-stepper': LoomElementProps<HTMLElementTagNameMap['loom-stepper']> & {
         steps?: string;
         current?: string | number;
+        size?: string;
       };
       'loom-select': LoomElementProps<HTMLElementTagNameMap['loom-select']> & {
         label?: string;
@@ -128,6 +132,7 @@ declare module 'react' {
         indeterminate?: boolean;
         disabled?: boolean;
         shape?: string;
+        size?: string;
       };
       'loom-toggle': LoomElementProps<HTMLElementTagNameMap['loom-toggle']> & {
         label?: string;

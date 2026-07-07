@@ -149,7 +149,7 @@ class LoomPagination extends HTMLElement {
     this._sizeWrapEl.appendChild(this._sizeSelectEl);
 
     this._prevEl = document.createElement('loom-fab');
-    this._prevEl.setAttribute('size', 'sm');
+    this._prevEl.setAttribute('size', 'xl');
     this._prevEl.setAttribute('content', 'icon');
     this._prevEl.setAttribute('aria-label', 'Página anterior');
     this._prevEl.setAttribute('part', 'prev');
@@ -160,7 +160,7 @@ class LoomPagination extends HTMLElement {
     this._pagesEl.classList.add(styles.pages);
 
     this._nextEl = document.createElement('loom-fab');
-    this._nextEl.setAttribute('size', 'sm');
+    this._nextEl.setAttribute('size', 'xl');
     this._nextEl.setAttribute('content', 'icon');
     this._nextEl.setAttribute('aria-label', 'Página siguiente');
     this._nextEl.setAttribute('part', 'next');
@@ -230,7 +230,7 @@ class LoomPagination extends HTMLElement {
       const isActive = item === current;
       wrap.classList.add(isActive ? styles.pageButtonActive : styles.pageButton);
       const fab = document.createElement('loom-fab');
-      fab.setAttribute('size', 'sm');
+      fab.setAttribute('size', 'xl');
       fab.setAttribute('content', 'text');
       fab.setAttribute('label', String(item));
       fab.setAttribute('aria-label', `Página ${item}`);

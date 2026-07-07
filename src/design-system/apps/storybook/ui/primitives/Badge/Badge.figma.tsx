@@ -12,13 +12,18 @@ figma.connect(
       state: figma.enum('State', {
         Default: 'default',
         Progress: 'progress',
-        Finished: 'success',
+        Success: 'success',
         Warning: 'warning',
         Error: 'danger',
       }),
+      variant: figma.enum('Variant', {
+        Default: 'default',
+        filled: 'filled',
+      }),
+      showLabel: figma.boolean('Show Status'),
     },
-    example: ({ label, state }) => (
-      <loom-badge state={state} label={label} />
+    example: ({ label, state, variant, showLabel }) => (
+      <loom-badge state={state} variant={variant} label={label} show-label={String(showLabel)} />
     ),
   },
 );

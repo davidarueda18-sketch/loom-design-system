@@ -23,15 +23,18 @@ export const box = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '24px',
-  height: '24px',
-  padding: spacingVars.xs,
   border: '1px solid',
   borderRadius: radiusVars.xs,
   boxSizing: 'border-box',
   flexShrink: 0,
   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
   borderColor: colorVars.textPrimary,
+});
+
+export const boxSize = styleVariants({
+  sm: { width: '16px', height: '16px', padding: spacingVars.xxs },
+  md: { width: '20px', height: '20px', padding: spacingVars.xxs },
+  lg: { width: '24px', height: '24px', padding: spacingVars.xs },
 });
 
 export const boxState = styleVariants({
@@ -77,13 +80,17 @@ export const boxState = styleVariants({
 });
 
 export const iconWrapper = style({
-  width: '16px',
-  height: '16px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
   color: 'inherit',
+});
+
+export const iconSize = styleVariants({
+  sm: { width: '10px', height: '10px' },
+  md: { width: '13px', height: '13px' },
+  lg: { width: '16px', height: '16px' },
 });
 
 export const label = style({

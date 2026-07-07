@@ -1,6 +1,8 @@
 import '../../../primitives/StepperStep/adapters/StepperStep.element.ts';
 import * as styles from '../Stepper.css.ts';
-import type { StepperState } from '../Stepper.types.ts';
+import type { StepperSize, StepperState } from '../Stepper.types.ts';
+
+const VALID_SIZES = new Set<StepperSize>(['sm', 'md', 'lg']);
 
 // ─── VE stylesheet adoption ───────────────────────────────────────────────────
 
@@ -65,7 +67,7 @@ function getAdoptedStyleSheets(): CSSStyleSheet[] {
 // ─── LoomStepper ─────────────────────────────────────────────────────────────
 
 class LoomStepper extends HTMLElement {
-  static observedAttributes = ['steps', 'current'] as const;
+  static observedAttributes = ['steps', 'current', 'size'] as const;
 
   // ─── Getters / Setters ───────────────────────────────────────────────────
 
@@ -87,6 +89,14 @@ class LoomStepper extends HTMLElement {
   }
   set current(val: number) {
     this.setAttribute('current', String(val));
+  }
+
+  get size(): StepperSize {
+    const val = this.getAttribute('size') as StepperSize;
+    return VALID_SIZES.has(val) ? val : 'md';
+  }
+  set size(val: StepperSize) {
+    this.setAttribute('size', val);
   }
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────
@@ -130,6 +140,7 @@ class LoomStepper extends HTMLElement {
 
     const steps = this.steps;
     const current = this.current;
+    const size = this.size;
 
     // Clear and rebuild shadow contents
     while (shadow.firstChild) shadow.removeChild(shadow.firstChild);
@@ -142,6 +153,7 @@ class LoomStepper extends HTMLElement {
       stepEl.setAttribute('step', String(index + 1));
       stepEl.setAttribute('label', stepLabel);
       stepEl.setAttribute('state', state);
+      stepEl.setAttribute('size', size);
       stepEl.style.cursor = 'pointer';
       stepEl.setAttribute('role', 'button');
       stepEl.setAttribute('tabindex', '0');
@@ -183,6 +195,7 @@ class LoomStepper extends HTMLElement {
         connectorEl.classList.add(
           styles.connector,
           styles.connectorState[connectorState],
+          styles.connectorSize[size],
         );
         shadow.appendChild(connectorEl);
       }

@@ -54,3 +54,6 @@ export type { TableTokenKey } from './table/index.ts';
 
 export { sidebarVars } from './sidebar/index.ts';
 export type { SidebarTokenKey } from './sidebar/index.ts';
+
+export { badgeVars } from './badge/index.ts';
+export type { BadgeTokenKey } from './badge/index.ts';

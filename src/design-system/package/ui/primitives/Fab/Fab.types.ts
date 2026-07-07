@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 
-export const FAB_SIZES    = ['sm', 'md', 'lg'] as const;
+export const FAB_SIZES    = ['sm', 'md', 'lg', 'xl', 'xl2'] as const;
 export const FAB_CONTENTS = ['icon', 'text'] as const;
 
 export type FabSize    = typeof FAB_SIZES[number];

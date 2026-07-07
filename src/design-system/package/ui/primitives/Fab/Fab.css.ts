@@ -1,7 +1,6 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 import {
   colorVars,
-  heightVars,
   radiusVars,
   fontSizeVars,
   fontWeightVars,
@@ -53,35 +52,55 @@ export const root = style({
 
 export const size = styleVariants({
   sm: {
-    width: heightVars.sm,
-    height: heightVars.sm,
+    width: '20px',
+    height: '20px',
     borderRadius: radiusVars.md,
   },
   md: {
-    width: heightVars.md,
-    height: heightVars.md,
+    width: '24px',
+    height: '24px',
     borderRadius: radiusVars.md,
   },
   lg: {
-    width: heightVars.lg,
-    height: heightVars.lg,
-    borderRadius: radiusVars.lg,
+    width: '28px',
+    height: '28px',
+    borderRadius: radiusVars.md,
+  },
+  xl: {
+    width: '32px',
+    height: '32px',
+    borderRadius: radiusVars.md,
+  },
+  xl2: {
+    width: '36px',
+    height: '36px',
+    borderRadius: radiusVars.md,
   },
 });
 
 export const textLabel = styleVariants({
   sm: {
-    fontSize: fontSizeVars.sm,
+    fontSize: fontSizeVars.xxs,
     fontWeight: fontWeightVars.medium,
     lineHeight: 1,
   },
   md: {
-    fontSize: fontSizeVars.lg,
+    fontSize: fontSizeVars.xs,
     fontWeight: fontWeightVars.medium,
     lineHeight: 1,
   },
   lg: {
-    fontSize: fontSizeVars.xl,
+    fontSize: fontSizeVars.sm,
+    fontWeight: fontWeightVars.medium,
+    lineHeight: 1,
+  },
+  xl: {
+    fontSize: fontSizeVars.base,
+    fontWeight: fontWeightVars.medium,
+    lineHeight: 1,
+  },
+  xl2: {
+    fontSize: fontSizeVars.lg,
     fontWeight: fontWeightVars.medium,
     lineHeight: 1,
   },

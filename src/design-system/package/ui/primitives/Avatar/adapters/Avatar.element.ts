@@ -3,7 +3,7 @@ import { getAvatarColor, getInitials } from '../Avatar.utils.ts';
 import { collectAdoptedStyleSheets } from './adopted-styles.ts';
 import type { AvatarSize } from '../Avatar.types.ts';
 
-const SIZES: readonly AvatarSize[] = ['sm', 'md', 'lg'];
+const SIZES: readonly AvatarSize[] = ['xs', 'sm', 'md', 'lg'];
 
 class LoomAvatar extends HTMLElement {
   static observedAttributes = ['name', 'email', 'photo-url', 'size'] as const;
@@ -77,7 +77,7 @@ class LoomAvatar extends HTMLElement {
       this._initialsEl.hidden = true;
     } else {
       this._imgEl.hidden = true;
-      this._imgEl.src = '';
+      this._imgEl.removeAttribute('src');
       this._initialsEl.hidden = false;
       this._initialsEl.textContent = initials;
       this.style.backgroundColor = color;

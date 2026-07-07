@@ -12,9 +12,15 @@ export const connector = style({
   flex: '1 0 0',
   height: '1px',
   alignSelf: 'flex-start',
-  marginTop: '20px',
   minWidth: '8px',
   flexShrink: 1,
+});
+
+// marginTop centers the connector on the step circle (half of its height).
+export const connectorSize = styleVariants({
+  sm: { marginTop: '16px' },
+  md: { marginTop: '20px' },
+  lg: { marginTop: '24px' },
 });
 
 export const connectorState = styleVariants({

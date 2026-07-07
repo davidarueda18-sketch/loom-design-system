@@ -1,13 +1,3 @@
-// Deterministic hue from a string (email, id, etc.)
-function hashString(s: string): number {
-  let hash = 0;
-  for (let i = 0; i < s.length; i++) {
-    hash = (hash << 5) - hash + s.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
 const AVATAR_COLORS = [
   '#6366f1', // indigo
   '#8b5cf6', // violet
@@ -22,7 +12,13 @@ const AVATAR_COLORS = [
 ];
 
 export function getAvatarColor(seed: string): string {
-  return AVATAR_COLORS[hashString(seed) % AVATAR_COLORS.length];
+  if (!seed) return '#333333';
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash % AVATAR_COLORS.length);
+  return AVATAR_COLORS[index];
 }
 
 export function getInitials(name: string): string {

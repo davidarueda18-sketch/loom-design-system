@@ -4,6 +4,13 @@ import '../../../../../package/ui/primitives/Avatar/adapters/Avatar.element.ts';
 import '../../../../../package/ui/primitives/Avatar/adapters/AvatarGroup.element.ts';
 import '../../../loom-web-components.d.ts';
 
+// Silhouettes embebidas como data URI: evitan depender de una red externa
+// (p. ej. pravatar.cc) que puede fallar y dejar el avatar en un estado roto.
+function placeholderPhoto(fill: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="150" height="150" fill="${fill}"/><circle cx="75" cy="60" r="30" fill="#fff"/><rect x="30" y="95" width="90" height="55" rx="45" fill="#fff"/></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 interface AvatarStoryArgs {
   name: string;
   email: string;
@@ -31,7 +38,7 @@ const meta = {
     docs: {
       description: {
         component: `
-Átomo de avatar y cluster de avatares. \`loom-avatar\` muestra foto (vía \`photo-url\`) o iniciales generadas desde \`name\`, con color determinístico por \`email\`.
+Átomo de avatar y cluster de avatares. \`loom-avatar\` muestra foto (vía \`photo-url\`) o iniciales generadas desde \`name\`, con un color de fondo determinístico según \`email\`/\`name\`. Sin \`photo-url\` (o si la imagen falla al cargar) se muestran únicamente las iniciales, sin rastro de la imagen.
 \`loom-avatar-group\` agupa varios \`loom-avatar\` con solapamiento y badge \`+N\` cuando superan el \`max\`.
 
 \`\`\`html
@@ -45,7 +52,7 @@ const meta = {
 </loom-avatar-group>
 \`\`\`
 
-Atributos: \`name\`, \`email\`, \`photo-url\`, \`size\` (sm/md/lg). Partes: \`img\`, \`initials\`.
+Atributos: \`name\`, \`email\`, \`photo-url\`, \`size\` (xs/sm/md/lg). Partes: \`img\`, \`initials\`.
         `.trim(),
       },
     },
@@ -62,7 +69,7 @@ export const Default: Story = {
 };
 
 export const Sizes: Story = {
-  parameters: { controls: { disable: true }, docs: { description: { story: 'Tres tamaños: sm (24px), md (32px), lg (40px).' } } },
+  parameters: { controls: { disable: true }, docs: { description: { story: 'Cuatro tamaños: xs (24px), sm (28px), md (32px), lg (40px).' } } },
   render: () => (
     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
       {AVATAR_SIZES.map((sz) => (
@@ -73,19 +80,19 @@ export const Sizes: Story = {
 };
 
 export const WithPhoto: Story = {
-  parameters: { controls: { disable: true }, docs: { description: { story: 'Con `photo-url`; si la URL falla el avatar cae a iniciales automáticamente.' } } },
+  parameters: { controls: { disable: true }, docs: { description: { story: 'Con `photo-url`; si la URL falla al cargar, el avatar cae a iniciales automáticamente sin dejar restos de la imagen rota.' } } },
   render: () => (
     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
       <loom-avatar
         name="David Rueda"
         email="david@example.com"
-        photo-url="https://i.pravatar.cc/150?u=david"
+        photo-url={placeholderPhoto('#0ea5e9')}
         size="lg"
       />
       <loom-avatar
         name="Ana Gómez"
         email="ana@example.com"
-        photo-url="https://i.pravatar.cc/150?u=ana"
+        photo-url={placeholderPhoto('#f43f5e')}
         size="lg"
       />
     </div>

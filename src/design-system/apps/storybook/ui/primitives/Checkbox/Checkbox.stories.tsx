@@ -2,8 +2,8 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
-import { CHECKBOX_STATES, CHECKBOX_SHAPES } from '../../../../../package/ui/primitives/Checkbox/index.ts';
-import type { CheckboxChangeEventDetail, CheckboxShape } from '../../../../../package/ui/primitives/Checkbox/index.ts';
+import { CHECKBOX_STATES, CHECKBOX_SHAPES, CHECKBOX_SIZES } from '../../../../../package/ui/primitives/Checkbox/index.ts';
+import type { CheckboxChangeEventDetail, CheckboxShape, CheckboxSize } from '../../../../../package/ui/primitives/Checkbox/index.ts';
 import { colorVars } from '../../../../../package/tokens/color/index.ts';
 import '../../../../../package/tokens/color/color.tokens.css.ts';
 import '../../../../../package/ui/primitives/Box/adapters/Box.element.ts';
@@ -18,6 +18,7 @@ interface CheckboxStoryArgs {
   disabled: boolean;
   label: string;
   shape: CheckboxShape;
+  size: CheckboxSize;
 }
 
 interface CheckboxWebComponentArgs {
@@ -38,6 +39,7 @@ const meta = {
     disabled: false,
     label: 'Acepto los términos y condiciones',
     shape: 'square',
+    size: 'sm',
   },
   argTypes: {
     checked:       { control: 'boolean', description: 'Sets the checked state.' },
@@ -45,6 +47,7 @@ const meta = {
     disabled:      { control: 'boolean', description: 'Disables pointer and keyboard interaction.' },
     label:         { control: 'text', description: 'Optional label text displayed beside the box.' },
     shape:         { control: 'select', options: CHECKBOX_SHAPES, description: 'Visual shape of the checkbox box.' },
+    size:          { control: 'inline-radio', options: CHECKBOX_SIZES, description: 'Visual size of the checkbox box (sm 16px, md 20px, lg 24px). Defaults to sm.' },
   },
   parameters: {
     docs: {
@@ -52,6 +55,7 @@ const meta = {
         component: `
 Control de selección binaria como Web Component. Soporta los estados **default**, **checked**,
 **indeterminate** y **disabled**, con hover y focus gestionados por CSS. Incluye label opcional.
+Tres tamaños de caja: **sm** (16px, por defecto), **md** (20px) y **lg** (24px).
 
 \`\`\`html
 <!-- Sin marcar -->
@@ -82,6 +86,7 @@ document.querySelector('loom-checkbox')?.addEventListener('loom-checkbox-change'
 | Attribute | disabled | Disables interaction |
 | Attribute | label | Visible label text |
 | Attribute | shape | Box shape: square or circle |
+| Attribute | size | Box size: sm (16px, default), md (20px) or lg (24px) |
 | Attribute | name | Form field name |
 | Attribute | value | Form field value when checked |
 | Attribute | aria-label | Accessible label |
@@ -169,7 +174,7 @@ function CheckboxEventLog() {
 
 export const Default: Story = {
   render: (args) => {
-    const { checked, indeterminate, disabled, label, shape } = args;
+    const { checked, indeterminate, disabled, label, shape, size } = args;
     return (
       <loom-box display="block" padding="lg">
         <loom-checkbox
@@ -178,6 +183,7 @@ export const Default: Story = {
           {...(disabled      ? { disabled: true }       : {})}
           label={label}
           shape={shape}
+          size={size}
         />
       </loom-box>
     );
@@ -347,6 +353,33 @@ CSS hooks: \`::part(root)\`, \`::part(box)\`, \`::part(icon)\`, \`::part(label)\
     host.removeAttribute('indeterminate');
     host.removeAttribute('checked');
   },
+};
+
+export const Sizes: Story = {
+  name: 'Tamaños',
+  parameters: {
+    docs: {
+      description: {
+        story: 'El atributo `size` controla el tamaño de la caja: `sm` (16px, por defecto), `md` (20px) y `lg` (24px, el más grande).',
+      },
+    },
+  },
+  render: () => (
+    <loom-box display="block" padding="lg">
+      <loom-inline gap="lg" align="center" wrap>
+        {CHECKBOX_SIZES.map((size) => (
+          <Column key={size}>
+            <p className="loom-caption" style={{ color: colorVars.textSecondary, margin: '0 0 4px' }}>
+              size="{size}"
+            </p>
+            <loom-checkbox label="Default" size={size} />
+            <loom-checkbox checked={true} label="Checked" size={size} />
+            <loom-checkbox indeterminate={true} label="Indeterminate" size={size} />
+          </Column>
+        ))}
+      </loom-inline>
+    </loom-box>
+  ),
 };
 
 export const Shape: Story = {

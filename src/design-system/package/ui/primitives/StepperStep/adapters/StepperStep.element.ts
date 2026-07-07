@@ -1,8 +1,9 @@
 import * as styles from '../StepperStep.css.ts';
 import { spacingVars } from '../../../../tokens/index.ts';
-import type { StepperStepState } from '../StepperStep.types.ts';
+import type { StepperStepSize, StepperStepState } from '../StepperStep.types.ts';
 
 const VALID_STATES = new Set<StepperStepState>(['default', 'active', 'completed']);
+const VALID_SIZES = new Set<StepperStepSize>(['sm', 'md', 'lg']);
 
 const CHECK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
   <path d="M3 8.5L6.5 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -75,7 +76,7 @@ function getAdoptedStyleSheets(): CSSStyleSheet[] {
 // ─── LoomStepperStep ──────────────────────────────────────────────────────────
 
 class LoomStepperStep extends HTMLElement {
-  static observedAttributes = ['step', 'label', 'state'] as const;
+  static observedAttributes = ['step', 'label', 'state', 'size'] as const;
 
   // ─── Getters / Setters ───────────────────────────────────────────────────
 
@@ -101,6 +102,14 @@ class LoomStepperStep extends HTMLElement {
     this.setAttribute('state', val);
   }
 
+  get size(): StepperStepSize {
+    const val = this.getAttribute('size') as StepperStepSize;
+    return VALID_SIZES.has(val) ? val : 'md';
+  }
+  set size(val: StepperStepSize) {
+    this.setAttribute('size', val);
+  }
+
   // ─── Shadow DOM elements ─────────────────────────────────────────────────
 
   private _circleEl: HTMLDivElement | null = null;
@@ -110,7 +119,14 @@ class LoomStepperStep extends HTMLElement {
 
   // ─── Prev-state (for idempotent _sync) ───────────────────────────────────
 
-  private _prev: Record<string, string | null> = { circleState: null, numberState: null, labelState: null };
+  private _prev: Record<string, string | null> = {
+    circleState: null,
+    numberState: null,
+    labelState: null,
+    circleSize: null,
+    numberSize: null,
+    labelSize: null,
+  };
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────
 
@@ -177,11 +193,15 @@ class LoomStepperStep extends HTMLElement {
     if (!this._circleEl || !this._numberEl || !this._checkEl || !this._labelEl) return;
 
     const stepState = this.state;
+    const stepSize = this.size;
     const isCompleted = stepState === 'completed';
 
     this._applyTo(this._circleEl, this._prev, 'circleState', stepState, styles.circleState as Record<string, string>);
     this._applyTo(this._numberEl, this._prev, 'numberState', stepState, styles.numberState as Record<string, string>);
     this._applyTo(this._labelEl, this._prev, 'labelState', stepState, styles.labelState as Record<string, string>);
+    this._applyTo(this._circleEl, this._prev, 'circleSize', stepSize, styles.circleSize as Record<string, string>);
+    this._applyTo(this._numberEl, this._prev, 'numberSize', stepSize, styles.numberSize as Record<string, string>);
+    this._applyTo(this._labelEl, this._prev, 'labelSize', stepSize, styles.labelSize as Record<string, string>);
 
     this._numberEl.textContent = this.step;
     this._numberEl.hidden = isCompleted;

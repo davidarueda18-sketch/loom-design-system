@@ -17,7 +17,8 @@ export const root = style({
 });
 
 export const size = styleVariants({
-  sm: { width: '24px', height: '24px', fontSize: fontSizeVars.xs },
+  xs: { width: '24px', height: '24px', fontSize: fontSizeVars.xs },
+  sm: { width: '28px', height: '28px', fontSize: fontSizeVars.xs },
   md: { width: '32px', height: '32px', fontSize: fontSizeVars.sm },
   lg: { width: '40px', height: '40px', fontSize: fontSizeVars.base },
 });
@@ -27,4 +28,9 @@ export const img = style({
   height: '100%',
   objectFit: 'cover',
   display: 'block',
+  selectors: {
+    '&[hidden]': {
+      display: 'none',
+    },
+  },
 });

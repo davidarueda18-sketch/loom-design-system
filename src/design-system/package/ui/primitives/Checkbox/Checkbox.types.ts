@@ -10,6 +10,11 @@ export const CHECKBOX_SHAPES = ['square', 'circle'] as const;
 /** Visual shape applied to the checkbox box part. */
 export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
 
+/** Supported checkbox box sizes, from smallest to largest. */
+export const CHECKBOX_SIZES = ['sm', 'md', 'lg'] as const;
+/** Visual size applied to the checkbox box part. Defaults to `sm` (16px). */
+export type CheckboxSize = (typeof CHECKBOX_SIZES)[number];
+
 /** Detail payload emitted by `loom-checkbox-change`. */
 export interface CheckboxChangeEventDetail {
   /** Current checked state after the interaction. */
@@ -30,6 +35,8 @@ export interface CheckboxProps extends Omit<ComponentPropsWithoutRef<'div'>, 'on
   label?: string;
   /** Visual shape of the checkbox box. */
   shape?: CheckboxShape;
+  /** Visual size of the checkbox box. Defaults to `sm` (16px). */
+  size?: CheckboxSize;
   /** Called when `<loom-checkbox>` emits `loom-checkbox-change`. */
   onChange?: (detail: CheckboxChangeEventDetail) => void;
 }

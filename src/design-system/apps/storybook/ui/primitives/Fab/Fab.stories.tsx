@@ -16,12 +16,14 @@ import '../../../../../package/ui/primitives/Stack/adapters/Stack.element.ts';
 import '../../../loom-web-components.d.ts';
 
 // ─── Icon size map ────────────────────────────────────────────────────────────
-// Matches the Figma-specified icon sizes per FAB size (mini=20px, md=24px, lg=32px)
+// Icon scales with the FAB button: sm(20)→xxs(12), md(24)→xs(14), lg(28)→sm(16), xl(32)→mini(20), xl2(36)→md(24)
 const ICON_SIZE_MAP = {
-  sm: 'mini',
-  md: 'md',
-  lg: 'lg',
-} as const satisfies Record<FabSize, 'mini' | 'md' | 'lg'>;
+  sm: 'xxs',
+  md: 'xs',
+  lg: 'sm',
+  xl: 'mini',
+  xl2: 'md',
+} as const satisfies Record<FabSize, 'xxs' | 'xs' | 'sm' | 'mini' | 'md'>;
 
 // ─── State overrides — simulate pseudo-classes visually ──────────────────────
 type StateDemo = { label: string; style?: CSSProperties; disabled?: boolean };
@@ -152,7 +154,7 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Tres tamaños disponibles. El ícono escala proporcionalmente: `mini` (20px) para `sm`, `md` (24px) para `md`, `lg` (32px) para `lg`.',
+        story: 'Cinco tamaños disponibles: `sm` (20px), `md` (24px), `lg` (28px), `xl` (32px), `xl2` (36px). El ícono escala proporcionalmente: `xxs` (12px), `xs` (14px), `sm` (16px), `mini` (20px), `md` (24px).',
       },
     },
   },

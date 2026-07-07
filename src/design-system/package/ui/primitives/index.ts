@@ -31,11 +31,11 @@ export type { FabProps, FabSize, FabContent } from './Fab/index.ts';
 export { Badge, BADGE_STATES } from './Badge/index.ts';
 export type { BadgeProps, BadgeState } from './Badge/index.ts';
 
-export { StepperStep, LoomStepperStep, STEPPER_STEP_STATES } from './StepperStep/index.ts';
-export type { StepperStepState, StepperStepProps } from './StepperStep/index.ts';
+export { StepperStep, LoomStepperStep, STEPPER_STEP_STATES, STEPPER_STEP_SIZES } from './StepperStep/index.ts';
+export type { StepperStepState, StepperStepSize, StepperStepProps } from './StepperStep/index.ts';
 
-export { Checkbox, LoomCheckbox, CHECKBOX_STATES, CHECKBOX_SHAPES } from './Checkbox/index.ts';
-export type { CheckboxProps, CheckboxState, CheckboxShape, CheckboxChangeEventDetail } from './Checkbox/index.ts';
+export { Checkbox, LoomCheckbox, CHECKBOX_STATES, CHECKBOX_SHAPES, CHECKBOX_SIZES } from './Checkbox/index.ts';
+export type { CheckboxProps, CheckboxState, CheckboxShape, CheckboxSize, CheckboxChangeEventDetail } from './Checkbox/index.ts';
 
 export { IconButton, ICON_BUTTON_VARIANTS, ICON_BUTTON_SIZES } from './IconButton/index.ts';
 export type { IconButtonProps, IconButtonVariant, IconButtonSize } from './IconButton/index.ts';
